@@ -1,54 +1,66 @@
-//@item-color: hsla(208, 71%, 81%, 0.3);
-//@item-color-odd: rgba(255, 255, 203, 0.3);
-//@border-radius: 5px;
-//@padding: 8px;
-//@item-row-height: 46px;
 
 @header-height: 32px;
 @header-font-size: 14px;
 @border-radius: 3px;
-@header-color: #000;
-@header-bg-color: rgba(158, 178, 187, 1.0);
-
-@border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
-
-//padding: @padding (@padding / 2);
 
 .rpanel {
 
-  &.rounded > header, &.rounded-top > header {
+  &.rounded {
+    border-radius: @border-radius;
+    > header {
+      border-radius: @border-radius @border-radius 0 0;
+    }
+    & > div:last-child {
+      border-radius: 0 0 @border-radius @border-radius;
+    }
+  }
+
+  &.rounded-top {
     border-radius: @border-radius @border-radius 0 0;
+    > header {
+      border-radius: @border-radius @border-radius 0 0;
+    }
+  }
+
+  &.rounded-bottom {
+    border-radius: 0 0 @border-radius @border-radius;
+    & > div:last-child {
+      border-radius: 0 0 @border-radius @border-radius;
+    }
+  }
+
+  &.raised > header {
+    box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
+  }
+
+  &.bordered {
+    > header {
+      border: 1px solid black;
+    }
+    > .rpanel-body {
+      border: 1px solid black;
+      border-top: 0 none;
+    }
+
   }
 
   > header {
     display: block;
-    //background-color: rgba(0, 0, 0, 0.2);
     height: @header-height;
     font-size: @header-font-size;
-
-    //border: 1px solid rgba(0, 0, 0, 0.5);
-    border: 1px solid @border-color;
-
-    box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
-    background-color: fadeout(@header-bg-color, 50%);
-    color: @header-color;
 
     .rpanel-icon {
       display: block;
       float: left;
       font-size: 125%;
-      color: (#fff - @header-color);
       height: @header-height;
       line-height: (@header-height - 4);
       margin-right: -6px;
-      //position: relative;
       text-align: center;
       width: (@header-height - 2);
-      text-shadow: 2px 2px 2px @header-color;
     }
 
     .rpanel-title {
-      //font-weight: bold;
       margin-left: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -59,11 +71,10 @@
       line-height: @header-height;
       position: relative;
       width: auto;
-      text-shadow: 1px 1px 1px mix((#fff - @header-color), (#fff - (#fff - @header-color)), 65%);
     }
 
     .rpanel-control {
-      border-left: 1px solid @border-color;
+      border-left: 1px solid black;
       float: right;
       height: @header-height;
       min-width: @header-height;
@@ -73,28 +84,9 @@
       padding: 0;
       text-align: center;
       text-decoration: none;
-
-      & * {
-        color: @header-color;
-        text-shadow: 1px 1px 1px (#fff - @header-color);
-      }
-
     }
-
   }
-
-  > .rpanel-body {
-    background-color: #fff;
-    border: 1px solid @border-color;
-    border-top: 0 none;
-  }
-
-  &.rounded > .rpanel-body, &.rounded-bottom > .rpanel-body {
-    //TODO: rpanel-footer border-radius instead
-    border-radius: 0 0 @border-radius @border-radius;
-  }
-
 }
 
-
-@import 'themes/flatbg';
+@import 'themes/grayscale';
+@import 'themes/lightblue';

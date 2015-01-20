@@ -1,0 +1,35 @@
+
+@header-color: rgba(255, 255, 255, 0.75);
+
+.rpanel.grayscale {
+  background-color: rgba(0, 0, 0, 0.25);
+
+  > header {
+    border-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.25);
+    color: @header-color;
+
+    .rpanel-icon {
+      color: (#fff - @header-color);
+      text-shadow: 2px 2px 2px @header-color;
+    }
+
+    .rpanel-title {
+      text-shadow: 1px 1px 1px mix((#fff - @header-color), (#fff - (#fff - @header-color)), 65%);
+    }
+
+    .rpanel-control {
+      border-color: rgba(255, 255, 255, 0.2);
+
+      & * {
+        color: @header-color;
+        text-shadow: 1px 1px 1px (#fff - @header-color);
+      }
+    }
+  }
+
+  > .rpanel-body {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.5);
+  }
+}

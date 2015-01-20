@@ -1,15 +1,14 @@
 
-@header-color: rgba(255, 255, 255, 0.75);
+@header-color: #000;
+@header-bg-color: rgba(158, 178, 187, 1.0);
 
-.rpanel.flatbg {
-  background-color: rgba(0, 0, 0, 0.25);
+@border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
+
+.rpanel.lightblue {
 
   > header {
-    //border: 1px solid rgba(0, 0, 0, 0.5);
-    border: 0 none;
-
-    box-shadow: none;
-    background-color: rgba(0, 0, 0, 0.25);
+    border-color: @border-color;
+    background-color: fadeout(@header-bg-color, 50%);
     color: @header-color;
 
     .rpanel-icon {
@@ -22,21 +21,17 @@
     }
 
     .rpanel-control {
-      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      border-color: @border-color;
 
       & * {
         color: @header-color;
         text-shadow: 1px 1px 1px (#fff - @header-color);
       }
-
     }
-
   }
 
   > .rpanel-body {
-    //background-color: rgba(255, 255, 255, 0.1);
-    background-color: transparent;
-    border: 0 none;
+    background-color: rgba(255, 255, 255, 0.65);
+    border-color: @border-color;
   }
-
 }

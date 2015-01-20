@@ -18,6 +18,24 @@ var RPanel = React.createClass({
       }
     }
 
+    if (this.props.rounded) {
+      if (this.props.rounded == "top") {
+        classes += " rounded-top";
+      } else if (this.props.rounded == "bottom") {
+        classes += " rounded-bottom";
+      } else {
+        classes += " rounded";
+      }
+    }
+
+    if (this.props.bordered) {
+      classes += " bordered";
+    }
+
+    if (this.props.raised) {
+      classes += " raised";
+    }
+
     return this.transferPropsTo(
       <div className={classes}>
       {this.props.children}
