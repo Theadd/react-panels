@@ -12,28 +12,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    requirejs: {
-      compile: {
-        options: {
-          appDir: "",
-          baseUrl: 'src/js',
-          name: 'rpanel',
-          include: ["main"],
-          optimize: "none",
-          out: 'assets/js/app.js',
-          skipModuleInsertion: true
-        }
-      }
-    },
     watch: {
-      scripts: {
-        files: ['src/js/*.js'],
-        tasks: ['requirejs'],
-        options: {
-          spawn: false,
-          interrupt: true
-        }
-      },
       styles: {
         files: ['src/less/**'],
         tasks: ['less'],
@@ -49,7 +28,8 @@ module.exports = function(grunt) {
           paths: ["src/less"]
         },
         files: {
-          "assets/css/rpanel.css": "src/less/rpanel.less"
+          "assets/css/rpanel.css": "src/less/rpanel.less",
+          "assets/css/demo.css": "src/less/demo.less"
         }
       },
       production: {
@@ -58,7 +38,8 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          "assets/css/rpanel.css": "src/less/rpanel.less"
+          "assets/css/rpanel.css": "src/less/rpanel.less",
+          "assets/css/demo.css": "src/less/demo.less"
         }
       }
     }
@@ -66,10 +47,9 @@ module.exports = function(grunt) {
 
   grunt.loadTasks('tasks');
 
-  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
 
-  grunt.registerTask('default', ['requirejs', 'watch', 'less']);
+  grunt.registerTask('default', ['watch', 'less']);
 
 };
