@@ -1,10 +1,11 @@
 
-@header-color: #000;
-@header-bg-color: rgba(158, 178, 187, 1.0);
-
-@border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
-
 .rpanel.lightblue {
+
+  @header-color: #000;
+  @header-bg-color: rgba(158, 178, 187, 1.0);
+  @content-bg-color: rgba(255, 255, 255, 0.85);
+
+  @border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
 
   > header {
     border-color: @border-color;
@@ -28,10 +29,42 @@
         text-shadow: 1px 1px 1px (#fff - @header-color);
       }
     }
+
+    .rpanel-tabs {
+
+      .rpanel-tab {
+
+        .rpanel-icon, .rpanel-title {
+          color: mix(@header-bg-color, @header-color, 50%);
+          text-shadow: none;
+        }
+
+        &.active {
+          border-color: fadein(@header-bg-color, 50%);
+          background-color: @content-bg-color;
+
+          .rpanel-icon, .rpanel-title {
+            color: mix(@header-bg-color, @header-color, 25%);
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: fadeout(@content-bg-color, 50%);
+        }
+      }
+    }
   }
 
   > .rpanel-body {
-    background-color: rgba(255, 255, 255, 0.65);
+    background-color: fadeout(@header-bg-color, 50%);
     border-color: @border-color;
+
+    .rpanel-toolbar {
+      background-color: @content-bg-color;
+      border-color: @border-color;
+    }
+    .rpanel-content {
+      background-color: @content-bg-color;
+    }
   }
 }

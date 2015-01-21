@@ -13,7 +13,7 @@ var base = (
       </RPanelControl>
     </RPanelHeader>
     <RPanelBody>
-    panel body content here
+    <RPanelContent>panel body content here</RPanelContent>
     </RPanelBody>
   </RPanel>
 );
@@ -35,14 +35,66 @@ var solidbg = (
           <i className="fa fa-times"></i>
         </a>
       </RPanelControl>
+      <RPanelControl>
+        <a href="#" className="rpanel-button">
+          <i className="fa fa-pencil-square-o"></i>
+        </a>
+      </RPanelControl>
+
+      <RPanelTabs>
+        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
+        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
+        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
+      </RPanelTabs>
     </RPanelHeader>
     <RPanelBody>
-    panel body content here
+      <RPanelToolbar>
+        <span>Toolbar content here</span>
+      </RPanelToolbar>
+      <RPanelContent>panel body content here</RPanelContent>
     </RPanelBody>
   </RPanel>
 );
 
 React.render(solidbg, document.getElementById('panel-solidbg'));
+
+React.render(base, document.getElementById('panel-base'));
+
+var solidbg2 = (
+  <RPanel
+    theme="lightblue"
+    raised={true}
+    rounded={true}>
+    <RPanelHeader
+      icon="fa fa-comments"
+      title="Panel Title">
+      <RPanelControl>
+        <a href="#" className="rpanel-button">
+          <i className="fa fa-times"></i>
+        </a>
+      </RPanelControl>
+      <RPanelControl>
+        <a href="#" className="rpanel-button">
+          <i className="fa fa-pencil-square-o"></i>
+        </a>
+      </RPanelControl>
+
+      <RPanelTabs>
+        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
+        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
+        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
+      </RPanelTabs>
+    </RPanelHeader>
+    <RPanelBody>
+      <RPanelToolbar>
+        <span>Toolbar content here</span>
+      </RPanelToolbar>
+      <RPanelContent>panel body content here</RPanelContent>
+    </RPanelBody>
+  </RPanel>
+);
+
+React.render(solidbg2, document.getElementById('panel-solidbg-2'));
 
 var flatbg = (
   <RPanel
@@ -56,9 +108,23 @@ var flatbg = (
           <i className="fa fa-times"></i>
         </a>
       </RPanelControl>
+      <RPanelControl>
+        <a href="#" className="rpanel-button">
+          <i className="fa fa-pencil-square-o"></i>
+        </a>
+      </RPanelControl>
+
+      <RPanelTabs>
+        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
+        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
+        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
+      </RPanelTabs>
     </RPanelHeader>
     <RPanelBody>
-    panel body content here
+      <RPanelToolbar>
+        <span>Toolbar content here</span>
+      </RPanelToolbar>
+      <RPanelContent>panel body content here</RPanelContent>
     </RPanelBody>
   </RPanel>
 );
@@ -79,7 +145,10 @@ var flatbg2 = (
       </RPanelControl>
     </RPanelHeader>
     <RPanelBody>
-    panel body content here
+      <RPanelToolbar>
+        <span>Toolbar content here</span>
+      </RPanelToolbar>
+      <RPanelContent>panel body content here</RPanelContent>
     </RPanelBody>
   </RPanel>
 );

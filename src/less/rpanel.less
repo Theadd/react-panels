@@ -33,9 +33,20 @@
     box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
   }
 
+  &:not(.bordered) > header {
+    height: @header-height;
+  }
+
   &.bordered {
     > header {
       border: 1px solid black;
+      height: (@header-height + 2);
+
+      .rpanel-tab:not(.active):hover {
+        border-top: 0 solid transparent;
+        margin-top: 1px;
+        padding-top: 1px;
+      }
     }
     > .rpanel-body {
       border: 1px solid black;
@@ -46,7 +57,7 @@
 
   > header {
     display: block;
-    height: @header-height;
+    //height: @header-height;
     font-size: @header-font-size;
 
     .rpanel-icon {
@@ -85,6 +96,80 @@
       text-align: center;
       text-decoration: none;
     }
+
+    .rpanel-tabs {
+      float: right;
+      height: (@header-height - 1);
+      min-width: @header-height;
+      display: inline-block;
+      //line-height: (@header-height - 1);
+      margin: -1px 20px 0;  //FIXME
+      padding: 0;
+
+      .rpanel-tab {
+        float: left;
+        display: block;
+        list-style: none;
+        padding: 0 5px;
+        border-top: 2px solid transparent;
+
+        //TODO: REMOVE
+        background-color: rgba(0, 255, 0, 0.25);
+        border-color: rgba(0, 0, 255, 0.5);
+
+
+        > a {
+          display: block;
+          max-height: (@header-height - 2);
+        }
+
+        &.active > a {
+          cursor: default;
+        }
+
+        .rpanel-icon {
+          //display: block;
+          //float: left;
+          font-size: 100%;
+          //height: @header-height;
+          line-height: (@header-height - 2);
+          margin-right: -9px;
+          margin-left: -3px;
+          //text-align: center;
+          //width: (@header-height - 2);
+          opacity: 0.85;
+        }
+
+        .rpanel-title {
+          line-height: @header-height;
+          margin-right: 6px;
+          opacity: 0.85;
+        }
+
+
+      }
+
+      * {
+        text-decoration: none;
+        color: inherit;
+        font-size: 0.95em;
+      }
+    }
+  }
+
+  > .rpanel-body {
+
+    .rpanel-toolbar {
+      min-height: @header-height;
+      line-height: @header-height;
+      border-bottom: 1px solid black;
+    }
+  }
+
+  &, * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
 }
 

@@ -85,3 +85,57 @@ var RPanelControl = React.createClass({
     );
   }
 });
+
+var RPanelToolbar = React.createClass({
+  render: function() {
+    return this.transferPropsTo(
+      <div className="rpanel-toolbar">
+        {this.props.children}
+      </div>
+    );
+  }
+});
+
+var RPanelContent = React.createClass({
+  render: function() {
+    return this.transferPropsTo(
+      <div className="rpanel-content">
+        {this.props.children}
+      </div>
+    );
+  }
+});
+
+var RPanelTabs = React.createClass({
+  render: function() {
+    return this.transferPropsTo(
+      <ul className="rpanel-tabs">
+        {this.props.children}
+      </ul>
+    );
+  }
+});
+
+var RPanelTab = React.createClass({
+  render: function() {
+    var icon = null,
+      title = null,
+      classes = (this.props.active) ? "rpanel-tab active" : "rpanel-tab";
+
+    if (this.props.icon) {
+      icon = (
+        <span className="rpanel-icon">
+          <i className={this.props.icon}></i>
+        </span>
+      );
+    }
+
+    title = (<span className="rpanel-title">{this.props.title}</span>);
+
+    return this.transferPropsTo(
+      <li className={classes} data-target={this.props.target}>
+        <a href="#" title={this.props.title}>{icon} {title}</a>
+      </li>
+    );
+  }
+});
