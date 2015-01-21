@@ -42,10 +42,21 @@
       border: 1px solid black;
       height: (@header-height + 2);
 
-      .rpanel-tab:not(.active):hover {
-        border-top: 0 solid transparent;
-        margin-top: 1px;
-        padding-top: 1px;
+      .rpanel-tabs {
+
+        > .rpanel-tab.active {
+          margin-top: -1px;
+          height: (@header-height + 2);
+
+          border-right: 1px solid black;
+          border-left: 1px solid black;
+          box-shadow: 0 2px 0 black inset;
+
+          > a {
+            margin-top: 1px !important;
+
+          }
+        }
       }
     }
     > .rpanel-body {
@@ -57,7 +68,6 @@
 
   > header {
     display: block;
-    //height: @header-height;
     font-size: @header-font-size;
 
     .rpanel-icon {
@@ -99,28 +109,25 @@
 
     .rpanel-tabs {
       float: right;
-      height: (@header-height - 1);
+      height: @header-height;
+      margin: 0 20px;
       min-width: @header-height;
       display: inline-block;
-      //line-height: (@header-height - 1);
-      margin: -1px 20px 0;  //FIXME
       padding: 0;
 
       .rpanel-tab {
+        position: relative;
         float: left;
         display: block;
         list-style: none;
         padding: 0 5px;
-        border-top: 2px solid transparent;
-
-        //TODO: REMOVE
-        background-color: rgba(0, 255, 0, 0.25);
-        border-color: rgba(0, 0, 255, 0.5);
+        height: @header-height;
 
 
         > a {
+          position: relative;
           display: block;
-          max-height: (@header-height - 2);
+          height: @header-height;
         }
 
         &.active > a {
@@ -128,15 +135,10 @@
         }
 
         .rpanel-icon {
-          //display: block;
-          //float: left;
           font-size: 100%;
-          //height: @header-height;
           line-height: (@header-height - 2);
           margin-right: -9px;
           margin-left: -3px;
-          //text-align: center;
-          //width: (@header-height - 2);
           opacity: 0.85;
         }
 
@@ -162,7 +164,7 @@
     .rpanel-toolbar {
       min-height: @header-height;
       line-height: @header-height;
-      border-bottom: 1px solid black;
+      border-bottom: 3px double black;
     }
   }
 

@@ -1,12 +1,10 @@
 
 .rpanel.grayscale {
-
-  @header-color: rgba(255, 255, 255, 0.75);
-  @header-bg-color: rgba(0, 0, 0, 0.5);
-  @content-bg-color: rgba(255, 255, 255, 0.25);
+  @header-color: rgba(0, 0, 0, 0.75);
+  @header-bg-color: rgba(255, 255, 255, 0.15);
+  @content-bg-color: rgba(0, 0, 0, 0.2);
 
   @border-color: rgba(0, 0, 0, 0.5);
-  //@border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
 
   > header {
     border-color: @border-color;
@@ -50,31 +48,23 @@
         }
 
         &:not(.active):hover {
-          background-color: fadeout(@content-bg-color, 50%);
+          background-color: fadeout(@content-bg-color, 10%);
         }
       }
     }
-
   }
 
-  > .rpanel-body {
-    background-color: transparent;
-    border-color: rgba(0, 0, 0, 0.5);
-
-    .rpanel-toolbar {
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-  }
   > .rpanel-body {
     background-color: @header-bg-color;
     border-color: @border-color;
 
     .rpanel-toolbar {
       background-color: @content-bg-color;
-      border-color: @border-color;
+      border-bottom: 0 none;
     }
     .rpanel-content {
-      background-color: @content-bg-color;
+      background-color: transparent;
+      box-shadow: 0 2px 0 @content-bg-color inset;
     }
   }
 }

@@ -40,8 +40,9 @@
         }
 
         &.active {
-          border-color: fadein(@header-bg-color, 50%);
+          border-color: @border-color;
           background-color: @content-bg-color;
+          box-shadow: 0 2px 0 saturate(fadein(@header-bg-color, 50%), 20%) inset;
 
           .rpanel-icon, .rpanel-title {
             color: mix(@header-bg-color, @header-color, 25%);
@@ -61,7 +62,7 @@
 
     .rpanel-toolbar {
       background-color: @content-bg-color;
-      border-color: @border-color;
+      border-color: fadeout(@border-color, 35%);
     }
     .rpanel-content {
       background-color: @content-bg-color;
