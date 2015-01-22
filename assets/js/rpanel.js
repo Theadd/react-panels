@@ -107,7 +107,26 @@ var RPanelContent = React.createClass({
 });
 
 var RPanelTabs = React.createClass({
+
+  getInitialState: function () {
+    for (var i = 0; i < this.props.children.length; ++i) {
+      if (this.props.children[i].props.active || false) {
+        return {selected: i};
+      }
+    }
+  },
+
+  handleClick: function (child) {
+    this.setState({selected: child.props.key});
+  },
+
   render: function() {
+    for (var i = 0; i < this.props.children.length; ++i) {
+      this.props.children[i].props.onClick = this.handleClick;
+      this.props.children[i].props.key = i;
+      this.props.children[i].props.selected = this.state.selected;
+    }
+
     return this.transferPropsTo(
       <ul className="rpanel-tabs">
         {this.props.children}
@@ -117,10 +136,16 @@ var RPanelTabs = React.createClass({
 });
 
 var RPanelTab = React.createClass({
+
+  handleClick: function (event) {
+    event.preventDefault();
+    this.props.onClick(this);
+  },
+
   render: function() {
     var icon = null,
-      title = null,
-      classes = (this.props.active) ? "rpanel-tab active" : "rpanel-tab";
+      title = (<span className="rpanel-title">{this.props.title}</span>),
+      classes = (this.props.key == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
 
     if (this.props.icon) {
       icon = (
@@ -130,10 +155,9 @@ var RPanelTab = React.createClass({
       );
     }
 
-    title = (<span className="rpanel-title">{this.props.title}</span>);
-
+    //TODO: transferPropsTo DEPRECATED, use: <Component {...this.props} more="values" />; https://gist.github.com/sebmarkbage/a6e220b7097eb3c79ab7
     return this.transferPropsTo(
-      <li className={classes} data-target={this.props.target}>
+      <li className={classes} data-target={this.props.target} onClick={this.handleClick}>
         <a href="#" title={this.props.title}>{icon} {title}</a>
       </li>
     );
