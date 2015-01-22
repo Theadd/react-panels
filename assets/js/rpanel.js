@@ -1,6 +1,104 @@
 
-var RPanel = React.createClass({
+var Panel = React.createClass({
+
+  getInitialState: function () {
+    var tabList = [],
+      defaultTabIndex = 0;
+
+    for (var i = 0; i < this.props.children.length; ++i) {
+      var tab = this.props.children[i];
+      if (tab.props.active || false) {
+        defaultTabIndex = i;
+      }
+      tabList.push({
+        index: i,
+        icon: tab.props.icon || false,
+        title: tab.props.title || ""
+      });
+    }
+
+    return {tabIndex: defaultTabIndex, tabCount: this.props.children.length, tabList: tabList};
+  },
+
+  getIcon: function () {
+    var icon = null;
+
+    if (this.props.icon) {
+      icon = (
+        <span className="rpanel-icon">
+          <i className={this.props.icon}></i>
+        </span>
+      );
+    }
+
+    return icon;
+  },
+
+  getTabs: function () {
+    var self = this;
+
+    return (
+      <ul className="rpanel-tabs">
+        {self.state.tabList.map(function(tab) {
+          return <PanelTab
+            title={tab.title}
+            icon={tab.icon}
+            index={tab.index}
+            key={tab.index}
+            selected={self.state.tabIndex}
+            onClick={self.handleClickOnTab} />;
+        })}
+      </ul>
+    );
+  },
+
+  getBody: function () {
+    var self = this,
+      index = 0;
+
+    return (
+      <div className="rpanel-body">
+        {React.Children.map(this.props.children, function (child) {
+          var display = (index++ == self.state.tabIndex),
+            classes = "rpanel-tab-body" + ((display) ? " active" : "");
+
+          return (
+            <div className={classes} key={index - 1}>
+              <div className="rpanel-toolbar">{child.props.toolbar}</div>
+              <div className="rpanel-content">{child.props.children}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
+
+  handleClickOnTab: function (child) {
+    this.setState({tabIndex: child.props.index});
+  },
+
   render: function() {
+    var classes = this.getClasses(),
+      icon = this.getIcon(),
+      tabs = this.getTabs(),
+      header = (
+        <header>
+          {icon}
+          <span className="rpanel-title">{this.props.title}</span>
+          {tabs}
+        </header>
+      ),
+      body = this.getBody();
+
+    return this.transferPropsTo(
+      <div className={classes}>
+      {header}
+      {body}
+      </div>
+    );
+  },
+
+  getClasses: function () {
     var classes = "rpanel";
 
     if (this.props.theme) {
@@ -36,106 +134,11 @@ var RPanel = React.createClass({
       classes += " raised";
     }
 
-    return this.transferPropsTo(
-      <div className={classes}>
-      {this.props.children}
-      </div>
-    );
+    return classes;
   }
 });
 
-var RPanelHeader = React.createClass({
-  render: function() {
-    var icon = null;
-
-    if (this.props.icon) {
-      icon = (
-        <span className="rpanel-icon">
-          <i className={this.props.icon}></i>
-        </span>
-      );
-    }
-
-    return this.transferPropsTo(
-      <header>
-        {icon}
-        <span className="rpanel-title">{this.props.title}</span>
-        {this.props.children}
-      </header>
-    );
-  }
-});
-
-var RPanelBody = React.createClass({
-  render: function() {
-    return this.transferPropsTo(
-      <div className="rpanel-body">
-        {this.props.children}
-      </div>
-    );
-  }
-});
-
-var RPanelControl = React.createClass({
-  render: function() {
-    return this.transferPropsTo(
-      <div className="rpanel-control">
-        {this.props.children}
-      </div>
-    );
-  }
-});
-
-var RPanelToolbar = React.createClass({
-  render: function() {
-    return this.transferPropsTo(
-      <div className="rpanel-toolbar">
-        {this.props.children}
-      </div>
-    );
-  }
-});
-
-var RPanelContent = React.createClass({
-  render: function() {
-    return this.transferPropsTo(
-      <div className="rpanel-content">
-        {this.props.children}
-      </div>
-    );
-  }
-});
-
-var RPanelTabs = React.createClass({
-
-  getInitialState: function () {
-    for (var i = 0; i < this.props.children.length; ++i) {
-      if (this.props.children[i].props.active || false) {
-        return {selected: i};
-      }
-    }
-  },
-
-  handleClick: function (child) {
-    this.setState({selected: child.props.key});
-  },
-
-  render: function() {
-    for (var i = 0; i < this.props.children.length; ++i) {
-      this.props.children[i].props.onClick = this.handleClick;
-      this.props.children[i].props.key = i;
-      this.props.children[i].props.selected = this.state.selected;
-    }
-
-    return this.transferPropsTo(
-      <ul className="rpanel-tabs">
-        {this.props.children}
-      </ul>
-    );
-  }
-});
-
-var RPanelTab = React.createClass({
+var PanelTab = React.createClass({
 
   handleClick: function (event) {
     event.preventDefault();
@@ -145,7 +148,7 @@ var RPanelTab = React.createClass({
   render: function() {
     var icon = null,
       title = (<span className="rpanel-title">{this.props.title}</span>),
-      classes = (this.props.key == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
+      classes = (this.props.index == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
 
     if (this.props.icon) {
       icon = (
@@ -161,5 +164,11 @@ var RPanelTab = React.createClass({
         <a href="#" title={this.props.title}>{icon} {title}</a>
       </li>
     );
+  }
+});
+
+var PanelContent = React.createClass({
+  render: function() {
+    //dummy
   }
 });

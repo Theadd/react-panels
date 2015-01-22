@@ -160,12 +160,20 @@
   }
 
   > .rpanel-body {
+    > .rpanel-tab-body {
+      display: none;
 
-    .rpanel-toolbar {
-      min-height: @header-height;
-      line-height: @header-height;
-      border-bottom: 3px double black;
+      &.active {
+        display: block;
+      }
+
+      > .rpanel-toolbar {
+        min-height: @header-height;
+        line-height: @header-height;
+        border-bottom: 3px double black;
+      }
     }
+
   }
 
   &, * {

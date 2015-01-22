@@ -1,156 +1,129 @@
+/*<div class="demo0">
+ <div id="panel0"></div>
+ </div>
+ <div class="demo1">
+ <div id="panel1"></div>
+ <br />
+ <br />
+ <div id="panel1-2"></div>
+ </div>
+ <div class="demo2">
+ <div id="panel2"></div>
+ </div>*/
 
-var base = (
-  <RPanel
-    bordered={true}
-    rounded={true}>
-    <RPanelHeader
-      icon="fa fa-comments"
-      title="Panel Title">
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-times"></i>
-        </a>
-      </RPanelControl>
-    </RPanelHeader>
-    <RPanelBody>
-    <RPanelContent>panel body content here</RPanelContent>
-    </RPanelBody>
-  </RPanel>
+var panel0 = (
+  <Panel
+    theme="grayscale"
+    icon="fa fa-cube"
+    title="Tabbed Panel"
+    buttons={['collapse', 'fullscreen', 'close']}>
+    <PanelContent
+      active={true}
+      icon="fa fa-area-chart"
+      title="Area Chart"
+      toolbar={(<span>Toolbar content here</span>)}>
+      <div>Panel content here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-pie-chart"
+      title="Pie Chart"
+      toolbar={(<span>Toolbar content for pie chart here</span>)}>
+      <div>Panel content of pie chart here</div>
+    </PanelContent>
+  </Panel>
 );
 
-React.render(base, document.getElementById('panel-base'));
+React.render(panel0, document.getElementById('panel0'));
 
-var solidbg = (
-  <RPanel
+var panel1 = (
+  <Panel
+    theme="lightblue"
+    icon="fa fa-comments"
+    title="Panel Title"
     bordered={true}
     opaque={true}
-    theme="lightblue"
     raised={true}
     rounded={true}>
-    <RPanelHeader
-      icon="fa fa-comments"
-      title="Panel Title">
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-times"></i>
-        </a>
-      </RPanelControl>
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-pencil-square-o"></i>
-        </a>
-      </RPanelControl>
-
-      <RPanelTabs>
-        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
-        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
-        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
-      </RPanelTabs>
-    </RPanelHeader>
-    <RPanelBody>
-      <RPanelToolbar>
-        <span>Toolbar content here</span>
-      </RPanelToolbar>
-      <RPanelContent>panel body content here</RPanelContent>
-    </RPanelBody>
-  </RPanel>
+    <PanelContent
+      active={true}
+      icon="fa fa-area-chart"
+      title="Area Chart"
+      toolbar={(<span>Toolbar content here</span>)}>
+      <div>Panel content here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-pie-chart"
+      title="Pie Chart"
+      toolbar={(<span>Toolbar content for pie chart here</span>)}>
+      <div>Panel content of pie chart here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-line-chart"
+      title="Line Chart"
+      toolbar={(<span>Toolbar content for line chart here</span>)}>
+      <div>Panel content of line chart here</div>
+    </PanelContent>
+  </Panel>
 );
 
-React.render(solidbg, document.getElementById('panel-solidbg'));
+React.render(panel1, document.getElementById('panel1'));
 
-React.render(base, document.getElementById('panel-base'));
-
-var solidbg2 = (
-  <RPanel
+var panel1_2 = (
+  <Panel
     theme="lightblue"
-    raised={true}
-    rounded={true}>
-    <RPanelHeader
-      icon="fa fa-comments"
-      title="Panel Title">
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-times"></i>
-        </a>
-      </RPanelControl>
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-pencil-square-o"></i>
-        </a>
-      </RPanelControl>
-
-      <RPanelTabs>
-        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
-        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
-        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
-      </RPanelTabs>
-    </RPanelHeader>
-    <RPanelBody>
-      <RPanelToolbar>
-        <span>Toolbar content here</span>
-      </RPanelToolbar>
-      <RPanelContent>panel body content here</RPanelContent>
-    </RPanelBody>
-  </RPanel>
+    icon="fa fa-cutlery"
+    title="Panel Title"
+    raised={true}>
+    <PanelContent
+      active={true}
+      icon="fa fa-area-chart"
+      title="Area Chart"
+      toolbar={(<span>Toolbar content here</span>)}>
+      <div>Panel content here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-pie-chart"
+      title="Pie Chart"
+      toolbar={(<span>Toolbar content for pie chart here</span>)}>
+      <div>Panel content of pie chart here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-line-chart"
+      title="Line Chart"
+      toolbar={(<span>Toolbar content for line chart here</span>)}>
+      <div>Panel content of line chart here</div>
+    </PanelContent>
+  </Panel>
 );
 
-React.render(solidbg2, document.getElementById('panel-solidbg-2'));
+React.render(panel1_2, document.getElementById('panel1-2'));
 
-var flatbg = (
-  <RPanel
+var panel2 = (
+  <Panel
     theme="grayscale"
+    icon="fa fa-share-alt"
+    title="Panel Title"
     rounded="top">
-    <RPanelHeader
-      icon="fa fa-comments"
-      title="Panel Title">
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-times"></i>
-        </a>
-      </RPanelControl>
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-pencil-square-o"></i>
-        </a>
-      </RPanelControl>
-
-      <RPanelTabs>
-        <RPanelTab icon="fa fa-area-chart" title="Area Chart" target="area-chart" active={true} />
-        <RPanelTab icon="fa fa-pie-chart" title="Pie Chart" target="pie-chart" />
-        <RPanelTab icon="fa fa-line-chart" title="Line Chart" target="line-chart" />
-      </RPanelTabs>
-    </RPanelHeader>
-    <RPanelBody>
-      <RPanelToolbar>
-        <span>Toolbar content here</span>
-      </RPanelToolbar>
-      <RPanelContent>panel body content here</RPanelContent>
-    </RPanelBody>
-  </RPanel>
+    <PanelContent
+      active={true}
+      icon="fa fa-area-chart"
+      title="Area Chart"
+      toolbar={(<span>Toolbar content here</span>)}>
+      <div>Panel content here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-pie-chart"
+      title="Pie Chart"
+      toolbar={(<span>Toolbar content for pie chart here</span>)}>
+      <div>Panel content of pie chart here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-line-chart"
+      title="Line Chart"
+      toolbar={(<span>Toolbar content for line chart here</span>)}>
+      <div>Panel content of line chart here</div>
+    </PanelContent>
+  </Panel>
 );
 
-React.render(flatbg, document.getElementById('panel-flagbg'));
-
-var flatbg2 = (
-  <RPanel
-    theme="grayscale"
-    rounded={false}>
-    <RPanelHeader
-      icon="fa fa-comments"
-      title="Panel Title">
-      <RPanelControl>
-        <a href="#" className="rpanel-button">
-          <i className="fa fa-times"></i>
-        </a>
-      </RPanelControl>
-    </RPanelHeader>
-    <RPanelBody>
-      <RPanelToolbar>
-        <span>Toolbar content here</span>
-      </RPanelToolbar>
-      <RPanelContent>panel body content here</RPanelContent>
-    </RPanelBody>
-  </RPanel>
-);
-
-React.render(flatbg2, document.getElementById('panel-flagbg-2'));
+React.render(panel2, document.getElementById('panel2'));
