@@ -4,12 +4,9 @@
 @border-radius: 3px;
 
 .no-select() {
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-
-  /* No support for these yet, use at own risk */
-  -o-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -203,10 +200,15 @@
         line-height: @header-height;
         border-bottom: 3px double black;
         display: none;
+        padding: 10px;
 
         &.active {
           display: block;
         }
+      }
+
+      > .rpanel-content {
+        padding: 10px;
       }
     }
 
