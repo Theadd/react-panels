@@ -123,6 +123,13 @@ var Panel = React.createClass({
     this.setState({state: newState});
   },
 
+  handleClickOnFullscreen: function (event) {
+    var newState = (this.state.state == "fullscreen") ? "default" : "fullscreen";
+
+    event.preventDefault();
+    this.setState({state: newState});
+  },
+
   render: function() {
     var classes = this.getClasses(),
       icon = this.getIcon(),
@@ -191,7 +198,8 @@ var Panel = React.createClass({
 
   getPredefinedButton: function (identifier) {
     var button = null,
-      classes = "rpanel-control";
+      classes = "rpanel-control",
+      hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "";
 
     switch (identifier) {
       case "close":
@@ -204,11 +212,21 @@ var Panel = React.createClass({
         );
         break;
       case "collapse":
-        classes += (this.state.state == "collapsed") ? " active" : "";
+        classes += ((this.state.state == "collapsed") ? " active" : "") + hiddenOnFullscreen;
         button = (
           <div className={classes} onClick={this.handleClickOnCollapse}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-minus"></i>
+            </a>
+          </div>
+        );
+        break;
+      case "fullscreen":
+        classes += (this.state.state == "fullscreen") ? " active" : "";
+        button = (
+          <div className={classes} onClick={this.handleClickOnFullscreen}>
+            <a href="#" className="rpanel-button">
+              <i className="fa fa-expand"></i>
             </a>
           </div>
         );

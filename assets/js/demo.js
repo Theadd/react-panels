@@ -4,7 +4,7 @@ var panel0 = (
     theme="grayscale"
     icon="fa fa-cube"
     title="Tabbed Panel"
-    buttons={['collapse', 'close']}>
+    buttons={['collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
@@ -32,7 +32,7 @@ var panel1 = (
     opaque={true}
     raised={true}
     rounded={true}
-    buttons={['collapse', 'close']}>
+    buttons={['collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
@@ -92,7 +92,8 @@ var panel2 = (
     theme="grayscale"
     icon="fa fa-share-alt"
     title="Panel Title"
-    rounded="top">
+    rounded="top"
+    buttons={['collapse', 'fullscreen']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
