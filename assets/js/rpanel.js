@@ -13,14 +13,18 @@ var Panel = React.createClass({
       defaultTabIndex = 0;
 
     for (var i = 0; i < this.props.children.length; ++i) {
-      var tab = this.props.children[i];
+      var tab = this.props.children[i],
+        hasToolbar = (typeof tab.props.toolbar !== "undefined"),
+        toolbarState = tab.props.toolbarState || ((hasToolbar) ? "visible" : "none");
+
       if (tab.props.active || false) {
         defaultTabIndex = i;
       }
       tabList.push({
         index: i,
         icon: tab.props.icon || false,
-        title: tab.props.title || ""
+        title: tab.props.title || "",
+        toolbar: toolbarState
       });
     }
 
@@ -71,12 +75,14 @@ var Panel = React.createClass({
     return (
       <div className="rpanel-body">
         {React.Children.map(this.props.children, function (child) {
-          var display = (index++ == self.state.tabIndex),
-            classes = "rpanel-tab-body" + ((display) ? " active" : "");
+          var showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
+            display = (index++ == self.state.tabIndex),
+            classes = "rpanel-tab-body" + ((display) ? " active" : ""),
+            toolbarClasses = "rpanel-toolbar" + ((showToolbar) ? " active" : "");
 
           return (
             <div className={classes} key={index - 1}>
-              <div className="rpanel-toolbar">{child.props.toolbar}</div>
+              <div className={toolbarClasses}>{child.props.toolbar}</div>
               <div className="rpanel-content">{child.props.children}</div>
             </div>
           );
@@ -128,6 +134,21 @@ var Panel = React.createClass({
 
     event.preventDefault();
     this.setState({state: newState});
+  },
+
+  handleClickOnToggleToolbar: function (event) {
+    var toolbarState = this.state.tabList[this.state.tabIndex].toolbar,
+      tabList = this.state.tabList;
+
+    event.preventDefault();
+    if (toolbarState == "visible") {
+      tabList[this.state.tabIndex].toolbar = "hidden";
+      this.setState({tabList: tabList});
+    } else if (toolbarState == "hidden") {
+      tabList[this.state.tabIndex].toolbar = "visible";
+      this.setState({tabList: tabList});
+    }
+
   },
 
   render: function() {
@@ -199,7 +220,8 @@ var Panel = React.createClass({
   getPredefinedButton: function (identifier) {
     var button = null,
       classes = "rpanel-control",
-      hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "";
+      hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "",
+      toolbarState = "";
 
     switch (identifier) {
       case "close":
@@ -227,6 +249,23 @@ var Panel = React.createClass({
           <div className={classes} onClick={this.handleClickOnFullscreen}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-expand"></i>
+            </a>
+          </div>
+        );
+        break;
+      case "toggleToolbar":
+        toolbarState = this.state.tabList[this.state.tabIndex].toolbar;
+        switch (toolbarState) {
+          case "visible": classes += " active"; break;
+          //case "hidden": break;
+          case "locked": classes += " active disabled"; break;
+          case "none": classes += " disabled"; break;
+        }
+        classes += hiddenOnFullscreen;
+        button = (
+          <div className={classes} onClick={this.handleClickOnToggleToolbar}>
+            <a href="#" className="rpanel-button">
+              <i className="fa fa-pencil-square-o"></i>
             </a>
           </div>
         );

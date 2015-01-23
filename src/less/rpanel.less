@@ -127,6 +127,12 @@
       cursor: pointer;
       .no-select;
 
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
       &.hidden {
         display: none;
       }
@@ -196,6 +202,11 @@
         min-height: @header-height;
         line-height: @header-height;
         border-bottom: 3px double black;
+        display: none;
+
+        &.active {
+          display: block;
+        }
       }
     }
 

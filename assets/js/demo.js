@@ -32,25 +32,35 @@ var panel1 = (
     opaque={true}
     raised={true}
     rounded={true}
-    buttons={['collapse', 'fullscreen', 'close']}>
+    buttons={['toggleToolbar', 'collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
       title="Area Chart"
+      toolbarState="visible"
       toolbar={(<span>Toolbar content here</span>)}>
       <div>Panel content here</div>
     </PanelContent>
     <PanelContent
       icon="fa fa-pie-chart"
       title="Pie Chart"
+      toolbarState="hidden"
       toolbar={(<span>Toolbar content for pie chart here</span>)}>
       <div>Panel content of pie chart here</div>
     </PanelContent>
     <PanelContent
       icon="fa fa-line-chart"
       title="Line Chart"
+      toolbarState="locked"
       toolbar={(<span>Toolbar content for line chart here</span>)}>
       <div>Panel content of line chart here</div>
+    </PanelContent>
+    <PanelContent
+      icon="fa fa-bar-chart"
+      title="Bar Chart"
+      toolbarState="none"
+      toolbar={(<span>Toolbar content for bar chart here</span>)}>
+      <div>Panel content of bar chart here</div>
     </PanelContent>
   </Panel>
 );
