@@ -17,7 +17,12 @@ var Panel = React.createClass({
       });
     }
 
-    return {tabIndex: defaultTabIndex, tabCount: this.props.children.length, tabList: tabList};
+    return {
+      tabIndex: defaultTabIndex,
+      tabCount: this.props.children.length,
+      tabList: tabList,
+      state: "default"
+    };
   },
 
   getIcon: function () {
@@ -73,18 +78,46 @@ var Panel = React.createClass({
     );
   },
 
+  getButtons: function () {
+    var self = this,
+      buttons = null;
+
+    if (self.props.buttons) {
+      buttons = [];
+
+      for (var i = self.props.buttons.length; --i >= 0;) {
+        var button = self.props.buttons[i];
+
+        if (typeof button === "string") {
+          var predefinedButton = self.getPredefinedButton(button);
+          if (predefinedButton || false) {
+            buttons.push(predefinedButton);
+          }
+        }
+      }
+    }
+
+    return buttons;
+  },
+
   handleClickOnTab: function (child) {
     this.setState({tabIndex: child.props.index});
+  },
+
+  handleClickOnClose: function () {
+    this.setState({state: "closed"});
   },
 
   render: function() {
     var classes = this.getClasses(),
       icon = this.getIcon(),
       tabs = this.getTabs(),
+      buttons = this.getButtons(),
       header = (
         <header>
           {icon}
           <span className="rpanel-title">{this.props.title}</span>
+          {buttons}
           {tabs}
         </header>
       ),
@@ -134,7 +167,31 @@ var Panel = React.createClass({
       classes += " raised";
     }
 
+    if (this.state.state != "default") {
+      classes += " rpanel-state-" + this.state.state;
+    }
+
     return classes;
+  },
+
+  getPredefinedButton: function (identifier) {
+    var button = null;
+
+    switch (identifier) {
+      case "close":
+        button = (
+          <div className="rpanel-control" onClick={this.handleClickOnClose}>
+            <a href="#" className="rpanel-button">
+              <i className="fa fa-times"></i>
+            </a>
+          </div>
+        );
+        break;
+      default:
+        throw new Error("Predefined button '" + identifier + "' not found.");
+    }
+
+    return button;
   }
 });
 

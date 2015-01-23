@@ -1,22 +1,10 @@
-/*<div class="demo0">
- <div id="panel0"></div>
- </div>
- <div class="demo1">
- <div id="panel1"></div>
- <br />
- <br />
- <div id="panel1-2"></div>
- </div>
- <div class="demo2">
- <div id="panel2"></div>
- </div>*/
 
 var panel0 = (
   <Panel
     theme="grayscale"
     icon="fa fa-cube"
     title="Tabbed Panel"
-    buttons={['collapse', 'fullscreen', 'close']}>
+    buttons={['close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
