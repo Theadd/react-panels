@@ -1,4 +1,4 @@
-# react-panels
+react-panels
 ===========
 ### [Website](http://theadd.github.io/react-panels/)
 
