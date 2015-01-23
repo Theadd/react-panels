@@ -28,6 +28,14 @@
         color: @header-color;
         text-shadow: 1px 1px 1px (#fff - @header-color);
       }
+
+      &.active {
+        background-color: @content-bg-color;
+      }
+
+      &:hover {
+        background-color: fadeout(@content-bg-color, 50%);
+      }
     }
 
     .rpanel-tabs {

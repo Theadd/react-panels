@@ -31,7 +31,8 @@ var panel1 = (
     bordered={true}
     opaque={true}
     raised={true}
-    rounded={true}>
+    rounded={true}
+    buttons={['collapse', 'close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"

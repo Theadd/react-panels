@@ -1,9 +1,28 @@
 {
   "name": "rpanel",
-  "version": "0.1.0",
-  "description": "rpanel react-component",
-  "main": "rpanel.js",
-  "author": "Theadd",
+  "version": "0.2.0",
+  "description": "React.js panel widget with support for tabs and buttons",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Theadd/rpanel.git"
+  },
+  "keywords": [
+    "react",
+    "panel",
+    "widget",
+    "window",
+    "tabbed",
+    "javascript",
+    "react-component"
+  ],
+  "author": {
+    "name": "Theadd",
+    "url": "https://github.com/Theadd/"
+  },
+  "bugs": {
+    "url": "https://github.com/Theadd/rpanel/issues"
+  },
+  "homepage": "https://github.com/Theadd/rpanel",
   "license": "MIT",
   "devDependencies": {
     "grunt": "^0.4.5",

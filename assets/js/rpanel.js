@@ -1,3 +1,10 @@
+/*
+ * rpanel
+ * https://github.com/Theadd/rpanel
+ *
+ * Copyright (c) 2015 R.Beltran https://github.com/Theadd
+ * Licensed under the MIT license.
+ */
 
 var Panel = React.createClass({
 
@@ -104,13 +111,15 @@ var Panel = React.createClass({
     this.setState({tabIndex: child.props.index});
   },
 
-  handleClickOnClose: function () {
+  handleClickOnClose: function (event) {
+    event.preventDefault();
     this.setState({state: "closed"});
   },
 
-  handleClickOnCollapse: function () {
+  handleClickOnCollapse: function (event) {
     var newState = (this.state.state == "collapsed") ? "default" : "collapsed";
 
+    event.preventDefault();
     this.setState({state: newState});
   },
 
@@ -181,12 +190,13 @@ var Panel = React.createClass({
   },
 
   getPredefinedButton: function (identifier) {
-    var button = null;
+    var button = null,
+      classes = "rpanel-control";
 
     switch (identifier) {
       case "close":
         button = (
-          <div className="rpanel-control" onClick={this.handleClickOnClose}>
+          <div className={classes} onClick={this.handleClickOnClose}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-times"></i>
             </a>
@@ -194,8 +204,9 @@ var Panel = React.createClass({
         );
         break;
       case "collapse":
+        classes += (this.state.state == "collapsed") ? " active" : "";
         button = (
-          <div className="rpanel-control" onClick={this.handleClickOnCollapse}>
+          <div className={classes} onClick={this.handleClickOnCollapse}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-minus"></i>
             </a>
