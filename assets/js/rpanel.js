@@ -108,6 +108,12 @@ var Panel = React.createClass({
     this.setState({state: "closed"});
   },
 
+  handleClickOnCollapse: function () {
+    var newState = (this.state.state == "collapsed") ? "default" : "collapsed";
+
+    this.setState({state: newState});
+  },
+
   render: function() {
     var classes = this.getClasses(),
       icon = this.getIcon(),
@@ -183,6 +189,15 @@ var Panel = React.createClass({
           <div className="rpanel-control" onClick={this.handleClickOnClose}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-times"></i>
+            </a>
+          </div>
+        );
+        break;
+      case "collapse":
+        button = (
+          <div className="rpanel-control" onClick={this.handleClickOnCollapse}>
+            <a href="#" className="rpanel-button">
+              <i className="fa fa-minus"></i>
             </a>
           </div>
         );

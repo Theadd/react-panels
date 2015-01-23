@@ -4,7 +4,7 @@ var panel0 = (
     theme="grayscale"
     icon="fa fa-cube"
     title="Tabbed Panel"
-    buttons={['close']}>
+    buttons={['collapse', 'close']}>
     <PanelContent
       active={true}
       icon="fa fa-area-chart"
