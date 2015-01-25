@@ -1,0 +1,81 @@
+
+.rpanel.default {
+
+  @header-color: #000;
+  @header-bg-color: rgba(158, 178, 187, 1.0);
+  @content-bg-color: rgba(255, 255, 255, 1);
+
+  @border-color: fadeout(mix(@header-bg-color, @header-color, 80%), 25%);
+
+  background-color: @content-bg-color;
+
+  > header {
+    border-color: @border-color;
+    background-color: fadeout(@header-bg-color, 50%);
+    color: @header-color;
+
+    .rpanel-icon {
+      color: (#fff - @header-color);
+      text-shadow: 2px 2px 2px @header-color;
+    }
+
+    .rpanel-title {
+      text-shadow: 1px 1px 1px mix((#fff - @header-color), (#fff - (#fff - @header-color)), 65%);
+    }
+
+    .rpanel-control {
+      border-color: @border-color;
+
+      & * {
+        color: @header-color;
+        text-shadow: 1px 1px 1px (#fff - @header-color);
+      }
+
+      &.active {
+        background-color: @content-bg-color;
+      }
+
+      &:hover {
+        background-color: fadeout(@content-bg-color, 50%);
+      }
+    }
+
+    .rpanel-tabs {
+
+      .rpanel-tab {
+
+        .rpanel-icon, .rpanel-title {
+          color: mix(@header-bg-color, @header-color, 50%);
+          text-shadow: none;
+        }
+
+        &.active {
+          border-color: @border-color;
+          background-color: @content-bg-color;
+          box-shadow: 0 2px 0 saturate(fadein(@header-bg-color, 50%), 20%) inset;
+
+          .rpanel-icon, .rpanel-title {
+            color: mix(@header-bg-color, @header-color, 25%);
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: fadeout(@content-bg-color, 50%);
+        }
+      }
+    }
+  }
+
+  > .rpanel-body {
+    background-color: fadeout(@header-bg-color, 50%);
+    border-color: @border-color;
+
+    .rpanel-toolbar {
+      background-color: @content-bg-color;
+      border-color: fadeout(@border-color, 35%);
+    }
+    .rpanel-content {
+      background-color: @content-bg-color;
+    }
+  }
+}

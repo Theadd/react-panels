@@ -27,6 +27,12 @@
       }
       & > div:last-child {
         border-radius: 0 0 @border-radius @border-radius;
+
+        > .rpanel-tab-body.active {
+          & > div:last-child {
+            border-radius: 0 0 @border-radius @border-radius;
+          }
+        }
       }
     }
 
@@ -41,6 +47,12 @@
       border-radius: 0 0 @border-radius @border-radius;
       & > div:last-child {
         border-radius: 0 0 @border-radius @border-radius;
+
+        > .rpanel-tab-body.active {
+          & > div:last-child {
+            border-radius: 0 0 @border-radius @border-radius;
+          }
+        }
       }
     }
   }
@@ -274,5 +286,6 @@
   }
 }
 
+@import 'themes/default';
 @import 'themes/grayscale';
 @import 'themes/lightblue';

@@ -4,6 +4,7 @@ var panel0 = (
     theme="grayscale"
     icon="fa fa-cube"
     title="Tabbed Panel"
+    rounded={true}
     forceTabs={true}
     buttons={['collapse', 'fullscreen', 'close']}>
     <PanelContent
@@ -20,7 +21,6 @@ React.render(panel0, document.getElementById('panel0'));
 
 var panel1 = (
   <Panel
-    theme="lightblue"
     icon="fa fa-comments"
     title="Panel Title"
     bordered={true}

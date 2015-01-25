@@ -230,11 +230,7 @@ var Panel = React.createClass({
   },
 
   getClasses: function () {
-    var classes = "rpanel";
-
-    if (this.props.theme) {
-      classes += " " + this.props.theme;
-    }
+    var classes = "rpanel " + (this.props.theme || "default");
 
     if (this.props.rounded) {
       classes += " rounded";
