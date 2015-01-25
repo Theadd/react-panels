@@ -259,6 +259,15 @@
       .calc(height; "100% - @{aux}");
     }
   }
+
+  &.floating {
+    position: absolute;
+    width: 800px;
+    top: 0;
+    left: 0;
+    z-index: 910;
+    pointer-events: all;
+  }
 }
 
 @import 'themes/grayscale';

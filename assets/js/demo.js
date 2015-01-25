@@ -32,6 +32,8 @@ var panel1 = (
     opaque={true}
     raised={true}
     rounded={true}
+    floating={true}
+    draggable={true}
     buttons={['toggleToolbar', 'collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}

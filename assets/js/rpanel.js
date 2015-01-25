@@ -1,5 +1,5 @@
 /*
- * rpanel
+ * react-panels
  * https://github.com/Theadd/rpanel
  *
  * Copyright (c) 2015 R.Beltran https://github.com/Theadd
@@ -151,12 +151,83 @@ var Panel = React.createClass({
 
   },
 
+  dragStart: function (e) {
+    //this.dragged = e.currentTarget.parentNode;
+    //console.log("dragStart");
+    //console.log(JSON.stringify(e, null, '  '));
+    //console.dir(e.currentTarget);
+    this.panelBounds = {
+      startLeft: this.props.left || 80,
+      startTop: this.props.top || 100,
+      startPageX: e.pageX,
+      startPageY: e.pageY
+    };
+
+    var self = this;
+
+    self.dragOverListener = function (e) {
+      if (self.panelBounds || false) {
+        var left = self.panelBounds.startLeft + (e.pageX - self.panelBounds.startPageX),
+          top = self.panelBounds.startTop + (e.pageY - self.panelBounds.startPageY);
+        self.setProps({ left: left, top: top });
+      } else console.log("WTFFFF");
+
+    };
+    window.addEventListener('dragover', self.dragOverListener);
+    //console.dir(this.panelBounds);
+    //e.dataTransfer.effectAllowed = 'move';
+    //e.dataTransfer.setData("text/html", e.currentTarget.parentNode);
+  },
+
+  dragEnd: function(e) {
+    /*this.dragged.style.display = "block";
+    console.log("dragEnd");
+    console.dir(e);
+    console.log("PAGEXY: " + e.pageX + ", " + e.pageY);
+    console.dir(this.panelBounds);*/
+    delete this.panelBounds;
+    window.removeEventListener('dragover', this.dragOverListener);
+
+  },
+
+  dragOver: function(e) {
+    //console.log("dragOver");
+    //console.dir(e);
+    //console.log("dragOver PAGEXY: " + e.pageX + ", " + e.pageY);
+    /*if (this.panelBounds || false) {
+      var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
+        top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
+      this.setProps({ left: left, top: top });
+    }*/
+    console.log("NOOOOOOOOOOOOOOOOO");
+
+    /*e.preventDefault();
+    this.dragged.style.display = "none";
+    if(e.target.className == "placeholder") return;
+    this.over = e.target;
+    e.target.parentNode.insertBefore(placeholder, e.target);*/
+  },
+
+  /*window.addEventListener("dragover", function(e) {
+    s(e), p && (e.dataTransfer.dropEffect = p, p = null), a && (D() && i() ? e.preventDefault() : y() && (clearTimeout(h), h = setTimeout(o, 140)))
+  })*/
+
   render: function() {
     var classes = this.getClasses(),
       icon = this.getIcon(),
       tabs = this.getTabs(),
       buttons = this.getButtons(),
-      header = (
+      header = (this.props.draggable || false) ? (
+        <header
+          draggable="true"
+          onDragEnd={this.dragEnd}
+          onDragStart={this.dragStart}>
+          {icon}
+          <span className="rpanel-title">{this.props.title}</span>
+          {buttons}
+          {tabs}
+        </header>
+      ) : (
         <header>
           {icon}
           <span className="rpanel-title">{this.props.title}</span>
@@ -166,10 +237,24 @@ var Panel = React.createClass({
       ),
       body = this.getBody();
 
-    return this.transferPropsTo(
+    var left = this.props.left || 80,
+      top = this.props.top || 100,
+      transform = `translate3d(${left}px, ${top}px, 0)`;
+
+    //<div className="rpanel-wrapper" onDragOver={this.dragOver}>
+    //      </div>
+    return ((this.props.floating || false) && (this.props.draggable)) ? this.transferPropsTo(
+      <div className={classes} style={{
+        WebkitTransform: transform,
+        transform: transform
+      }}>
+        {header}
+        {body}
+      </div>
+    ) : this.transferPropsTo(
       <div className={classes}>
-      {header}
-      {body}
+        {header}
+        {body}
       </div>
     );
   },
@@ -208,6 +293,10 @@ var Panel = React.createClass({
 
     if (this.props.raised) {
       classes += " raised";
+    }
+
+    if (this.props.floating) {
+      classes += " floating";
     }
 
     if (this.state.state != "default") {
