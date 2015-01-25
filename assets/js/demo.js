@@ -4,6 +4,7 @@ var panel0 = (
     theme="grayscale"
     icon="fa fa-cube"
     title="Tabbed Panel"
+    forceTabs={true}
     buttons={['collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}
@@ -11,12 +12,6 @@ var panel0 = (
       title="Area Chart"
       toolbar={(<span>Toolbar content here</span>)}>
       <div>Panel content here</div>
-    </PanelContent>
-    <PanelContent
-      icon="fa fa-pie-chart"
-      title="Pie Chart"
-      toolbar={(<span>Toolbar content for pie chart here</span>)}>
-      <div>Panel content of pie chart here</div>
     </PanelContent>
   </Panel>
 );

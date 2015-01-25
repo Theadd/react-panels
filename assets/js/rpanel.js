@@ -10,11 +10,11 @@ var Panel = React.createClass({
 
   getInitialState: function () {
     var tabList = [],
-      defaultTabIndex = 0;
+      defaultTabIndex = 0,
+      i = 0;
 
-    for (var i = 0; i < this.props.children.length; ++i) {
-      var tab = this.props.children[i],
-        hasToolbar = (typeof tab.props.toolbar !== "undefined"),
+    React.Children.forEach(this.props.children, function(tab) {
+      var hasToolbar = (typeof tab.props.toolbar !== "undefined"),
         toolbarState = tab.props.toolbarState || ((hasToolbar) ? "visible" : "none");
 
       if (tab.props.active || false) {
@@ -26,11 +26,13 @@ var Panel = React.createClass({
         title: tab.props.title || "",
         toolbar: toolbarState
       });
-    }
+
+      ++i;
+    });
 
     return {
       tabIndex: defaultTabIndex,
-      tabCount: this.props.children.length,
+      tabCount: React.Children.count(this.props.children),
       tabList: tabList,
       state: "default"
     };
@@ -51,10 +53,11 @@ var Panel = React.createClass({
   },
 
   getTabs: function () {
-    var self = this;
+    var self = this,
+      classes = "rpanel-tabs" + (((self.state.tabCount > 1) || (self.props.forceTabs || false)) ? "" : " hidden");
 
     return (
-      <ul className="rpanel-tabs">
+      <ul className={classes}>
         {self.state.tabList.map(function(tab) {
           return <PanelTab
             title={tab.title}
