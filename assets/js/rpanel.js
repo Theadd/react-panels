@@ -152,10 +152,6 @@ var Panel = React.createClass({
   },
 
   dragStart: function (e) {
-    //this.dragged = e.currentTarget.parentNode;
-    //console.log("dragStart");
-    //console.log(JSON.stringify(e, null, '  '));
-    //console.dir(e.currentTarget);
     this.panelBounds = {
       startLeft: this.props.left || 80,
       startTop: this.props.top || 100,
@@ -163,54 +159,23 @@ var Panel = React.createClass({
       startPageY: e.pageY
     };
 
-    var self = this;
-
-    self.dragOverListener = function (e) {
-      if (self.panelBounds || false) {
-        var left = self.panelBounds.startLeft + (e.pageX - self.panelBounds.startPageX),
-          top = self.panelBounds.startTop + (e.pageY - self.panelBounds.startPageY);
-        self.setProps({ left: left, top: top });
-      } else console.log("WTFFFF");
-
-    };
-    window.addEventListener('dragover', self.dragOverListener);
-    //console.dir(this.panelBounds);
-    //e.dataTransfer.effectAllowed = 'move';
-    //e.dataTransfer.setData("text/html", e.currentTarget.parentNode);
+    window.addEventListener('dragover', this.dragOver);
   },
 
   dragEnd: function(e) {
-    /*this.dragged.style.display = "block";
-    console.log("dragEnd");
-    console.dir(e);
-    console.log("PAGEXY: " + e.pageX + ", " + e.pageY);
-    console.dir(this.panelBounds);*/
     delete this.panelBounds;
-    window.removeEventListener('dragover', this.dragOverListener);
-
+    window.removeEventListener('dragover', this.dragOver);
   },
 
   dragOver: function(e) {
-    //console.log("dragOver");
-    //console.dir(e);
-    //console.log("dragOver PAGEXY: " + e.pageX + ", " + e.pageY);
-    /*if (this.panelBounds || false) {
-      var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
-        top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
-      this.setProps({ left: left, top: top });
-    }*/
-    console.log("NOOOOOOOOOOOOOOOOO");
+    var self = this;
 
-    /*e.preventDefault();
-    this.dragged.style.display = "none";
-    if(e.target.className == "placeholder") return;
-    this.over = e.target;
-    e.target.parentNode.insertBefore(placeholder, e.target);*/
+    if (self.panelBounds || false) {
+      var left = self.panelBounds.startLeft + (e.pageX - self.panelBounds.startPageX),
+        top = self.panelBounds.startTop + (e.pageY - self.panelBounds.startPageY);
+      self.setProps({ left: left, top: top });
+    }
   },
-
-  /*window.addEventListener("dragover", function(e) {
-    s(e), p && (e.dataTransfer.dropEffect = p, p = null), a && (D() && i() ? e.preventDefault() : y() && (clearTimeout(h), h = setTimeout(o, 140)))
-  })*/
 
   render: function() {
     var classes = this.getClasses(),
@@ -239,19 +204,19 @@ var Panel = React.createClass({
 
     var left = this.props.left || 80,
       top = this.props.top || 100,
+      width = `${this.props.width || 800}px`,
       transform = `translate3d(${left}px, ${top}px, 0)`;
 
-    //<div className="rpanel-wrapper" onDragOver={this.dragOver}>
-    //      </div>
-    return ((this.props.floating || false) && (this.props.draggable)) ? this.transferPropsTo(
+    return ((this.props.floating || false) && (this.props.draggable)) ? (
       <div className={classes} style={{
-        WebkitTransform: transform,
-        transform: transform
+        WebkitTransform: (this.state.state == "fullscreen") ? `inherit` : transform,
+        transform: (this.state.state == "fullscreen") ? `inherit` : transform,
+        width: (this.state.state == "fullscreen") ? `100%` : width
       }}>
         {header}
         {body}
       </div>
-    ) : this.transferPropsTo(
+    ) : (
       <div className={classes}>
         {header}
         {body}
@@ -387,9 +352,8 @@ var PanelTab = React.createClass({
       );
     }
 
-    //TODO: transferPropsTo DEPRECATED, use: <Component {...this.props} more="values" />; https://gist.github.com/sebmarkbage/a6e220b7097eb3c79ab7
-    return this.transferPropsTo(
-      <li className={classes} data-target={this.props.target} onClick={this.handleClick}>
+    return (
+      <li className={classes} onClick={this.handleClick}>
         <a href="#" title={this.props.title}>{icon} {title}</a>
       </li>
     );
