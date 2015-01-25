@@ -93,7 +93,8 @@ var Panel = React.createClass({
 
   getButtons: function () {
     var self = this,
-      buttons = null;
+      buttons = null,
+      keyIndex = 0;
 
     if (self.props.buttons) {
       buttons = [];
@@ -102,9 +103,10 @@ var Panel = React.createClass({
         var button = self.props.buttons[i];
 
         if (typeof button === "string") {
-          var predefinedButton = self.getPredefinedButton(button);
+          var predefinedButton = self.getPredefinedButton(button, keyIndex);
           if (predefinedButton || false) {
             buttons.push(predefinedButton);
+            ++keyIndex;
           }
         }
       }
@@ -271,7 +273,7 @@ var Panel = React.createClass({
     return classes;
   },
 
-  getPredefinedButton: function (identifier) {
+  getPredefinedButton: function (identifier, key) {
     var button = null,
       classes = "rpanel-control",
       hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "",
@@ -280,7 +282,7 @@ var Panel = React.createClass({
     switch (identifier) {
       case "close":
         button = (
-          <div className={classes} onClick={this.handleClickOnClose}>
+          <div className={classes} key={key} onClick={this.handleClickOnClose}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-times"></i>
             </a>
@@ -290,7 +292,7 @@ var Panel = React.createClass({
       case "collapse":
         classes += ((this.state.state == "collapsed") ? " active" : "") + hiddenOnFullscreen;
         button = (
-          <div className={classes} onClick={this.handleClickOnCollapse}>
+          <div className={classes} key={key} onClick={this.handleClickOnCollapse}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-minus"></i>
             </a>
@@ -300,7 +302,7 @@ var Panel = React.createClass({
       case "fullscreen":
         classes += (this.state.state == "fullscreen") ? " active" : "";
         button = (
-          <div className={classes} onClick={this.handleClickOnFullscreen}>
+          <div className={classes} key={key} onClick={this.handleClickOnFullscreen}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-expand"></i>
             </a>
@@ -317,7 +319,7 @@ var Panel = React.createClass({
         }
         classes += hiddenOnFullscreen;
         button = (
-          <div className={classes} onClick={this.handleClickOnToggleToolbar}>
+          <div className={classes} key={key} onClick={this.handleClickOnToggleToolbar}>
             <a href="#" className="rpanel-button">
               <i className="fa fa-pencil-square-o"></i>
             </a>
