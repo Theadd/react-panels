@@ -29,6 +29,8 @@ var panel1 = (
     rounded={true}
     floating={true}
     draggable={true}
+    top="200"
+    left="250"
     buttons={['toggleToolbar', 'collapse', 'fullscreen', 'close']}>
     <PanelContent
       active={true}
@@ -46,6 +48,7 @@ var panel1 = (
       icon="fa fa-pie-chart"
       title="Pie Chart"
       toolbarState="hidden"
+      noPadding={true}
       toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
       <div>
         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.

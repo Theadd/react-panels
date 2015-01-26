@@ -24,7 +24,8 @@ var Panel = React.createClass({
         index: i,
         icon: tab.props.icon || false,
         title: tab.props.title || "",
-        toolbar: toolbarState
+        toolbar: toolbarState,
+        padding: Boolean(!(tab.props.noPadding || false))
       });
 
       ++i;
@@ -79,14 +80,17 @@ var Panel = React.createClass({
       <div className="rpanel-body">
         {React.Children.map(this.props.children, function (child) {
           var showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
-            display = (index++ == self.state.tabIndex),
+            display = (index == self.state.tabIndex),
             classes = "rpanel-tab-body" + ((display) ? " active" : ""),
-            toolbarClasses = "rpanel-toolbar" + ((showToolbar) ? " active" : "");
+            toolbarClasses = "rpanel-toolbar" + ((showToolbar) ? " active" : ""),
+            contentClasses = "rpanel-content" + ((!self.state.tabList[index].padding) ? " no-padding" : "");
+
+          ++index;
 
           return (
             <div className={classes} key={index - 1}>
               <div className={toolbarClasses}>{child.props.toolbar}</div>
-              <div className="rpanel-content">{child.props.children}</div>
+              <div className={contentClasses}>{child.props.children}</div>
             </div>
           );
         })}
@@ -158,8 +162,8 @@ var Panel = React.createClass({
 
   dragStart: function (e) {
     this.panelBounds = {
-      startLeft: this.props.left || 80,
-      startTop: this.props.top || 100,
+      startLeft: Number(this.props.left) || 80,
+      startTop: Number(this.props.top) || 100,
       startPageX: e.pageX,
       startPageY: e.pageY
     };
@@ -207,9 +211,9 @@ var Panel = React.createClass({
       ),
       body = this.getBody();
 
-    var left = this.props.left || 80,
-      top = this.props.top || 100,
-      width = `${this.props.width || 800}px`,
+    var left = Number(this.props.left) || 80,
+      top = Number(this.props.top) || 100,
+      width = `${Number(this.props.width || 800)}px`,
       transform = `translate3d(${left}px, ${top}px, 0)`;
 
     return ((this.props.floating || false) && (this.props.draggable)) ? (
