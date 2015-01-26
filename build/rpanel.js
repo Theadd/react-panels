@@ -1,12 +1,12 @@
 /*
  * react-panels
- * https://github.com/Theadd/rpanel
+ * https://github.com/Theadd/react-panels
  *
  * Copyright (c) 2015 R.Beltran https://github.com/Theadd
  * Licensed under the MIT license.
  */
 
-var Panel = React.createClass({
+var Panel = React.createClass({displayName: "Panel",
 
   getInitialState: function () {
     var tabList = [],
@@ -44,9 +44,9 @@ var Panel = React.createClass({
 
     if (this.props.icon) {
       icon = (
-        <span className="rpanel-icon">
-          <i className={this.props.icon}></i>
-        </span>
+        React.createElement("span", {className: "rpanel-icon"}, 
+          React.createElement("i", {className: this.props.icon})
+        )
       );
     }
 
@@ -58,17 +58,17 @@ var Panel = React.createClass({
       classes = "rpanel-tabs" + (((self.state.tabCount > 1) || (self.props.forceTabs || false)) ? "" : " hidden");
 
     return (
-      <ul className={classes}>
-        {self.state.tabList.map(function(tab) {
-          return <PanelTab
-            title={tab.title}
-            icon={tab.icon}
-            index={tab.index}
-            key={tab.index}
-            selected={self.state.tabIndex}
-            onClick={self.handleClickOnTab} />;
-        })}
-      </ul>
+      React.createElement("ul", {className: classes}, 
+        self.state.tabList.map(function(tab) {
+          return React.createElement(PanelTab, {
+            title: tab.title, 
+            icon: tab.icon, 
+            index: tab.index, 
+            key: tab.index, 
+            selected: self.state.tabIndex, 
+            onClick: self.handleClickOnTab});
+        })
+      )
     );
   },
 
@@ -77,8 +77,8 @@ var Panel = React.createClass({
       index = 0;
 
     return (
-      <div className="rpanel-body">
-        {React.Children.map(this.props.children, function (child) {
+      React.createElement("div", {className: "rpanel-body"}, 
+        React.Children.map(this.props.children, function (child) {
           var showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
             display = (index == self.state.tabIndex),
             classes = "rpanel-tab-body" + ((display) ? " active" : ""),
@@ -88,13 +88,13 @@ var Panel = React.createClass({
           ++index;
 
           return (
-            <div className={classes} key={index - 1}>
-              <div className={toolbarClasses}>{child.props.toolbar}</div>
-              <div className={contentClasses}>{child.props.children}</div>
-            </div>
+            React.createElement("div", {className: classes, key: index - 1}, 
+              React.createElement("div", {className: toolbarClasses}, child.props.toolbar), 
+              React.createElement("div", {className: contentClasses}, child.props.children)
+            )
           );
-        })}
-      </div>
+        })
+      )
     );
   },
 
@@ -192,22 +192,22 @@ var Panel = React.createClass({
       tabs = this.getTabs(),
       buttons = this.getButtons(),
       header = (this.props.draggable || false) ? (
-        <header
-          draggable="true"
-          onDragEnd={this.dragEnd}
-          onDragStart={this.dragStart}>
-          {icon}
-          <span className="rpanel-title">{this.props.title}</span>
-          {buttons}
-          {tabs}
-        </header>
+        React.createElement("header", {
+          draggable: "true", 
+          onDragEnd: this.dragEnd, 
+          onDragStart: this.dragStart}, 
+          icon, 
+          React.createElement("span", {className: "rpanel-title"}, this.props.title), 
+          buttons, 
+          tabs
+        )
       ) : (
-        <header>
-          {icon}
-          <span className="rpanel-title">{this.props.title}</span>
-          {buttons}
-          {tabs}
-        </header>
+        React.createElement("header", null, 
+          icon, 
+          React.createElement("span", {className: "rpanel-title"}, this.props.title), 
+          buttons, 
+          tabs
+        )
       ),
       body = this.getBody();
 
@@ -217,19 +217,19 @@ var Panel = React.createClass({
       transform = `translate3d(${left}px, ${top}px, 0)`;
 
     return ((this.props.floating || false) && (this.props.draggable)) ? (
-      <div className={classes} style={{
+      React.createElement("div", {className: classes, style: {
         WebkitTransform: (this.state.state == "fullscreen") ? `inherit` : transform,
         transform: (this.state.state == "fullscreen") ? `inherit` : transform,
         width: (this.state.state == "fullscreen") ? `100%` : width
-      }}>
-        {header}
-        {body}
-      </div>
+      }}, 
+        header, 
+        body
+      )
     ) : (
-      <div className={classes}>
-        {header}
-        {body}
-      </div>
+      React.createElement("div", {className: classes}, 
+        header, 
+        body
+      )
     );
   },
 
@@ -285,31 +285,31 @@ var Panel = React.createClass({
     switch (identifier) {
       case "close":
         button = (
-          <div className={classes} key={key} onClick={this.handleClickOnClose}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-times"></i>
-            </a>
-          </div>
+          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnClose}, 
+            React.createElement("a", {href: "#", className: "rpanel-button"}, 
+              React.createElement("i", {className: "fa fa-times"})
+            )
+          )
         );
         break;
       case "collapse":
         classes += ((this.state.state == "collapsed") ? " active" : "") + hiddenOnFullscreen;
         button = (
-          <div className={classes} key={key} onClick={this.handleClickOnCollapse}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-minus"></i>
-            </a>
-          </div>
+          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnCollapse}, 
+            React.createElement("a", {href: "#", className: "rpanel-button"}, 
+              React.createElement("i", {className: "fa fa-minus"})
+            )
+          )
         );
         break;
       case "fullscreen":
         classes += (this.state.state == "fullscreen") ? " active" : "";
         button = (
-          <div className={classes} key={key} onClick={this.handleClickOnFullscreen}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-expand"></i>
-            </a>
-          </div>
+          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnFullscreen}, 
+            React.createElement("a", {href: "#", className: "rpanel-button"}, 
+              React.createElement("i", {className: "fa fa-expand"})
+            )
+          )
         );
         break;
       case "toggleToolbar":
@@ -322,11 +322,11 @@ var Panel = React.createClass({
         }
         classes += hiddenOnFullscreen;
         button = (
-          <div className={classes} key={key} onClick={this.handleClickOnToggleToolbar}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-pencil-square-o"></i>
-            </a>
-          </div>
+          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnToggleToolbar}, 
+            React.createElement("a", {href: "#", className: "rpanel-button"}, 
+              React.createElement("i", {className: "fa fa-pencil-square-o"})
+            )
+          )
         );
         break;
       default:
@@ -337,7 +337,7 @@ var Panel = React.createClass({
   }
 });
 
-var PanelTab = React.createClass({
+var PanelTab = React.createClass({displayName: "PanelTab",
 
   handleClick: function (event) {
     event.preventDefault();
@@ -346,26 +346,26 @@ var PanelTab = React.createClass({
 
   render: function() {
     var icon = null,
-      title = (<span className="rpanel-title">{this.props.title}</span>),
+      title = (React.createElement("span", {className: "rpanel-title"}, this.props.title)),
       classes = (this.props.index == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
 
     if (this.props.icon) {
       icon = (
-        <span className="rpanel-icon">
-          <i className={this.props.icon}></i>
-        </span>
+        React.createElement("span", {className: "rpanel-icon"}, 
+          React.createElement("i", {className: this.props.icon})
+        )
       );
     }
 
     return (
-      <li className={classes} onClick={this.handleClick}>
-        <a href="#" title={this.props.title}>{icon} {title}</a>
-      </li>
+      React.createElement("li", {className: classes, onClick: this.handleClick}, 
+        React.createElement("a", {href: "#", title: this.props.title}, icon, " ", title)
+      )
     );
   }
 });
 
-var PanelContent = React.createClass({
+var PanelContent = React.createClass({displayName: "PanelContent",
   render: function() {
     //dummy
   }

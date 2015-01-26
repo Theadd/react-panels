@@ -20,6 +20,14 @@ module.exports = function(grunt) {
           spawn: true,
           interrupt: true
         }
+      },
+      sources: {
+        files: ['src/jsx/**'],
+        tasks: ['react'],
+        options: {
+          spawn: true,
+          interrupt: true
+        }
       }
     },
     less: {
@@ -28,8 +36,7 @@ module.exports = function(grunt) {
           paths: ["src/less"]
         },
         files: {
-          "assets/css/rpanel.css": "src/less/rpanel.less",
-          "assets/css/demo.css": "src/less/demo.less"
+          "build/rpanel.css": "src/less/rpanel.less"
         }
       },
       production: {
@@ -38,18 +45,25 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          "assets/css/rpanel.css": "src/less/rpanel.less",
-          "assets/css/demo.css": "src/less/demo.less"
+          "build/rpanel.min.css": "src/less/rpanel.less"
+        }
+      }
+    },
+    react: {
+      combined_file_output: {
+        files: {
+          'build/rpanel.js': [
+            'src/jsx/rpanel.jsx'
+          ]
         }
       }
     }
   });
 
-  grunt.loadTasks('tasks');
-
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-react');
 
-  grunt.registerTask('default', ['watch', 'less']);
+  grunt.registerTask('default', ['watch', 'less', 'react']);
 
 };
