@@ -7,9 +7,12 @@
   <meta name="description" content="React-panels : React.js panel widget with support for tabs, toolbars, buttons and customizable themes">
 
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/prettify-desert.css">
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" media="screen" href="build/css/rpanel.css">
 
+  <script src="javascripts/prettify.js"></script>
+  <script src="javascripts/lang-css.js"></script>
   <script src="javascripts/react.js"></script>
   <script src="javascripts/JSXTransformer.js"></script>
   <script type="text/jsx" src="build/js/rpanel.js"></script>
@@ -106,6 +109,48 @@
         );
 
         React.render(panel0, document.getElementById('panel0'));
+      </script>
+
+      <div id="panel1"></div>
+
+      <script type="text/jsx">
+        var panel1 = (
+          <Panel
+            icon="fa fa-paw"
+            title="Example: Floating Window"
+            floating={true}
+            draggable={true}
+            rounded={true}
+            bordered={true}
+            left="540"
+            top="460"
+            width="350"
+            buttons={['collapse', 'close']}>
+            <PanelContent noPadding={true}>
+              <div>
+                <pre className="prettyprint lang-js linenums nonums">
+                  &lt;Panel<br />
+                  &nbsp; icon=&quot;fa fa-paw&quot;<br />
+                  &nbsp; title=&quot;Example: Floating Window&quot;<br />
+                  &nbsp; floating=&#123;true&#125;<br />
+                  &nbsp; draggable=&#123;true&#125;<br />
+                  &nbsp; rounded=&#123;true&#125;<br />
+                  &nbsp; bordered=&#123;true&#125;<br />
+                  &nbsp; left=&quot;540&quot; top=&quot;460&quot; width=&quot;350&quot;<br />
+                  &nbsp; buttons=&#123;&#91;&#39;collapse&#39;, &#39;close&#39;&#93;&#125;&gt;<br />
+                  &nbsp; &lt;PanelContent noPadding=&#123;true&#125;&gt;<br />
+                  &nbsp; &nbsp; &lt;div&gt;...&lt;/div&gt;<br />
+                  &nbsp; &lt;/PanelContent&gt;<br />
+                  &lt;/Panel&gt;
+                </pre>
+              </div>
+            </PanelContent>
+          </Panel>
+        );
+
+        React.render(panel1, document.getElementById('panel1'), function () {
+          prettyPrint();
+        });
       </script>
 
       <br /><br />
