@@ -1,10 +1,3 @@
-/*
- * grunt-contrib-requirejs
- * http://gruntjs.com/
- *
- * Copyright (c) 2014 Tyler Kellen, contributors
- * Licensed under the MIT license.
- */
 
 'use strict';
 
@@ -36,7 +29,7 @@ module.exports = function(grunt) {
           paths: ["src/less"]
         },
         files: {
-          "build/rpanel.css": "src/less/rpanel.less"
+          "dist/react-panels.css": "src/less/rpanel.less"
         }
       },
       production: {
@@ -45,14 +38,14 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          "build/rpanel.min.css": "src/less/rpanel.less"
+          "dist/react-panels.min.css": "src/less/rpanel.less"
         }
       }
     },
     react: {
       combined_file_output: {
         files: {
-          'build/rpanel.js': [
+          'dist/react-panels.js': [
             'src/jsx/rpanel.jsx'
           ]
         }
@@ -64,6 +57,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-react');
 
-  grunt.registerTask('default', ['watch', 'less', 'react']);
+  grunt.registerTask('default', ['less', 'react']);
+  grunt.registerTask('live', ['watch', 'less', 'react']);
 
 };
