@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>react-panels: basic</title>
+  <title>react-panels: blue theme</title>
   <link rel="stylesheet" href="../dist/react-panels.css" type="text/css" />
   <link rel="stylesheet" href="thirdparty/css/font-awesome.min.css" type="text/css" />
 
@@ -29,6 +29,11 @@
       width: 100%;
       color: rgba(255, 255, 255, 0.8);
       background-color: rgba(0, 0, 0, 0.2);
+    }
+    .clearfix:after {
+      content:"";
+      display:table;
+      clear:both;
     }
   </style>
 
@@ -78,6 +83,7 @@
                 using the <strong>toggleToolbar</strong> button
               </li>
             </ul>
+            <div className="clearfix"></div>
           </div>
         </PanelContent>
         <PanelContent
