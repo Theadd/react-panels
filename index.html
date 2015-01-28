@@ -9,13 +9,13 @@
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/prettify-desert.css">
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" media="screen" href="build/css/rpanel.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="bower_components/react-panels/dist/react-panels.css">
 
   <script src="javascripts/prettify.js"></script>
   <script src="javascripts/lang-css.js"></script>
   <script src="javascripts/react.js"></script>
   <script src="javascripts/JSXTransformer.js"></script>
-  <script type="text/jsx" src="build/js/rpanel.js"></script>
+  <script type="text/jsx" src="bower_components/react-panels/dist/react-panels.js"></script>
 
   <title>react-panels</title>
 </head>
@@ -45,115 +45,127 @@
 
     <p>A panel widget with extended features made with React and LESS. It does not depend on any third party module although some examples might use Font Awesome for icons.</p>
     <p>Install instructions:</p>
-<pre><code>$ npm install react-panels
+<pre><code>$ bower install react-panels
 </code></pre>
-    <p><strong>** Still in the early days of active development so wait a few days to start using it.</strong></p>
 
+    <br />
     <h3>
-      <a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
+      <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples
+    </h3>
 
-      <div id="panel0"></div>
-      <script type="text/jsx">
-        var panel0 = (
-          <Panel
-            theme="lightblue"
-            icon="fa fa-cube"
-            title="Panel Title"
-            bordered={true}
-            opaque={true}
-            raised={true}
-            rounded={true}
-            buttons={['toggleToolbar', 'collapse', 'close']}>
-            <PanelContent
-              active={true}
-              icon="fa fa-area-chart"
-              title="Area Chart"
-              toolbarState="visible"
-              toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-              <div>
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                <br /><br />
-              Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-              </div>
-            </PanelContent>
-            <PanelContent
-              icon="fa fa-pie-chart"
-              title="Pie Chart"
-              toolbarState="hidden"
-              toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-              <div>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-              </div>
-            </PanelContent>
-            <PanelContent
-              icon="fa fa-line-chart"
-              title="Line Chart"
-              toolbarState="locked"
-              toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-              <div>
-              At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues.
-              </div>
-            </PanelContent>
-            <PanelContent
-              icon="fa fa-bar-chart"
-              title="Bar Chart"
-              toolbarState="none"
-              toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-              <div>
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                <br /><br />
-              Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-              </div>
-            </PanelContent>
-          </Panel>
-        );
+    <div id="panel0"></div>
+    <script type="text/jsx">
+      var panel0 = (
+        <Panel
+          theme="lightblue"
+          icon="fa fa-cube"
+          title="Panel Title"
+          bordered={true}
+          opaque={true}
+          raised={true}
+          rounded={true}
+          buttons={['toggleToolbar', 'collapse', 'close']}>
+          <PanelContent
+            active={true}
+            icon="fa fa-area-chart"
+            title="Area Chart"
+            toolbarState="visible"
+            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+            <div>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+              <br /><br />
+            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
+            </div>
+          </PanelContent>
+          <PanelContent
+            icon="fa fa-pie-chart"
+            title="Pie Chart"
+            toolbarState="hidden"
+            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+            <div>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+            </div>
+          </PanelContent>
+          <PanelContent
+            icon="fa fa-line-chart"
+            title="Line Chart"
+            toolbarState="locked"
+            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+            <div>
+            At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues.
+            </div>
+          </PanelContent>
+          <PanelContent
+            icon="fa fa-bar-chart"
+            title="Bar Chart"
+            toolbarState="none"
+            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+            <div>
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+              <br /><br />
+            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+            </div>
+          </PanelContent>
+        </Panel>
+      );
 
-        React.render(panel0, document.getElementById('panel0'));
-      </script>
+      React.render(panel0, document.getElementById('panel0'));
+    </script>
 
-      <div id="panel1"></div>
+    <div id="panel1"></div>
 
-      <script type="text/jsx">
-        var panel1 = (
-          <Panel
-            icon="fa fa-paw"
-            title="Example: Floating Window"
-            floating={true}
-            draggable={true}
-            rounded={true}
-            bordered={true}
-            left="540"
-            top="460"
-            width="350"
-            buttons={['collapse', 'close']}>
-            <PanelContent noPadding={true}>
-              <div>
-                <pre className="prettyprint lang-js linenums nonums">
-                  &lt;Panel<br />
-                  &nbsp; icon=&quot;fa fa-paw&quot;<br />
-                  &nbsp; title=&quot;Example: Floating Window&quot;<br />
-                  &nbsp; floating=&#123;true&#125;<br />
-                  &nbsp; draggable=&#123;true&#125;<br />
-                  &nbsp; rounded=&#123;true&#125;<br />
-                  &nbsp; bordered=&#123;true&#125;<br />
-                  &nbsp; left=&quot;540&quot; top=&quot;460&quot; width=&quot;350&quot;<br />
-                  &nbsp; buttons=&#123;&#91;&#39;collapse&#39;, &#39;close&#39;&#93;&#125;&gt;<br />
-                  &nbsp; &lt;PanelContent noPadding=&#123;true&#125;&gt;<br />
-                  &nbsp; &nbsp; &lt;div&gt;...&lt;/div&gt;<br />
-                  &nbsp; &lt;/PanelContent&gt;<br />
-                  &lt;/Panel&gt;
-                </pre>
-              </div>
-            </PanelContent>
-          </Panel>
-        );
+    <script type="text/jsx">
+      var panel1 = (
+        <Panel
+          icon="fa fa-paw"
+          title="Example: Floating Window"
+          floating={true}
+          draggable={true}
+          rounded={true}
+          bordered={true}
+          left="540"
+          top="460"
+          width="350"
+          buttons={['collapse', 'close']}>
+          <PanelContent noPadding={true}>
+            <div>
+              <pre className="prettyprint lang-js linenums nonums">
+                &lt;Panel<br />
+                &nbsp; icon=&quot;fa fa-paw&quot;<br />
+                &nbsp; title=&quot;Example: Floating Window&quot;<br />
+                &nbsp; floating=&#123;true&#125;<br />
+                &nbsp; draggable=&#123;true&#125;<br />
+                &nbsp; rounded=&#123;true&#125;<br />
+                &nbsp; bordered=&#123;true&#125;<br />
+                &nbsp; left=&quot;540&quot; top=&quot;460&quot; width=&quot;350&quot;<br />
+                &nbsp; buttons=&#123;&#91;&#39;collapse&#39;, &#39;close&#39;&#93;&#125;&gt;<br />
+                &nbsp; &lt;PanelContent noPadding=&#123;true&#125;&gt;<br />
+                &nbsp; &nbsp; &lt;div&gt;...&lt;/div&gt;<br />
+                &nbsp; &lt;/PanelContent&gt;<br />
+                &lt;/Panel&gt;
+              </pre>
+            </div>
+          </PanelContent>
+        </Panel>
+      );
 
-        React.render(panel1, document.getElementById('panel1'), function () {
-          prettyPrint();
-        });
-      </script>
+      React.render(panel1, document.getElementById('panel1'), function () {
+        prettyPrint();
+      });
+    </script>
 
-      <br /><br />
+    <br /><strong>More:</strong><br /><br />
+    <ul>
+      <li><a href="bower_components/react-panels/examples/basic.html">basic</a></li>
+      <li><a href="bower_components/react-panels/examples/basic-with-fa-icons.html">basic with <strong>font awesome</strong> icons</a></li>
+      <li><a href="bower_components/react-panels/examples/complete.html">complete</a></li>
+      <li><a href="bower_components/react-panels/examples/complete-floating-window.html">floating window</a></li>
+      <li><a href="bower_components/react-panels/examples/complete-theme-grayscale-blue.html">grayscale theme with blue background image</a></li>
+      <li><a href="bower_components/react-panels/examples/complete-theme-grayscale-gold.html">grayscale theme with gold (color) background image</a></li>
+    </ul>
+
+    <br />
+
   </section>
 </div>
 

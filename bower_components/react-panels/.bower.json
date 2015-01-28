@@ -1,0 +1,14 @@
+{
+  "name": "react-panels",
+  "homepage": "https://github.com/Theadd/react-panels",
+  "_release": "43ae47b96c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "43ae47b96ca67abd535aca4e0a7a293b631c78db"
+  },
+  "_source": "git://github.com/Theadd/react-panels.git",
+  "_target": "*",
+  "_originalSource": "react-panels",
+  "_direct": true
+}

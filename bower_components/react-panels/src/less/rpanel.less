@@ -1,0 +1,302 @@
+/*
+ * react-panels
+ * https://github.com/Theadd/react-panels
+ *
+ * Copyright (c) 2015 R.Beltran https://github.com/Theadd
+ * Licensed under the MIT license.
+ */
+
+@header-height: 32px;
+@header-font-size: 14px;
+@border-radius: 3px;
+
+.no-select() {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.calc(@prop; @val) {
+  @{prop}: calc(~'@{val}');
+  @{prop}: -moz-calc(~'@{val}');
+  @{prop}: -webkit-calc(~'@{val}');
+  @{prop}: -o-calc(~'@{val}');
+}
+
+.rpanel {
+
+  &:not(.rpanel-state-fullscreen) {
+    &.rounded {
+      border-radius: @border-radius;
+      > header {
+        border-radius: @border-radius @border-radius 0 0;
+      }
+      & > div:last-child {
+        border-radius: 0 0 @border-radius @border-radius;
+
+        > .rpanel-tab-body.active {
+          & > div:last-child {
+            border-radius: 0 0 @border-radius @border-radius;
+          }
+        }
+      }
+    }
+
+    &.rounded-top {
+      border-radius: @border-radius @border-radius 0 0;
+      > header {
+        border-radius: @border-radius @border-radius 0 0;
+      }
+    }
+
+    &.rounded-bottom {
+      border-radius: 0 0 @border-radius @border-radius;
+      & > div:last-child {
+        border-radius: 0 0 @border-radius @border-radius;
+
+        > .rpanel-tab-body.active {
+          & > div:last-child {
+            border-radius: 0 0 @border-radius @border-radius;
+          }
+        }
+      }
+    }
+  }
+
+  &.raised > header {
+    box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
+  }
+
+  &:not(.bordered) > header {
+    height: @header-height;
+  }
+
+  &.bordered {
+    > header {
+      border: 1px solid black;
+      height: (@header-height + 2);
+
+      .rpanel-tabs {
+
+        > .rpanel-tab.active {
+          margin-top: -1px;
+          height: (@header-height + 2);
+
+          border-right: 1px solid black;
+          border-left: 1px solid black;
+          box-shadow: 0 2px 0 black inset;
+
+          > a {
+            margin-top: 1px !important;
+
+          }
+        }
+      }
+    }
+    > .rpanel-body {
+      border: 1px solid black;
+      border-top: 0 none;
+    }
+
+  }
+
+  > header {
+    display: block;
+    font-size: @header-font-size;
+
+    .rpanel-icon {
+      display: block;
+      float: left;
+      font-size: 125%;
+      height: @header-height;
+      line-height: (@header-height - 4);
+      margin-right: -6px;
+      text-align: center;
+      width: (@header-height - 2);
+    }
+
+    .rpanel-title {
+      margin-left: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      height: 100%;
+      display: inline-block;
+      letter-spacing: 0;
+      line-height: @header-height;
+      position: relative;
+      width: auto;
+    }
+
+    .rpanel-control {
+      border-left: 1px solid black;
+      float: right;
+      height: @header-height;
+      min-width: @header-height;
+      display: inline-block;
+      line-height: @header-height;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      .no-select;
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      &.hidden {
+        display: none;
+      }
+    }
+
+    .rpanel-tabs {
+      float: right;
+      height: @header-height;
+      margin: 0 20px;
+      min-width: @header-height;
+      display: inline-block;
+      padding: 0;
+
+      &.hidden {
+        display: none;
+      }
+
+      .rpanel-tab {
+        position: relative;
+        float: left;
+        display: block;
+        list-style: none;
+        padding: 0 5px;
+        height: @header-height;
+
+
+        > a {
+          position: relative;
+          display: block;
+          height: @header-height;
+        }
+
+        &.active > a {
+          cursor: default;
+        }
+
+        .rpanel-icon {
+          font-size: 100%;
+          line-height: (@header-height - 2);
+          margin-right: -9px;
+          margin-left: -3px;
+          opacity: 0.85;
+        }
+
+        .rpanel-title {
+          line-height: @header-height;
+          margin-right: 6px;
+          opacity: 0.85;
+        }
+
+
+      }
+
+      * {
+        text-decoration: none;
+        color: inherit;
+        font-size: 0.95em;
+      }
+    }
+  }
+
+  > .rpanel-body {
+    > .rpanel-tab-body {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+
+      > .rpanel-toolbar {
+        min-height: @header-height;
+        line-height: @header-height;
+        border-bottom: 3px double black;
+        display: none;
+        padding: 10px;
+
+        &.active {
+          display: block;
+        }
+      }
+
+      > .rpanel-content {
+        padding: 10px;
+
+        &.no-padding {
+          padding: 0;
+        }
+      }
+    }
+
+  }
+
+  &, * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  &.rpanel-state-closed {
+    display: none;
+  }
+
+  &.rpanel-state-collapsed {
+    > .rpanel-body {
+      display: none;
+    }
+  }
+
+  &.rpanel-state-fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+
+    > .rpanel-body {
+      .calc(height; "100% - @{header-height}");
+
+      > .rpanel-tab-body.active {
+        height: 100%;
+
+        > .rpanel-toolbar {
+          display: none;
+        }
+
+        > .rpanel-content {
+          height: 100%;
+        }
+      }
+    }
+
+    &.bordered > .rpanel-body {
+      @aux: (@header-height + 2);
+      .calc(height; "100% - @{aux}");
+    }
+  }
+
+  &.floating {
+    position: absolute;
+    width: 800px;
+    top: 0;
+    left: 0;
+    z-index: 910;
+    pointer-events: all;
+  }
+}
+
+@import 'themes/default';
+@import 'themes/grayscale';
+@import 'themes/lightblue';
