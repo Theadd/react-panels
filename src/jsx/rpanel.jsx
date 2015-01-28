@@ -168,21 +168,23 @@ var Panel = React.createClass({
       startPageY: e.pageY
     };
 
+    try {
+      e.dataTransfer.setData('text/plain', "Panel");
+    } catch (err) { /* Fix for IE */ }
+
     window.addEventListener('dragover', this.dragOver);
   },
 
-  dragEnd: function(e) {
+  dragEnd: function() {
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
   },
 
   dragOver: function(e) {
-    var self = this;
-
-    if (self.panelBounds || false) {
-      var left = self.panelBounds.startLeft + (e.pageX - self.panelBounds.startPageX),
-        top = self.panelBounds.startTop + (e.pageY - self.panelBounds.startPageY);
-      self.setProps({ left: left, top: top });
+    if (this.panelBounds || false) {
+      var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
+        top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
+      this.setProps({ left: left, top: top });
     }
   },
 
@@ -213,14 +215,16 @@ var Panel = React.createClass({
 
     var left = Number(this.props.left) || 80,
       top = Number(this.props.top) || 100,
-      width = `${Number(this.props.width || 800)}px`,
-      transform = `translate3d(${left}px, ${top}px, 0)`;
+      width = String(this.props.width || 800) + "px",
+      transform = (this.state.state == "fullscreen") ? "inherit" : "translate3d(" + left + "px, " + top + "px, 0)";
 
     return ((this.props.floating || false) && (this.props.draggable)) ? (
       <div className={classes} style={{
-        WebkitTransform: (this.state.state == "fullscreen") ? `inherit` : transform,
-        transform: (this.state.state == "fullscreen") ? `inherit` : transform,
-        width: (this.state.state == "fullscreen") ? `100%` : width
+        WebkitTransform: transform,
+        MozTransform: transform,
+        msTransform: transform,
+        transform: transform,
+        width: (this.state.state == "fullscreen") ? "100%" : width
       }}>
         {header}
         {body}
