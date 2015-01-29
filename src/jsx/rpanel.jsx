@@ -39,6 +39,21 @@ var Panel = React.createClass({
     };
   },
 
+  getDefaultProps: function () {
+    return {
+      "icon": "",
+      "title": "",
+      "bordered": false,
+      "opaque": false,
+      "raised": false,
+      "rounded": false,
+      "buttons": [],
+      /** Set panel title based on the title of active tab. */
+      "getTitleFromActiveTab": false,
+      "displayTabTitles": true
+    };
+  },
+
   getIcon: function () {
     var icon = null;
 
@@ -63,6 +78,7 @@ var Panel = React.createClass({
           return <PanelTab
             title={tab.title}
             icon={tab.icon}
+            showTitle={self.props.displayTabTitles}
             index={tab.index}
             key={tab.index}
             selected={self.state.tabIndex}
@@ -103,7 +119,7 @@ var Panel = React.createClass({
       buttons = null,
       keyIndex = 0;
 
-    if (self.props.buttons) {
+    if (self.props.buttons.length) {
       buttons = [];
 
       for (var i = self.props.buttons.length; --i >= 0;) {
@@ -193,20 +209,23 @@ var Panel = React.createClass({
       icon = this.getIcon(),
       tabs = this.getTabs(),
       buttons = this.getButtons(),
+      title = this.props.title + (
+          (this.props.getTitleFromActiveTab) ? this.state.tabList[this.state.tabIndex].title : ""
+        ),
       header = (this.props.draggable || false) ? (
         <header
           draggable="true"
           onDragEnd={this.dragEnd}
           onDragStart={this.dragStart}>
           {icon}
-          <span className="rpanel-title">{this.props.title}</span>
+          <span className="rpanel-title">{title}</span>
           {buttons}
           {tabs}
         </header>
       ) : (
         <header>
           {icon}
-          <span className="rpanel-title">{this.props.title}</span>
+          <span className="rpanel-title">{title}</span>
           {buttons}
           {tabs}
         </header>
@@ -342,6 +361,17 @@ var Panel = React.createClass({
 });
 
 var PanelTab = React.createClass({
+  //This is the tab button in header not the tab's content
+
+  getDefaultProps: function () {
+    return {
+      "icon": "",
+      "title": "",
+      "index": 0,
+      "selected": false,
+      "showTitle": true
+    };
+  },
 
   handleClick: function (event) {
     event.preventDefault();
@@ -350,7 +380,11 @@ var PanelTab = React.createClass({
 
   render: function() {
     var icon = null,
-      title = (<span className="rpanel-title">{this.props.title}</span>),
+      title = (this.props.showTitle && this.props.title.length) ? (
+        <span className="rpanel-title">{this.props.title}</span>
+      ) : (
+        <span className="rpanel-title hidden"></span>
+      ),
       classes = (this.props.index == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
 
     if (this.props.icon) {
