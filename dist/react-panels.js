@@ -141,12 +141,17 @@ var Panel = React.createClass({displayName: "Panel",
       for (var i = self.props.buttons.length; --i >= 0;) {
         var button = self.props.buttons[i];
 
-        if (typeof button === "string") {
-          var predefinedButton = self.getPredefinedButton(button, keyIndex);
+        if (typeof button === "string" || ((typeof button === "object") && !(button instanceof ReactElement))) {
+          var predefinedButton = self.getButton(button, keyIndex);
           if (predefinedButton || false) {
             buttons.push(predefinedButton);
             ++keyIndex;
           }
+        } else if ((typeof button === "object") && (button instanceof ReactElement)) {
+          //FIXME: Compute values for active and disabled properties of PanelButton after setProps only
+          button.setProps({"key": keyIndex, "tabIndex": keyIndex, state: this.state});
+          buttons.push(button);
+          ++keyIndex;
         }
       }
     }
@@ -315,64 +320,69 @@ var Panel = React.createClass({displayName: "Panel",
     return classes;
   },
 
-  getPredefinedButton: function (identifier, key) {
-    var button = null,
-      classes = "rpanel-control",
-      hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "",
-      toolbarState = "";
+  getButton: function (identifier, key, customProps) {
+    var preset = {};
 
     switch (identifier) {
+
       case "close":
-        button = (
-          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnClose}, 
-            React.createElement("a", {href: "#", className: "rpanel-button"}, 
-              React.createElement("i", {className: "fa fa-times"})
-            )
-          )
-        );
+        preset = {"onClick": this.handleClickOnClose};
         break;
+
       case "collapse":
-        classes += ((this.state.state == "collapsed") ? " active" : "") + hiddenOnFullscreen;
-        button = (
-          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnCollapse}, 
-            React.createElement("a", {href: "#", className: "rpanel-button"}, 
-              React.createElement("i", {className: "fa fa-minus"})
-            )
-          )
-        );
+        preset = {
+          "identifier": "collapse",
+          "icon": "fa fa-minus",
+          "title": "Toggle panel",
+          "active": function (state) {
+            return (state.state == "collapsed");
+          },
+          "hiddenOnFullscreen": true,
+          "onClick": this.handleClickOnCollapse
+        };
         break;
+
       case "fullscreen":
-        classes += (this.state.state == "fullscreen") ? " active" : "";
-        button = (
-          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnFullscreen}, 
-            React.createElement("a", {href: "#", className: "rpanel-button"}, 
-              React.createElement("i", {className: "fa fa-expand"})
-            )
-          )
-        );
+        preset = {
+          "identifier": "fullscreen",
+          "icon": "fa fa-expand",
+          "title": "Toggle fullscreen",
+          "active": function (state) {
+            return (state.state == "fullscreen");
+          },
+          "onClick": this.handleClickOnFullscreen
+        };
         break;
+
       case "toggleToolbar":
-        toolbarState = this.state.tabList[this.state.tabIndex].toolbar;
-        switch (toolbarState) {
-          case "visible": classes += " active"; break;
-          //case "hidden": break;
-          case "locked": classes += " active disabled"; break;
-          case "none": classes += " disabled"; break;
-        }
-        classes += hiddenOnFullscreen;
-        button = (
-          React.createElement("div", {className: classes, key: key, onClick: this.handleClickOnToggleToolbar}, 
-            React.createElement("a", {href: "#", className: "rpanel-button"}, 
-              React.createElement("i", {className: "fa fa-pencil-square-o"})
-            )
-          )
-        );
+        preset = {
+          "identifier": "toggleToolbar",
+          "icon": "fa fa-pencil-square-o",
+          "title": "Toggle toolbar of active tab",
+          "active": function (state) {
+            return (["visible", "locked"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          },
+          "disabled": function (state) {
+            return (["locked", "none"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          },
+          "hiddenOnFullscreen": true,
+          "onClick": this.handleClickOnToggleToolbar
+        };
         break;
+
+      case "custom":
+        break;
+
       default:
         throw new Error("Predefined button '" + identifier + "' not found.");
     }
 
-    return button;
+    Object.keys(customProps || {}).forEach(function(prop) {
+      preset[prop] = customProps[prop];
+    });
+
+    return (Object.keys(preset).length) ?
+      (React.createElement(PanelButton, {key: key, tabIndex: key, state: this.state, preset: preset})) : null;
   }
 });
 
@@ -423,4 +433,71 @@ var PanelContent = React.createClass({displayName: "PanelContent",
   render: function() {
     //dummy
   }
+});
+
+/*
+ * react-panels
+ * https://github.com/Theadd/react-panels
+ *
+ * Copyright (c) 2015 R.Beltran https://github.com/Theadd
+ * Licensed under the MIT license.
+ */
+
+var PanelButton = React.createClass({displayName: "PanelButton",
+
+  applyPreset: function (preset) {
+    var self = this,
+      defaultProps = {
+        "identifier": "close",
+        "icon": "fa fa-times",
+        "title": "Close",
+        "active": false,
+        "disabled": false,
+        "hiddenOnFullscreen": false,
+        "onClick": function () {}
+      };
+
+    Object.keys(defaultProps).forEach(function(prop) {
+      var value = defaultProps[prop];
+
+      if (typeof self.props[prop] !== "undefined") {
+        value = self.props[prop];
+      } else if (typeof preset[prop] !== "undefined") {
+        value = preset[prop];
+      }
+
+      self.props[prop] = value;
+    });
+
+    if (typeof self.props.active === "function") {
+      self.props.active = self.props.active(self.props.state);
+    }
+    if (typeof self.props.disabled === "function") {
+      self.props.disabled = self.props.disabled(self.props.state);
+    }
+  },
+
+  handleClick: function (event) {
+    if (typeof this.props.onClick === "function") {
+      this.props.onClick(event, this.props);
+    }
+  },
+
+  render: function() {
+    this.applyPreset(this.props.preset || {});
+
+    var classes = "rpanel-control" +
+      ((this.props.active) ? " active" : "") +
+      ((this.props.disabled) ? " disabled" : "") +
+      ((this.props.hiddenOnFullscreen && this.props.state.state == "fullscreen") ? " hidden" : "");
+
+    return (
+      React.createElement("div", {className: classes, key: this.props.tabIndex, onClick: this.handleClick}, 
+        React.createElement("a", {href: "#", className: "rpanel-button", title: this.props.title}, 
+          React.createElement("i", {className: this.props.icon})
+        )
+      )
+    );
+  }
+
 });

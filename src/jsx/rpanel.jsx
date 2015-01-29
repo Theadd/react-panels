@@ -141,12 +141,17 @@ var Panel = React.createClass({
       for (var i = self.props.buttons.length; --i >= 0;) {
         var button = self.props.buttons[i];
 
-        if (typeof button === "string") {
-          var predefinedButton = self.getPredefinedButton(button, keyIndex);
+        if (typeof button === "string" || ((typeof button === "object") && !(button instanceof ReactElement))) {
+          var predefinedButton = self.getButton(button, keyIndex);
           if (predefinedButton || false) {
             buttons.push(predefinedButton);
             ++keyIndex;
           }
+        } else if ((typeof button === "object") && (button instanceof ReactElement)) {
+          //FIXME: Compute values for active and disabled properties of PanelButton after setProps only
+          button.setProps({"key": keyIndex, "tabIndex": keyIndex, state: this.state});
+          buttons.push(button);
+          ++keyIndex;
         }
       }
     }
@@ -315,64 +320,69 @@ var Panel = React.createClass({
     return classes;
   },
 
-  getPredefinedButton: function (identifier, key) {
-    var button = null,
-      classes = "rpanel-control",
-      hiddenOnFullscreen = (this.state.state == "fullscreen") ? " hidden" : "",
-      toolbarState = "";
+  getButton: function (identifier, key, customProps) {
+    var preset = {};
 
     switch (identifier) {
+
       case "close":
-        button = (
-          <div className={classes} key={key} onClick={this.handleClickOnClose}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-times"></i>
-            </a>
-          </div>
-        );
+        preset = {"onClick": this.handleClickOnClose};
         break;
+
       case "collapse":
-        classes += ((this.state.state == "collapsed") ? " active" : "") + hiddenOnFullscreen;
-        button = (
-          <div className={classes} key={key} onClick={this.handleClickOnCollapse}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-minus"></i>
-            </a>
-          </div>
-        );
+        preset = {
+          "identifier": "collapse",
+          "icon": "fa fa-minus",
+          "title": "Toggle panel",
+          "active": function (state) {
+            return (state.state == "collapsed");
+          },
+          "hiddenOnFullscreen": true,
+          "onClick": this.handleClickOnCollapse
+        };
         break;
+
       case "fullscreen":
-        classes += (this.state.state == "fullscreen") ? " active" : "";
-        button = (
-          <div className={classes} key={key} onClick={this.handleClickOnFullscreen}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-expand"></i>
-            </a>
-          </div>
-        );
+        preset = {
+          "identifier": "fullscreen",
+          "icon": "fa fa-expand",
+          "title": "Toggle fullscreen",
+          "active": function (state) {
+            return (state.state == "fullscreen");
+          },
+          "onClick": this.handleClickOnFullscreen
+        };
         break;
+
       case "toggleToolbar":
-        toolbarState = this.state.tabList[this.state.tabIndex].toolbar;
-        switch (toolbarState) {
-          case "visible": classes += " active"; break;
-          //case "hidden": break;
-          case "locked": classes += " active disabled"; break;
-          case "none": classes += " disabled"; break;
-        }
-        classes += hiddenOnFullscreen;
-        button = (
-          <div className={classes} key={key} onClick={this.handleClickOnToggleToolbar}>
-            <a href="#" className="rpanel-button">
-              <i className="fa fa-pencil-square-o"></i>
-            </a>
-          </div>
-        );
+        preset = {
+          "identifier": "toggleToolbar",
+          "icon": "fa fa-pencil-square-o",
+          "title": "Toggle toolbar of active tab",
+          "active": function (state) {
+            return (["visible", "locked"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          },
+          "disabled": function (state) {
+            return (["locked", "none"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          },
+          "hiddenOnFullscreen": true,
+          "onClick": this.handleClickOnToggleToolbar
+        };
         break;
+
+      case "custom":
+        break;
+
       default:
         throw new Error("Predefined button '" + identifier + "' not found.");
     }
 
-    return button;
+    Object.keys(customProps || {}).forEach(function(prop) {
+      preset[prop] = customProps[prop];
+    });
+
+    return (Object.keys(preset).length) ?
+      (<PanelButton key={key} tabIndex={key} state={this.state} preset={preset} />) : null;
   }
 });
 
