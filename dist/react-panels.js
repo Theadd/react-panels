@@ -8,10 +8,41 @@
 
 var Panel = React.createClass({displayName: "Panel",
 
+  applyPreset: function (preset) {
+    var self = this,
+      defaultProps = {
+        "icon": "",
+        "title": "",
+        "theme": "default",
+        "bordered": false,
+        "opaque": false,
+        "raised": false,
+        "rounded": false,
+        "buttons": [],
+        /** Set panel title based on the title of the active tab. */
+        "getTitleFromActiveTab": false,
+        "displayTabTitles": true
+      };
+
+    Object.keys(defaultProps).forEach(function(prop) {
+      var value = defaultProps[prop];
+
+      if (typeof self.props[prop] !== "undefined") {
+        value = self.props[prop];
+      } else if (typeof preset[prop] !== "undefined") {
+        value = preset[prop];
+      }
+
+      self.props[prop] = value;
+    });
+  },
+
   getInitialState: function () {
     var tabList = [],
       defaultTabIndex = 0,
       i = 0;
+
+    this.applyPreset(this.props.preset || {});
 
     React.Children.forEach(this.props.children, function(tab) {
       var hasToolbar = (typeof tab.props.toolbar !== "undefined"),
@@ -36,21 +67,6 @@ var Panel = React.createClass({displayName: "Panel",
       tabCount: React.Children.count(this.props.children),
       tabList: tabList,
       state: "default"
-    };
-  },
-
-  getDefaultProps: function () {
-    return {
-      "icon": "",
-      "title": "",
-      "bordered": false,
-      "opaque": false,
-      "raised": false,
-      "rounded": false,
-      "buttons": [],
-      /** Set panel title based on the title of active tab. */
-      "getTitleFromActiveTab": false,
-      "displayTabTitles": true
     };
   },
 
@@ -257,7 +273,7 @@ var Panel = React.createClass({displayName: "Panel",
   },
 
   getClasses: function () {
-    var classes = "rpanel " + (this.props.theme || "default");
+    var classes = "rpanel " + this.props.theme;
 
     if (this.props.rounded) {
       classes += " rounded";
