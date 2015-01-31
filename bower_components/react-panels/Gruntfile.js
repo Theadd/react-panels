@@ -46,7 +46,8 @@ module.exports = function(grunt) {
       combined_file_output: {
         files: {
           'dist/react-panels.js': [
-            'src/jsx/rpanel.jsx'
+            'src/jsx/rpanel.jsx',
+            'src/jsx/rbutton.jsx'
           ]
         }
       }
