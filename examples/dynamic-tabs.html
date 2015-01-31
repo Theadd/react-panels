@@ -19,6 +19,13 @@
       min-width: 300px;
       width: 50%;
     }
+    .input-example {
+      padding: 5px 10px;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-height: 32px;
+      border: 1px solid #aaa;
+      width: 100%;
+    }
   </style>
 
   <script src="thirdparty/js/react.js"></script>
@@ -30,6 +37,36 @@
   <div id="example"></div>
 
   <script type="text/jsx">
+
+    var ChangeTitleToolbar = React.createClass({
+
+      handleClick: function() {
+        var inputNode = this.refs.newTitleInput.getDOMNode();
+        this.props.parentPanel.setPanelContentTitle(inputNode.value);
+        inputNode.value = "";
+      },
+
+      render: function() {
+        return (
+          <span>
+            <input type="text"
+              ref="newTitleInput"
+              placeholder="Change title of this tab"
+              className="input-example"
+              style={{width: "calc(100% - 120px)"}}
+            />
+            <input type="button"
+              value="Update"
+              className="input-example"
+              style={{width: "110px", margin: "0 0 0 10px"}}
+              onClick={this.handleClick}
+            />
+          </span>
+        );
+      }
+
+    });
+
     React.render(
       <Panel
         title="Panel Title"
@@ -43,7 +80,13 @@
               "onClick": function (event, button) {
                 event.preventDefault();
                 button.props.parent.addPanelContent(
-                  <PanelContent icon="fa fa-child" title="Child"><div>Content of new tab!</div></PanelContent>,
+                  <PanelContent
+                    icon="fa fa-child"
+                    title="Child"
+                    toolbar={(<ChangeTitleToolbar />)}
+                  >
+                    <div>Content of new tab!</div>
+                  </PanelContent>,
                   true
                 );
               }

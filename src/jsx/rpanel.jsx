@@ -119,6 +119,10 @@ var Panel = React.createClass({
 
           ++index;
 
+          if (React.isValidElement(child.props.toolbar)) {
+            child.props.toolbar.props.parentPanel = self;
+          }
+
           return (
             <div className={classes} key={index - 1}>
               <div className={toolbarClasses}>{child.props.toolbar}</div>
@@ -420,6 +424,21 @@ var Panel = React.createClass({
 
     this.props.children.push(panelContent);
     this.setState(_state);
+  },
+
+  setPanelContentTitle: function (newTitle, index) {
+    if (typeof index === "undefined" || index == null) {
+      index = this.state.tabIndex;
+    }
+
+    var tabList = this.state.tabList;
+    try {
+      tabList[index].title = newTitle;
+      this.props.children[index].props.title = newTitle;
+      this.setState({tabList: tabList});
+    } catch (err) {
+      console.error(err);
+    }
   }
 
 });
