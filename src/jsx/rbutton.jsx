@@ -33,16 +33,16 @@ var PanelButton = React.createClass({
     });
 
     if (typeof self.props.active === "function") {
-      self.props.active = self.props.active(self.props.state);
+      self.props.active = self.props.active(self);
     }
     if (typeof self.props.disabled === "function") {
-      self.props.disabled = self.props.disabled(self.props.state);
+      self.props.disabled = self.props.disabled(self);
     }
   },
 
   handleClick: function (event) {
     if (typeof this.props.onClick === "function") {
-      this.props.onClick(event, this.props);
+      this.props.onClick(event, this);
     }
   },
 
@@ -52,7 +52,7 @@ var PanelButton = React.createClass({
     var classes = "rpanel-control" +
       ((this.props.active) ? " active" : "") +
       ((this.props.disabled) ? " disabled" : "") +
-      ((this.props.hiddenOnFullscreen && this.props.state.state == "fullscreen") ? " hidden" : "");
+      ((this.props.hiddenOnFullscreen && this.props.parent.state.state == "fullscreen") ? " hidden" : "");
 
     return (
       <div className={classes} key={this.props.tabIndex} onClick={this.handleClick}>
@@ -63,4 +63,10 @@ var PanelButton = React.createClass({
     );
   }
 
+});
+
+var CustomPanelButton = React.createClass({
+  render: function() {
+    //dummy
+  }
 });

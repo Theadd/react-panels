@@ -139,18 +139,32 @@ var Panel = React.createClass({
       buttons = [];
 
       for (var i = self.props.buttons.length; --i >= 0;) {
-        var button = self.props.buttons[i];
+        var button = self.props.buttons[i],
+          buttonIdentifier = "",
+          customButtonProps = {};
 
-        if (typeof button === "string" || ((typeof button === "object") && !(button instanceof ReactElement))) {
-          var predefinedButton = self.getButton(button, keyIndex);
+        if (typeof button === "string" || ((typeof button === "object") && !React.isValidElement(button))) {
+          if (typeof button === "string") {
+            buttonIdentifier = button;
+          } else {
+            buttonIdentifier = Object.keys(button)[0];
+            customButtonProps = button[buttonIdentifier];
+          }
+          var predefinedButton = self.getButton(buttonIdentifier, keyIndex, customButtonProps);
           if (predefinedButton || false) {
             buttons.push(predefinedButton);
             ++keyIndex;
           }
-        } else if ((typeof button === "object") && (button instanceof ReactElement)) {
-          //FIXME: Compute values for active and disabled properties of PanelButton after setProps only
-          button.setProps({"key": keyIndex, "tabIndex": keyIndex, state: this.state});
-          buttons.push(button);
+        } else if (React.isValidElement(button)) {
+          var panelButton = (
+            <PanelButton {...button.props}
+              key={keyIndex}
+              tabIndex={keyIndex}
+              parent={this}
+            />
+          );
+
+          buttons.push(panelButton);
           ++keyIndex;
         }
       }
@@ -334,8 +348,8 @@ var Panel = React.createClass({
           "identifier": "collapse",
           "icon": "fa fa-minus",
           "title": "Toggle panel",
-          "active": function (state) {
-            return (state.state == "collapsed");
+          "active": function (button) {
+            return (button.props.parent.state.state == "collapsed");
           },
           "hiddenOnFullscreen": true,
           "onClick": this.handleClickOnCollapse
@@ -347,8 +361,8 @@ var Panel = React.createClass({
           "identifier": "fullscreen",
           "icon": "fa fa-expand",
           "title": "Toggle fullscreen",
-          "active": function (state) {
-            return (state.state == "fullscreen");
+          "active": function (button) {
+            return (button.props.parent.state.state == "fullscreen");
           },
           "onClick": this.handleClickOnFullscreen
         };
@@ -359,11 +373,11 @@ var Panel = React.createClass({
           "identifier": "toggleToolbar",
           "icon": "fa fa-pencil-square-o",
           "title": "Toggle toolbar of active tab",
-          "active": function (state) {
-            return (["visible", "locked"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          "active": function (button) {
+            return (["visible", "locked"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
           },
-          "disabled": function (state) {
-            return (["locked", "none"].indexOf(state.tabList[state.tabIndex].toolbar) != -1);
+          "disabled": function (button) {
+            return (["locked", "none"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
           },
           "hiddenOnFullscreen": true,
           "onClick": this.handleClickOnToggleToolbar
@@ -382,7 +396,7 @@ var Panel = React.createClass({
     });
 
     return (Object.keys(preset).length) ?
-      (<PanelButton key={key} tabIndex={key} state={this.state} preset={preset} />) : null;
+      (<PanelButton key={key} tabIndex={key} parent={this} preset={preset} />) : null;
   }
 });
 
