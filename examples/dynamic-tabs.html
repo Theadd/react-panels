@@ -92,10 +92,17 @@
               }
             }}
           />,
-          {"collapse": {
-            "title": "Minimize/Maximize"
-          }},
-          "close"
+          <CustomPanelButton
+            title="Remove Active Tab!"
+            preset={{
+              "identifier": "removeTab",
+              "icon": "fa fa-trash",
+              "onClick": function (event, button) {
+                event.preventDefault();
+                button.props.parent.removePanelContent();
+              }
+            }}
+          />
         ]}>
         <PanelContent
           icon="fa fa-beer"

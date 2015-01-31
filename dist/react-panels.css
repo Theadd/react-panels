@@ -126,6 +126,9 @@
   padding: 0 5px;
   height: 32px;
 }
+.rpanel > header .rpanel-tabs .rpanel-tab.hidden {
+  display: none;
+}
 .rpanel > header .rpanel-tabs .rpanel-tab > a {
   position: relative;
   display: block;
@@ -157,7 +160,7 @@
 .rpanel > .rpanel-body > .rpanel-tab-body {
   display: none;
 }
-.rpanel > .rpanel-body > .rpanel-tab-body.active {
+.rpanel > .rpanel-body > .rpanel-tab-body.active:not(.hidden) {
   display: block;
 }
 .rpanel > .rpanel-body > .rpanel-tab-body > .rpanel-toolbar {

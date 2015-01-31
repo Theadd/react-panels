@@ -56,7 +56,8 @@ var Panel = React.createClass({
         icon: tab.props.icon || false,
         title: tab.props.title || "",
         toolbar: toolbarState,
-        padding: Boolean(!(tab.props.noPadding || false))
+        padding: Boolean(!(tab.props.noPadding || false)),
+        state: "visible"
       });
 
       ++i;
@@ -91,14 +92,16 @@ var Panel = React.createClass({
     return (
       <ul className={classes}>
         {self.state.tabList.map(function(tab) {
-          return <PanelTab
+
+          return (tab.state != "none") ? (<PanelTab
             title={tab.title}
             icon={tab.icon}
             showTitle={self.props.displayTabTitles}
             index={tab.index}
             key={tab.index}
             selected={self.state.tabIndex}
-            onClick={self.handleClickOnTab} />;
+            state={tab.state}
+            onClick={self.handleClickOnTab} />) : null;
         })}
       </ul>
     );
@@ -113,7 +116,8 @@ var Panel = React.createClass({
         {React.Children.map(this.props.children, function (child) {
           var showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
             display = (index == self.state.tabIndex),
-            classes = "rpanel-tab-body" + ((display) ? " active" : ""),
+            visibility = self.state.tabList[index].state,
+            classes = "rpanel-tab-body" + ((display) ? " active " : " ") + visibility,
             toolbarClasses = "rpanel-toolbar" + ((showToolbar) ? " active" : ""),
             contentClasses = "rpanel-content" + ((!self.state.tabList[index].padding) ? " no-padding" : "");
 
@@ -123,12 +127,12 @@ var Panel = React.createClass({
             child.props.toolbar.props.parentPanel = self;
           }
 
-          return (
+          return (visibility != "none") ? (
             <div className={classes} key={index - 1}>
               <div className={toolbarClasses}>{child.props.toolbar}</div>
               <div className={contentClasses}>{child.props.children}</div>
             </div>
-          );
+          ) : null;
         })}
       </div>
     );
@@ -414,7 +418,8 @@ var Panel = React.createClass({
       icon: panelContent.props.icon || false,
       title: panelContent.props.title || "",
       toolbar: toolbarState,
-      padding: Boolean(!(panelContent.props.noPadding || false))
+      padding: Boolean(!(panelContent.props.noPadding || false)),
+      state: "visible"
     });
 
     _state.tabCount = i + 1;
@@ -423,6 +428,50 @@ var Panel = React.createClass({
     }
 
     this.props.children.push(panelContent);
+    this.setState(_state);
+  },
+
+  removePanelContent: function (index, hideOnly) {
+    var _state = this.state,
+      switchToOtherTab = false,
+      newTabState = (hideOnly || false) ? "hidden" : "none",
+      i = 0;
+
+    if (typeof index === "undefined" || index == null) {
+      index = _state.tabIndex;
+    }
+    switchToOtherTab = (index == _state.tabIndex);
+    _state.tabList[index].state = newTabState;
+    var newTabIndex = index;
+    if (switchToOtherTab) {
+      for (i = index + 1; i < _state.tabList.length; ++i) {
+        if (_state.tabList[i].state == "visible") {
+          newTabIndex = i;
+          break;
+        }
+      }
+      if (newTabIndex == index) {
+        for (i = index; --i >= 0;) {
+          if (_state.tabList[i].state == "visible") {
+            newTabIndex = i;
+            break;
+          }
+        }
+      }
+    }
+    _state.tabIndex = newTabIndex;
+    this.setState(_state);
+  },
+
+  restorePanelContent: function (index, selected) {
+    var _state = this.state,
+      newTabState = "visible";
+
+    _state.tabList[index].state = newTabState;
+
+    if (selected || (_state.tabList[_state.tabIndex].state != newTabState)) {
+      _state.tabIndex = index;
+    }
     this.setState(_state);
   },
 
@@ -469,6 +518,8 @@ var PanelTab = React.createClass({
         <span className="rpanel-title hidden"></span>
       ),
       classes = (this.props.index == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
+
+    classes += " " + this.props.state;
 
     if (this.props.icon) {
       icon = (
