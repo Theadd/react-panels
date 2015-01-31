@@ -397,7 +397,31 @@ var Panel = React.createClass({
 
     return (Object.keys(preset).length) ?
       (<PanelButton key={key} tabIndex={key} parent={this} preset={preset} />) : null;
+  },
+
+  addPanelContent: function (panelContent, selected) {
+    var _state = this.state,
+      i = _state.tabList.length,
+      hasToolbar = (typeof panelContent.props.toolbar !== "undefined"),
+      toolbarState = panelContent.props.toolbarState || ((hasToolbar) ? "visible" : "none");
+
+    _state.tabList.push({
+      index: i,
+      icon: panelContent.props.icon || false,
+      title: panelContent.props.title || "",
+      toolbar: toolbarState,
+      padding: Boolean(!(panelContent.props.noPadding || false))
+    });
+
+    _state.tabCount = i + 1;
+    if (selected || false) {
+      _state.tabIndex = i;
+    }
+
+    this.props.children.push(panelContent);
+    this.setState(_state);
   }
+
 });
 
 var PanelTab = React.createClass({
