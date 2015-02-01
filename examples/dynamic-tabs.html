@@ -67,6 +67,36 @@
 
     });
 
+    var SomeContentComponent = React.createClass({
+
+      handleClick: function() {
+        event.preventDefault();
+        alert("Title of active tab: " + this.props.parentPanel.getPanelContentTitle());
+      },
+
+      handleClick2: function() {
+        event.preventDefault();
+        this.props.parentPanel.removePanelContent(null, true);
+      },
+
+      handleClick3: function() {
+        event.preventDefault();
+        var leftIndex = (this.props.parentPanel.state.tabIndex || 1) - 1;
+        this.props.parentPanel.restorePanelContent(leftIndex);
+      },
+
+      render: function() {
+        return (
+          <ul>
+            <li>Click <a href="#" onClick={this.handleClick}>here</a> to display the title in an alert!</li>
+            <li>Click <a href="#" onClick={this.handleClick2}>here</a> to hide current tab instead of removing it!</li>
+            <li>Click <a href="#" onClick={this.handleClick3}>here</a> to restore the first tab on the left side of the current tab. Either it was removed, hidden or it is already visible.</li>
+          </ul>
+        );
+      }
+
+    });
+
     React.render(
       <Panel
         title="Panel Title"
@@ -85,7 +115,7 @@
                     title="Child"
                     toolbar={(<ChangeTitleToolbar />)}
                   >
-                    <div>Content of new tab!</div>
+                    <SomeContentComponent />
                   </PanelContent>,
                   true
                 );

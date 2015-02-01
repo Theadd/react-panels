@@ -126,6 +126,9 @@ var Panel = React.createClass({
           if (React.isValidElement(child.props.toolbar)) {
             child.props.toolbar.props.parentPanel = self;
           }
+          if (React.isValidElement(child.props.children)) {
+            child.props.children.props.parentPanel = self;
+          }
 
           return (visibility != "none") ? (
             <div className={classes} key={index - 1}>
@@ -488,6 +491,21 @@ var Panel = React.createClass({
     } catch (err) {
       console.error(err);
     }
+  },
+
+  getPanelContentTitle: function (index) {
+    var title = false;
+
+    if (typeof index === "undefined" || index == null) {
+      index = this.state.tabIndex;
+    }
+    try {
+      title = this.state.tabList[index].title;
+    } catch (err) {
+      console.error(err);
+    }
+
+    return title;
   }
 
 });
