@@ -38,40 +38,32 @@ var Panel = React.createClass({displayName: "Panel",
   },
 
   getInitialState: function () {
-    var tabList = [],
-      defaultTabIndex = 0,
-      i = 0;
+    var self = this,
+      tabList = [],
+      defaultTabIndex = 0;
 
     this.applyPreset(this.props.preset || {});
 
+    self._id = Panel._register(self);
+
     React.Children.forEach(this.props.children, function(tab) {
-      var hasToolbar = (typeof tab.props.toolbar !== "undefined"),
-        toolbarState = tab.props.toolbarState || ((hasToolbar) ? "visible" : "none");
+      var _tab = self._registerPanelContent(tab);
 
       if (tab.props.active || false) {
-        defaultTabIndex = i;
+        defaultTabIndex = _tab.index;
       }
-      tabList.push({
-        index: i,
-        icon: tab.props.icon || false,
-        title: tab.props.title || "",
-        toolbar: toolbarState,
-        padding: Boolean(!(tab.props.noPadding || false)),
-        state: "visible"
-      });
-
-      ++i;
+      tabList[_tab.index] = _tab;
     });
 
     return {
       tabIndex: defaultTabIndex,
-      tabCount: React.Children.count(this.props.children),
+      tabCount: self._childrenList.length,
       tabList: tabList,
       state: "default"
     };
   },
 
-  getIcon: function () {
+  _getIcon: function () {
     var icon = null;
 
     if (this.props.icon) {
@@ -85,63 +77,72 @@ var Panel = React.createClass({displayName: "Panel",
     return icon;
   },
 
-  getTabs: function () {
+  _getTabs: function () {
     var self = this,
+      index = -1,
       classes = "rpanel-tabs" + (((self.state.tabCount > 1) || (self.props.forceTabs || false)) ? "" : " hidden");
 
     return (
       React.createElement("ul", {className: classes}, 
-        self.state.tabList.map(function(tab) {
+        self._childrenList.map(function(id) {
+          ++index;
+          if (id == null) return null;
 
-          return (tab.state != "none") ? (React.createElement(PanelTab, {
-            title: tab.title, 
-            icon: tab.icon, 
-            showTitle: self.props.displayTabTitles, 
-            index: tab.index, 
-            key: tab.index, 
-            selected: self.state.tabIndex, 
-            state: tab.state, 
-            onClick: self.handleClickOnTab})) : null;
+          var child = Panel._getPanelContent(id),
+            tab = self.state.tabList[index],
+            title = child.props.title || "",
+            icon = child.props.icon || false;
+
+          return (tab.state != "none") ? (
+            React.createElement(PanelTab, {
+              title: title, 
+              icon: icon, 
+              showTitle: self.props.displayTabTitles, 
+              index: index, 
+              key: index, 
+              selected: self.state.tabIndex, 
+              state: tab.state, 
+              _id: tab.id, 
+              onClick: self.handleClickOnTab}
+            )) : null;
         })
       )
     );
   },
 
-  getBody: function () {
+  _getBody: function () {
     var self = this,
-      index = 0;
+      index = -1;
 
     return (
       React.createElement("div", {className: "rpanel-body"}, 
-        React.Children.map(this.props.children, function (child) {
-          var showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
-            display = (index == self.state.tabIndex),
-            visibility = self.state.tabList[index].state,
-            classes = "rpanel-tab-body" + ((display) ? " active " : " ") + visibility,
-            toolbarClasses = "rpanel-toolbar" + ((showToolbar) ? " active" : ""),
-            contentClasses = "rpanel-content" + ((!self.state.tabList[index].padding) ? " no-padding" : "");
 
+        self._childrenList.map(function(id) {
           ++index;
+          if (id == null) return null;
 
-          if (React.isValidElement(child.props.toolbar)) {
-            child.props.toolbar.props.parentPanel = self;
-          }
-          if (React.isValidElement(child.props.children)) {
-            child.props.children.props.parentPanel = self;
-          }
+          var child = Panel._getPanelContent(id),
+            showToolbar = (['visible', 'locked'].indexOf(self.state.tabList[index].toolbar) != -1),
+            display = (index == self.state.tabIndex),
+            visibility = self.state.tabList[index].state;
 
-          return (visibility != "none") ? (
-            React.createElement("div", {className: classes, key: index - 1}, 
-              React.createElement("div", {className: toolbarClasses}, child.props.toolbar), 
-              React.createElement("div", {className: contentClasses}, child.props.children)
+          Panel._setPanelContent(
+            React.createElement(PanelContent, React.__spread({},  child.props, 
+              {key: index, 
+              _index: index, 
+              showToolbar: showToolbar, 
+              display: display, 
+              visibility: visibility})
             )
-          ) : null;
+          );
+
+          return Panel._getPanelContent(id);
         })
       )
     );
   },
 
-  getButtons: function () {
+  _getButtons: function () {
     var self = this,
       buttons = null,
       keyIndex = 0;
@@ -161,7 +162,7 @@ var Panel = React.createClass({displayName: "Panel",
             buttonIdentifier = Object.keys(button)[0];
             customButtonProps = button[buttonIdentifier];
           }
-          var predefinedButton = self.getButton(buttonIdentifier, keyIndex, customButtonProps);
+          var predefinedButton = self._getButton(buttonIdentifier, keyIndex, customButtonProps);
           if (predefinedButton || false) {
             buttons.push(predefinedButton);
             ++keyIndex;
@@ -185,7 +186,7 @@ var Panel = React.createClass({displayName: "Panel",
   },
 
   handleClickOnTab: function (child) {
-    this.setState({tabIndex: child.props.index});
+    this.setActivePanelContent(child.props.index);
   },
 
   handleClickOnClose: function (event) {
@@ -208,18 +209,12 @@ var Panel = React.createClass({displayName: "Panel",
   },
 
   handleClickOnToggleToolbar: function (event) {
-    var toolbarState = this.state.tabList[this.state.tabIndex].toolbar,
-      tabList = this.state.tabList;
+    var panelContent = this.getActivePanelContent();
 
     event.preventDefault();
-    if (toolbarState == "visible") {
-      tabList[this.state.tabIndex].toolbar = "hidden";
-      this.setState({tabList: tabList});
-    } else if (toolbarState == "hidden") {
-      tabList[this.state.tabIndex].toolbar = "visible";
-      this.setState({tabList: tabList});
+    if (panelContent) {
+      panelContent.toggleToolbar();
     }
-
   },
 
   dragStart: function (e) {
@@ -251,10 +246,11 @@ var Panel = React.createClass({displayName: "Panel",
   },
 
   render: function() {
-    var classes = this.getClasses(),
-      icon = this.getIcon(),
-      tabs = this.getTabs(),
-      buttons = this.getButtons(),
+    var classes = this._getClasses(),
+      icon = this._getIcon(),
+      body = this._getBody(),
+      tabs = this._getTabs(),
+      buttons = this._getButtons(),
       title = this.props.title + (
           (this.props.getTitleFromActiveTab) ? this.state.tabList[this.state.tabIndex].title : ""
         ),
@@ -275,8 +271,13 @@ var Panel = React.createClass({displayName: "Panel",
           buttons, 
           tabs
         )
-      ),
-      body = this.getBody();
+      );
+
+    /*if (this._needsForceUpdate) {
+      this._needsForceUpdate = false;
+      this.forceUpdate();
+      //TODO: forceUpdate active PanelContent
+    }*/
 
     var left = Number(this.props.left) || 80,
       top = Number(this.props.top) || 100,
@@ -302,7 +303,7 @@ var Panel = React.createClass({displayName: "Panel",
     );
   },
 
-  getClasses: function () {
+  _getClasses: function () {
     var classes = "rpanel " + this.props.theme;
 
     if (this.props.rounded) {
@@ -345,7 +346,7 @@ var Panel = React.createClass({displayName: "Panel",
     return classes;
   },
 
-  getButton: function (identifier, key, customProps) {
+  _getButton: function (identifier, key, customProps) {
     var preset = {};
 
     switch (identifier) {
@@ -410,33 +411,41 @@ var Panel = React.createClass({displayName: "Panel",
       (React.createElement(PanelButton, {key: key, tabIndex: key, parent: this, preset: preset})) : null;
   },
 
-  addPanelContent: function (panelContent, selected) {
-    var _state = this.state,
-      i = _state.tabList.length,
-      hasToolbar = (typeof panelContent.props.toolbar !== "undefined"),
+  _registerPanelContent: function (panelContent) {
+    var hasToolbar = (typeof panelContent.props.toolbar !== "undefined"),
       toolbarState = panelContent.props.toolbarState || ((hasToolbar) ? "visible" : "none");
 
-    _state.tabList.push({
-      index: i,
-      icon: panelContent.props.icon || false,
-      title: panelContent.props.title || "",
-      toolbar: toolbarState,
-      padding: Boolean(!(panelContent.props.noPadding || false)),
-      state: "visible"
-    });
+    panelContent.props._panelId = this._id;
 
-    _state.tabCount = i + 1;
+    var id = Panel._setPanelContent(panelContent),
+      index = this._childrenList.push(id) - 1;
+
+    return {
+      index: index,
+      toolbar: toolbarState,
+      padding: Boolean(!(panelContent.props.noPadding || false)), //TODO: deprecated
+      state: "visible",
+      id: id
+    };
+  },
+
+  addPanelContent: function (panelContent, selected) {
+    var _state = this.state,
+      _tab = this._registerPanelContent(panelContent);
+
+    _state.tabList[_tab.index] = _tab;
+
+    _state.tabCount = this._childrenList.length;
     if (selected || false) {
-      _state.tabIndex = i;
+      _state.tabIndex = _tab.index;
     }
 
-    this.props.children.push(panelContent);
     this.setState(_state);
   },
 
   removePanelContent: function (index, hideOnly) {
     var _state = this.state,
-      switchToOtherTab = false,
+      switchToOtherTab,
       newTabState = (hideOnly || false) ? "hidden" : "none",
       i = 0;
 
@@ -478,34 +487,70 @@ var Panel = React.createClass({displayName: "Panel",
     this.setState(_state);
   },
 
-  setPanelContentTitle: function (newTitle, index) {
-    if (typeof index === "undefined" || index == null) {
-      index = this.state.tabIndex;
-    }
+  getPanelContentAt: function (index) {
+    var id = this._childrenList[index];
 
-    var tabList = this.state.tabList;
-    try {
-      tabList[index].title = newTitle;
-      this.props.children[index].props.title = newTitle;
-      this.setState({tabList: tabList});
-    } catch (err) {
-      console.error(err);
-    }
+    return (id == null) ? false : Panel.getPanelContent(id);
   },
 
-  getPanelContentTitle: function (index) {
-    var title = false;
+  setActivePanelContent: function (index) {
+    this.setState({tabIndex: index || 0});
+  },
 
-    if (typeof index === "undefined" || index == null) {
-      index = this.state.tabIndex;
-    }
-    try {
-      title = this.state.tabList[index].title;
-    } catch (err) {
-      console.error(err);
-    }
+  getActivePanelContent: function () {
+    return this.getPanelContentAt(this.state.tabIndex);
+  },
 
-    return title;
+  _childrenList: [],
+  _id: null,
+
+  statics: {
+
+    _register: function (panel) {
+      return (Panel._panelList.push(panel) - 1);
+    },
+
+    getPanel: function (id) {
+      return Panel._panelList[id] || false;
+    },
+
+    _getPanelContent: function (id) {
+      return Panel._panelContentList[id] || false;
+    },
+
+    getPanelContent: function (id) {
+      return Panel._panelContentObjectList[id] || false;
+    },
+
+    _setPanelContent: function (panelContent) {
+      var id = null;
+
+      if (panelContent.props._id != null) {
+        id = Number(panelContent.props._id);
+        Panel._panelContentList[id] = (panelContent);
+      } else {
+        id = Panel._panelContentList.length;
+        Panel._panelContentList[id] = (
+          React.createElement(PanelContent, React.__spread({},  panelContent.props, 
+            {_id: id})
+          )
+        );
+      }
+
+      return id;
+    },
+
+    _setPanelContentObject: function (panelContentObject) {
+      var id = Number(panelContentObject.getId());
+
+      Panel._panelContentObjectList[id] = panelContentObject;
+
+      return id;
+    },
+
+    _panelContentList: [],
+    _panelContentObjectList: [],
+    _panelList: []
   }
 
 });
@@ -555,9 +600,147 @@ var PanelTab = React.createClass({displayName: "PanelTab",
   }
 });
 
+/*
+ * react-panels
+ * https://github.com/Theadd/react-panels
+ *
+ * Copyright (c) 2015 R.Beltran https://github.com/Theadd
+ * Licensed under the MIT license.
+ */
+
 var PanelContent = React.createClass({displayName: "PanelContent",
+
+  getDefaultProps: function () {
+    return {
+      "noPadding": false,
+      "_panel": {},
+      "_panelId": null,
+      "_index": null,
+      "_id": null,
+      "title": "",
+      "icon": false
+    };
+
+  },
+
+  getInitialState: function () {
+    Panel._setPanelContentObject(this);
+    return {};
+  },
+
+  updateProps: function (props) {
+    this.setProps(props);
+  },
+
+  getPanel: function () {
+    if (this.props._panelId != null) {
+      return Panel.getPanel(this.props._panelId);
+    } else {
+      console.error("This PanelContent is not attached to any Panel.");
+      return false;
+    }
+  },
+
+  getId: function () {
+    return this.props._id;
+  },
+
+  getIndex: function () {
+    return this.props._index;
+  },
+
+  isHidden: function () {
+    return (this.props.visibility == "hidden");
+  },
+
+  isRemoved: function () {
+    return (this.props.visibility == "removed");
+  },
+
+  isActive: function () {
+    return this.props.display;
+  },
+
+  setActive: function () {
+    this.getPanel().setActivePanelContent(this.getIndex());
+  },
+
+  hide: function () {
+    this.getPanel().removePanelContent(this.getIndex(), true);
+  },
+
+  remove: function () {
+    this.getPanel().removePanelContent(this.getIndex(), false);
+  },
+
+  restore: function (shouldBeActive) {
+    this.getPanel().restorePanelContent(this.getIndex(), shouldBeActive || false);
+  },
+
+  isToolbarActive: function () {
+    return this.props.showToolbar;
+  },
+
+  setToolbarActive: function (shouldBeActive) {
+    if (this.isToolbarActive != shouldBeActive) {
+      this.toggleToolbar();
+    }
+  },
+
+  toggleToolbar: function () {
+    var panel = this.getPanel(),
+      index = this.getIndex(),
+      toolbarState = panel.state.tabList[index].toolbar,
+      tabList = panel.state.tabList;
+
+    if (toolbarState == "visible") {
+      tabList[index].toolbar = "hidden";
+      panel.setState({tabList: tabList});
+    } else if (toolbarState == "hidden") {
+      tabList[index].toolbar = "visible";
+      panel.setState({tabList: tabList});
+    }
+  },
+
+  getTitle: function () {
+    return this.props.title;
+  },
+
+  setTitle: function (newTitle) {
+    this.props.title = newTitle || "";
+    this.getPanel().forceUpdate();
+  },
+
+  getIcon: function () {
+    return this.props.icon;
+  },
+
+  setIcon: function (newIcon) {
+    this.props.icon = newIcon || false;
+    this.getPanel().forceUpdate();
+  },
+
   render: function() {
-    //dummy
+    var classes = "rpanel-tab-body" + ((this.isActive() && !this.isHidden()) ? " active" : ""),
+      toolbarClasses = "rpanel-toolbar" + ((this.isToolbarActive()) ? " active" : ""),
+      contentClasses = "rpanel-content" + ((this.props.noPadding) ? " no-padding" : "");
+
+    var id = this.getId(),
+      childContent = React.Children.only(this.props.children);
+
+    if (React.isValidElement(this.props.toolbar)) {
+      this.props.toolbar.props._panelContentId = id;
+    }
+    if (React.isValidElement(childContent)) {
+      childContent.props._panelContentId = id;
+    }
+
+    return (!this.isRemoved()) ? (
+      React.createElement("div", {className: classes}, 
+        React.createElement("div", {className: toolbarClasses}, this.props.toolbar), 
+        React.createElement("div", {className: contentClasses}, childContent)
+      )
+    ) : null;
   }
 });
 
