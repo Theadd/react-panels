@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>react-panels: dynamic tabs</title>
+  <link rel="stylesheet" href="../dist/react-panels.css" type="text/css" />
+  <link rel="stylesheet" href="thirdparty/css/font-awesome.min.css" type="text/css" />
+
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      padding: 20px;
+      background-color: #F2F2F2;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-width: 300px;
+      width: 50%;
+    }
+    .input-example {
+      padding: 5px 10px;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-height: 32px;
+      border: 1px solid #aaa;
+      width: 100%;
+    }
+  </style>
+
+  <script src="thirdparty/js/react.js"></script>
+  <script src="thirdparty/js/JSXTransformer.js"></script>
+  <script src="../dist/react-panels.js"></script>
+</head>
+<body>
+
+  <div id="example"></div>
+
+  <script type="text/jsx">
+
+    var ChangeTitleToolbar = React.createClass({
+
+      handleClick: function() {
+        var inputNode = this.refs.newTitleInput.getDOMNode();
+        this.getPanelContent().setTitle(inputNode.value);
+        inputNode.value = "";
+      },
+
+      getPanelContent: function () {
+        return Panel.getPanelContent(this.props._panelContentId);
+      },
+
+      render: function() {
+        return (
+          <span>
+            <input type="text"
+              ref="newTitleInput"
+              placeholder="Change title of this tab"
+              className="input-example"
+              style={{width: "calc(100% - 120px)"}}
+            />
+            <input type="button"
+              value="Update"
+              className="input-example"
+              style={{width: "110px", margin: "0 0 0 10px"}}
+              onClick={this.handleClick}
+            />
+          </span>
+        );
+      }
+
+    });
+
+    var SomeContentComponent = React.createClass({
+
+      handleClick: function(event) {
+        event.preventDefault();
+        alert("Title of active tab: " + this.getPanelContent().getTitle());
+      },
+
+      handleClick2: function(event) {
+        event.preventDefault();
+        this.getPanelContent().hide();
+      },
+
+      handleClick3: function(event) {
+        var panelContent = this.getPanelContent(),
+          leftIndex = (panelContent.getIndex() || 1) - 1,
+          leftPanelContent = panelContent.getPanel().getPanelContentAt(leftIndex);
+
+        event.preventDefault();
+        if (leftPanelContent) {
+          leftPanelContent.restore(false);
+        }
+      },
+
+      handleClick4: function(event) {
+        event.preventDefault();
+        this.getPanelContent().toggleToolbar();
+      },
+
+      getPanelContent: function () {
+        return Panel.getPanelContent(this.props._panelContentId);
+      },
+
+      render: function() {
+        var toolbarAction = (this.getPanelContent().isToolbarActive()) ? "hide" : "show";
+
+        return (
+          <ul>
+            <li>Click <a href="#" onClick={this.handleClick}>here</a> to display the title in an alert!</li>
+            <li>Click <a href="#" onClick={this.handleClick2}>here</a> to hide current tab instead of removing it!</li>
+            <li>Click <a href="#" onClick={this.handleClick3}>here</a> to restore the first tab on the left side of the current tab. Either it was removed, hidden or it is already visible.</li>
+            <li>Click <a href="#" onClick={this.handleClick4}>here</a> to {toolbarAction} the toolbar.</li>
+          </ul>
+        );
+      }
+
+    });
+
+    React.render(
+      <Panel
+        title="Panel Title"
+        icon="fa fa-cube"
+        buttons={[
+          <CustomPanelButton
+            title="Add Tab!"
+            preset={{
+              "identifier": "addTab",
+              "icon": "fa fa-plus",
+              "onClick": function (event, button) {
+                event.preventDefault();
+                button.props.parent.addPanelContent(
+                  <PanelContent
+                    icon="fa fa-child"
+                    title="Child"
+                    toolbar={(<ChangeTitleToolbar />)}
+                  >
+                    <SomeContentComponent />
+                  </PanelContent>,
+                  true
+                );
+              }
+            }}
+          />,
+          <CustomPanelButton
+            title="Remove Active Tab!"
+            preset={{
+              "identifier": "removeTab",
+              "icon": "fa fa-trash",
+              "onClick": function (event, button) {
+                event.preventDefault();
+                button.props.parent.removePanelContent();
+              }
+            }}
+          />
+        ]}>
+        <PanelContent
+          icon="fa fa-beer"
+          title="Beer"
+        >
+          <div>First tab content here</div>
+        </PanelContent>
+        <PanelContent
+          icon="fa fa-coffee"
+          title="Coffee"
+        >
+          <div>Second tab content here</div>
+        </PanelContent>
+      </Panel>,
+      document.getElementById('example')
+    );
+  </script>
+
+
+</body>
+</html>
