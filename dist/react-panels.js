@@ -45,6 +45,7 @@ var Panel = React.createClass({displayName: "Panel",
     this.applyPreset(this.props.preset || {});
 
     self._id = Panel._register(self);
+    self._childrenList = [];
 
     React.Children.forEach(this.props.children, function(tab) {
       var _tab = self._registerPanelContent(tab);
