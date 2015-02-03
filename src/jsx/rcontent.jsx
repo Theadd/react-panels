@@ -40,11 +40,11 @@ var PanelContent = React.createClass({
   },
 
   getId: function () {
-    return this.props._id;
+    return Number(this.props._id);
   },
 
   getIndex: function () {
-    return this.props._index;
+    return Number(this.props._index);
   },
 
   isHidden: function () {
@@ -52,7 +52,7 @@ var PanelContent = React.createClass({
   },
 
   isRemoved: function () {
-    return (this.props.visibility == "removed");
+    return (this.props.visibility == "none");
   },
 
   isActive: function () {
@@ -80,7 +80,7 @@ var PanelContent = React.createClass({
   },
 
   setToolbarActive: function (shouldBeActive) {
-    if (this.isToolbarActive != shouldBeActive) {
+    if (this.isToolbarActive() != shouldBeActive) {
       this.toggleToolbar();
     }
   },

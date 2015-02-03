@@ -18,6 +18,7 @@ var Panel = React.createClass({displayName: "Panel",
         "opaque": false,
         "raised": false,
         "rounded": false,
+        "forceTabs": false,
         "buttons": [],
         /** Set panel title based on the title of the active tab. */
         "getTitleFromActiveTab": false,
@@ -455,7 +456,7 @@ var Panel = React.createClass({displayName: "Panel",
     }
     switchToOtherTab = (index == _state.tabIndex);
     _state.tabList[index].state = newTabState;
-    var newTabIndex = index;
+    var newTabIndex = _state.tabIndex;
     if (switchToOtherTab) {
       for (i = index + 1; i < _state.tabList.length; ++i) {
         if (_state.tabList[i].state == "visible") {
@@ -500,6 +501,25 @@ var Panel = React.createClass({displayName: "Panel",
 
   getActivePanelContent: function () {
     return this.getPanelContentAt(this.state.tabIndex);
+  },
+
+  getPanelContentList: function (visible, hidden, removed, activeOnly, childrenOnly) {
+    var self = this,
+      list = [];
+
+    Object.keys(Panel._panelContentObjectList).forEach(function(id) {
+      var index = self._childrenList.indexOf(Number(id));
+      if ((childrenOnly || false) && index == -1) return;
+      var panelContent = Panel._panelContentObjectList[id];
+      if ((activeOnly || false) && !panelContent.isActive()) return;
+      if (!(removed || false) && panelContent.isRemoved()) return;
+      if (!(hidden || false) && panelContent.isHidden()) return;
+      if (!(visible || false) && (!panelContent.isRemoved() && !panelContent.isHidden())) return;
+
+      list.push(panelContent);
+    });
+
+    return list;
   },
 
   _childrenList: [],
@@ -643,11 +663,11 @@ var PanelContent = React.createClass({displayName: "PanelContent",
   },
 
   getId: function () {
-    return this.props._id;
+    return Number(this.props._id);
   },
 
   getIndex: function () {
-    return this.props._index;
+    return Number(this.props._index);
   },
 
   isHidden: function () {
@@ -655,7 +675,7 @@ var PanelContent = React.createClass({displayName: "PanelContent",
   },
 
   isRemoved: function () {
-    return (this.props.visibility == "removed");
+    return (this.props.visibility == "none");
   },
 
   isActive: function () {
@@ -683,7 +703,7 @@ var PanelContent = React.createClass({displayName: "PanelContent",
   },
 
   setToolbarActive: function (shouldBeActive) {
-    if (this.isToolbarActive != shouldBeActive) {
+    if (this.isToolbarActive() != shouldBeActive) {
       this.toggleToolbar();
     }
   },
@@ -764,6 +784,7 @@ var PanelButton = React.createClass({displayName: "PanelButton",
         "active": false,
         "disabled": false,
         "hiddenOnFullscreen": false,
+        "showContent": false,
         "onClick": function () {}
       };
 
@@ -787,6 +808,25 @@ var PanelButton = React.createClass({displayName: "PanelButton",
     }
   },
 
+  getPanel: function () {
+    return this.props.parent;
+  },
+
+  isContentVisible: function () {
+    return this.props.showContent;
+  },
+
+  setContentVisible: function (shouldBeVisible) {
+    if (this.isContentVisible() != shouldBeVisible) {
+      this.toggleContent();
+    }
+  },
+
+  toggleContent: function () {
+    this.props.showContent = !this.props.showContent;
+    this.forceUpdate();
+  },
+
   handleClick: function (event) {
     if (typeof this.props.onClick === "function") {
       this.props.onClick(event, this);
@@ -796,16 +836,24 @@ var PanelButton = React.createClass({displayName: "PanelButton",
   render: function() {
     this.applyPreset(this.props.preset || {});
 
-    var classes = "rpanel-control" +
+    var self = this,
+      classes = "rpanel-control" +
       ((this.props.active) ? " active" : "") +
       ((this.props.disabled) ? " disabled" : "") +
-      ((this.props.hiddenOnFullscreen && this.props.parent.state.state == "fullscreen") ? " hidden" : "");
+      ((this.props.hiddenOnFullscreen && this.props.parent.state.state == "fullscreen") ? " hidden" : ""),
+      content = ((this.props.showContent && React.Children.count(this.props.children)) ?
+        React.Children.map(this.props.children, function(child) {
+          child.props._button = self;
+
+          return child;
+        }) : null);
 
     return (
       React.createElement("div", {className: classes, key: this.props.tabIndex, onClick: this.handleClick}, 
         React.createElement("a", {href: "#", className: "rpanel-button", title: this.props.title}, 
           React.createElement("i", {className: this.props.icon})
-        )
+        ), 
+      content
       )
     );
   }

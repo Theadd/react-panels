@@ -18,6 +18,7 @@ var Panel = React.createClass({
         "opaque": false,
         "raised": false,
         "rounded": false,
+        "forceTabs": false,
         "buttons": [],
         /** Set panel title based on the title of the active tab. */
         "getTitleFromActiveTab": false,
@@ -455,7 +456,7 @@ var Panel = React.createClass({
     }
     switchToOtherTab = (index == _state.tabIndex);
     _state.tabList[index].state = newTabState;
-    var newTabIndex = index;
+    var newTabIndex = _state.tabIndex;
     if (switchToOtherTab) {
       for (i = index + 1; i < _state.tabList.length; ++i) {
         if (_state.tabList[i].state == "visible") {
@@ -500,6 +501,25 @@ var Panel = React.createClass({
 
   getActivePanelContent: function () {
     return this.getPanelContentAt(this.state.tabIndex);
+  },
+
+  getPanelContentList: function (visible, hidden, removed, activeOnly, childrenOnly) {
+    var self = this,
+      list = [];
+
+    Object.keys(Panel._panelContentObjectList).forEach(function(id) {
+      var index = self._childrenList.indexOf(Number(id));
+      if ((childrenOnly || false) && index == -1) return;
+      var panelContent = Panel._panelContentObjectList[id];
+      if ((activeOnly || false) && !panelContent.isActive()) return;
+      if (!(removed || false) && panelContent.isRemoved()) return;
+      if (!(hidden || false) && panelContent.isHidden()) return;
+      if (!(visible || false) && (!panelContent.isRemoved() && !panelContent.isHidden())) return;
+
+      list.push(panelContent);
+    });
+
+    return list;
   },
 
   _childrenList: [],

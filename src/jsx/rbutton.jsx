@@ -17,6 +17,7 @@ var PanelButton = React.createClass({
         "active": false,
         "disabled": false,
         "hiddenOnFullscreen": false,
+        "showContent": false,
         "onClick": function () {}
       };
 
@@ -40,6 +41,25 @@ var PanelButton = React.createClass({
     }
   },
 
+  getPanel: function () {
+    return this.props.parent;
+  },
+
+  isContentVisible: function () {
+    return this.props.showContent;
+  },
+
+  setContentVisible: function (shouldBeVisible) {
+    if (this.isContentVisible() != shouldBeVisible) {
+      this.toggleContent();
+    }
+  },
+
+  toggleContent: function () {
+    this.props.showContent = !this.props.showContent;
+    this.forceUpdate();
+  },
+
   handleClick: function (event) {
     if (typeof this.props.onClick === "function") {
       this.props.onClick(event, this);
@@ -49,16 +69,24 @@ var PanelButton = React.createClass({
   render: function() {
     this.applyPreset(this.props.preset || {});
 
-    var classes = "rpanel-control" +
+    var self = this,
+      classes = "rpanel-control" +
       ((this.props.active) ? " active" : "") +
       ((this.props.disabled) ? " disabled" : "") +
-      ((this.props.hiddenOnFullscreen && this.props.parent.state.state == "fullscreen") ? " hidden" : "");
+      ((this.props.hiddenOnFullscreen && this.props.parent.state.state == "fullscreen") ? " hidden" : ""),
+      content = ((this.props.showContent && React.Children.count(this.props.children)) ?
+        React.Children.map(this.props.children, function(child) {
+          child.props._button = self;
+
+          return child;
+        }) : null);
 
     return (
       <div className={classes} key={this.props.tabIndex} onClick={this.handleClick}>
         <a href="#" className="rpanel-button" title={this.props.title}>
           <i className={this.props.icon}></i>
         </a>
+      {content}
       </div>
     );
   }
