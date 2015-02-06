@@ -122,15 +122,16 @@
       <Panel
         title="Panel Title"
         icon="fa fa-cube"
+        forceTabs={true}
         buttons={[
-          <CustomPanelButton
+          <PanelButton
             title="Add Tab!"
             preset={{
               "identifier": "addTab",
               "icon": "fa fa-plus",
               "onClick": function (event, button) {
                 event.preventDefault();
-                button.props.parent.addPanelContent(
+                button.getPanel().addPanelContent(
                   <PanelContent
                     icon="fa fa-child"
                     title="Child"
@@ -143,14 +144,14 @@
               }
             }}
           />,
-          <CustomPanelButton
+          <PanelButton
             title="Remove Active Tab!"
             preset={{
               "identifier": "removeTab",
               "icon": "fa fa-trash",
               "onClick": function (event, button) {
                 event.preventDefault();
-                button.props.parent.removePanelContent();
+                button.getPanel().getActivePanelContent().remove();
               }
             }}
           />

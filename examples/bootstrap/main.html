@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fixed Top Navbar Example for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../dist/react-panels.css" type="text/css" />
+
+    <!-- Custom styles for this template -->
+    <link href="src/css/main.css" rel="stylesheet">
+
+    <style>
+
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- REACT-BOOTSTRAP -->
+
+    <!--[if lt IE 9]>
+    <script>
+      (function(){
+        var ef = function(){};
+        window.console = window.console || {log:ef,warn:ef,error:ef,dir:ef};
+      }());
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv-printshiv.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-sham.js"></script>
+    <![endif]-->
+
+    <!-- END REACT-BOOTSTRAP -->
+
+  </head>
+
+  <body>
+    <div id="navbar"></div>
+
+    <div class="container">
+
+      <div id="grid-example"></div>
+
+    </div> <!-- /container -->
+    <div id="window-example"></div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+
+    <script src="bower_components/react/react.js"></script>
+    <script src="bower_components/react/JSXTransformer.js"></script>
+    <script src="bower_components/react-bootstrap/react-bootstrap.js"></script>
+    <script src="../../dist/react-panels.js"></script>
+    <script>
+      var Jumbotron = ReactBootstrap.Jumbotron;
+      var Button = ReactBootstrap.Button;
+      var Navbar = ReactBootstrap.Navbar;
+      var Nav = ReactBootstrap.Nav;
+      var NavItem = ReactBootstrap.NavItem;
+      var DropdownButton = ReactBootstrap.DropdownButton;
+      var MenuItem = ReactBootstrap.MenuItem;
+      var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+      var SplitButton = ReactBootstrap.SplitButton;
+      var BootstrapPanel = ReactBootstrap.Panel;
+      var TabbedArea = ReactBootstrap.TabbedArea;
+      var TabPane = ReactBootstrap.TabPane;
+      var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+      var Popover = ReactBootstrap.Popover;
+
+      var Grid = ReactBootstrap.Grid;
+      var Row = ReactBootstrap.Row;
+      var Col = ReactBootstrap.Col;
+
+      var Input = ReactBootstrap.Input;
+    </script>
+
+    <script type="text/jsx" src="src/jsx/buttons.jsx"></script>
+    <script type="text/jsx" src="src/jsx/toolbars.jsx"></script>
+    <script type="text/jsx" src="src/jsx/panel-contents.jsx"></script>
+    <script type="text/jsx" src="src/jsx/panels.jsx"></script>
+    <script type="text/jsx" src="src/jsx/main.jsx"></script>
+  </body>
+</html>

@@ -11,7 +11,7 @@ var PanelContent = React.createClass({
   getDefaultProps: function () {
     return {
       "noPadding": false,
-      "_panel": {},
+      "_panel": {}, //DEPRECATED
       "_panelId": null,
       "_index": null,
       "_id": null,
@@ -116,6 +116,13 @@ var PanelContent = React.createClass({
   setIcon: function (newIcon) {
     this.props.icon = newIcon || false;
     this.getPanel().forceUpdate();
+  },
+
+  moveTo: function (targetPanelId, activeOnTarget, targetIndex) {
+    var id = this.getId();
+
+    targetIndex = ((typeof targetIndex === "undefined") || (targetIndex == null)) ? null : targetIndex;
+    Panel.movePanelContent(id, targetPanelId, activeOnTarget || false, targetIndex);
   },
 
   render: function() {

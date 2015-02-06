@@ -35,15 +35,16 @@
         title="Panel Title"
         icon="fa fa-cube"
         buttons={[
-          <CustomPanelButton
+          <PanelButton
             title="Another beer!"
             preset={{
               "identifier": "beer",
               "icon": "fa fa-beer",
               "onClick": function (event, button) {
                 event.preventDefault();
-                button.props.parent.numBeers = (button.props.parent.numBeers || 1) + 1;
-                button.props.parent.setProps({"title": "I want " + button.props.parent.numBeers + " beers!"});
+                var panel = button.getPanel();
+                panel.numBeers = (panel.numBeers || 1) + 1;
+                panel.setProps({"title": "I want " + panel.numBeers + " beers!"});
               }
             }}
           />,
