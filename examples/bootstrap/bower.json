@@ -1,0 +1,25 @@
+{
+  "name": "react-panels-with-bootstrap",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Theadd/react-panels",
+  "authors": [
+    "Theadd <pantallazo@gmail.com>"
+  ],
+  "main": "main.html",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.12.2",
+    "bootstrap": "~3.3.2",
+    "react-bootstrap": "~0.13.3"
+  }
+}
