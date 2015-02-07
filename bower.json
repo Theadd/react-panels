@@ -28,7 +28,9 @@
     "tests"
   ],
   "dependencies": {
-    "react": "~0.12.2",
+    "react": "~0.12.2"
+  },
+  "devDependencies": {
     "react-bootstrap": "~0.13.3",
     "bootstrap": "~3.3.2"
   }
