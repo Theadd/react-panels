@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         }
       },
       sources: {
-        files: ['src/jsx/**'],
+        files: ['src/jsx/**', 'examples/bootstrap.html_files/src/**'],
         tasks: ['react'],
         options: {
           spawn: true,
@@ -49,6 +49,13 @@ module.exports = function(grunt) {
             'src/jsx/rpanel.jsx',
             'src/jsx/rcontent.jsx',
             'src/jsx/rbutton.jsx'
+          ],
+          'examples/bootstrap.html_files/main.js': [
+            'examples/bootstrap.html_files/src/buttons.jsx',
+            'examples/bootstrap.html_files/src/toolbars.jsx',
+            'examples/bootstrap.html_files/src/panel-contents.jsx',
+            'examples/bootstrap.html_files/src/panels.jsx',
+            'examples/bootstrap.html_files/src/main.jsx'
           ]
         }
       }

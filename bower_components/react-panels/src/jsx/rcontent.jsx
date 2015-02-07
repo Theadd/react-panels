@@ -11,7 +11,7 @@ var PanelContent = React.createClass({
   getDefaultProps: function () {
     return {
       "noPadding": false,
-      "_panel": {},
+      "_panel": {}, //DEPRECATED
       "_panelId": null,
       "_index": null,
       "_id": null,
@@ -40,11 +40,11 @@ var PanelContent = React.createClass({
   },
 
   getId: function () {
-    return this.props._id;
+    return Number(this.props._id);
   },
 
   getIndex: function () {
-    return this.props._index;
+    return Number(this.props._index);
   },
 
   isHidden: function () {
@@ -52,7 +52,7 @@ var PanelContent = React.createClass({
   },
 
   isRemoved: function () {
-    return (this.props.visibility == "removed");
+    return (this.props.visibility == "none");
   },
 
   isActive: function () {
@@ -80,7 +80,7 @@ var PanelContent = React.createClass({
   },
 
   setToolbarActive: function (shouldBeActive) {
-    if (this.isToolbarActive != shouldBeActive) {
+    if (this.isToolbarActive() != shouldBeActive) {
       this.toggleToolbar();
     }
   },
@@ -116,6 +116,13 @@ var PanelContent = React.createClass({
   setIcon: function (newIcon) {
     this.props.icon = newIcon || false;
     this.getPanel().forceUpdate();
+  },
+
+  moveTo: function (targetPanelId, activeOnTarget, targetIndex) {
+    var id = this.getId();
+
+    targetIndex = ((typeof targetIndex === "undefined") || (targetIndex == null)) ? null : targetIndex;
+    Panel.movePanelContent(id, targetPanelId, activeOnTarget || false, targetIndex);
   },
 
   render: function() {

@@ -149,7 +149,7 @@
   margin-right: 6px;
   opacity: 0.85;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab .rpanel-title.hidden {
+.rpanel > header .rpanel-tabs .rpanel-tab .rpanel-title.rpanel-no-title {
   margin-left: 0;
 }
 .rpanel > header .rpanel-tabs * {

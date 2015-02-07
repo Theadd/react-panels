@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>react-panels: custom buttons</title>
   <link rel="stylesheet" href="../dist/react-panels.css" type="text/css" />
-  <link rel="stylesheet" href="thirdparty/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
 
   <style>
     html {
@@ -21,8 +21,8 @@
     }
   </style>
 
-  <script src="thirdparty/js/react.js"></script>
-  <script src="thirdparty/js/JSXTransformer.js"></script>
+  <script src="../bower_components/react/react.js"></script>
+  <script src="../bower_components/react/JSXTransformer.js"></script>
   <script src="../dist/react-panels.js"></script>
 </head>
 <body>
@@ -35,15 +35,16 @@
         title="Panel Title"
         icon="fa fa-cube"
         buttons={[
-          <CustomPanelButton
+          <PanelButton
             title="Another beer!"
             preset={{
               "identifier": "beer",
               "icon": "fa fa-beer",
               "onClick": function (event, button) {
                 event.preventDefault();
-                button.props.parent.numBeers = (button.props.parent.numBeers || 1) + 1;
-                button.props.parent.setProps({"title": "I want " + button.props.parent.numBeers + " beers!"});
+                var panel = button.getPanel();
+                panel.numBeers = (panel.numBeers || 1) + 1;
+                panel.setProps({"title": "I want " + panel.numBeers + " beers!"});
               }
             }}
           />,
