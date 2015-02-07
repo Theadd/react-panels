@@ -364,10 +364,19 @@ var Panel = React.createClass({displayName: "Panel",
       body = this._getBody(),
       tabs = this._getTabs(),
       buttons = this._getButtons(),
-      title = this.props.title + (
-          (this.props.getTitleFromActiveTab) ? this._getActivePanelContent().props.title : ""
-        ),
-      header = (this.props.draggable || false) ? (
+      title = this.props.title;
+
+    try {
+      if (this.props.getTitleFromActiveTab) {
+        title += this._getActivePanelContent().props.title || "";
+      }
+    } catch (e) {
+      console.trace();
+      console.error(e);
+    }
+
+    var header = (this.props.draggable || false) ?
+      (
         React.createElement("header", {
           draggable: "true", 
           onDragEnd: this.dragEnd, 
@@ -385,12 +394,6 @@ var Panel = React.createClass({displayName: "Panel",
           tabs
         )
       );
-
-    /*if (this._needsForceUpdate) {
-      this._needsForceUpdate = false;
-      this.forceUpdate();
-      //TODO: forceUpdate active PanelContent
-    }*/
 
     var left = Number(this.props.left) || 80,
       top = Number(this.props.top) || 100,
