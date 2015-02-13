@@ -21,6 +21,14 @@ module.exports = function(grunt) {
           spawn: true,
           interrupt: true
         }
+      },
+      docs: {
+        files: ['dist/react-panels.js'],
+        tasks: ['jsdoc'],
+        options: {
+          spawn: true,
+          interrupt: false
+        }
       }
     },
     less: {
@@ -59,14 +67,25 @@ module.exports = function(grunt) {
           ]
         }
       }
+    },
+    jsdoc : {
+      dist : {
+        src: ['dist/react-panels.js'],
+        options: {
+          destination: 'docs/dist',
+          template : "docs/templates/jaguar",
+          configure : "docs/templates/jaguar/conf.json"
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-react');
+  grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', ['less', 'react']);
-  grunt.registerTask('live', ['watch', 'less', 'react']);
+  grunt.registerTask('default', ['less', 'react', 'jsdoc']);
+  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc']);
 
 };

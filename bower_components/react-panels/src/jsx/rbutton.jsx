@@ -6,6 +6,12 @@
  * Licensed under the MIT license.
  */
 
+/**
+ * Main mixin for panel buttons.
+ *
+ * @exports PanelButtonMixin
+ * @namespace PanelButtonMixin
+ */
 var PanelButtonMixin = {
   getPanel: function () {
     if (this.props._panelId != null) {
@@ -16,6 +22,12 @@ var PanelButtonMixin = {
     }
   },
 
+  /**
+   * Returns true if button is active, false otherwise.
+   *
+   * @memberof! PanelButtonMixin#
+   * @method isActive
+   */
   isActive: function () {
     return this.props._active;
   },
@@ -44,6 +56,23 @@ var PanelButtonMixin = {
   }
 };
 
+/**
+ * Mixin for openable panel buttons.
+ *
+ * @example
+ * var MoveTabButton = React.createClass({
+ *   mixins: [PanelButtonMixin, PanelButtonOpenableMixin],
+ *
+ *   handleClick: function(event) {
+ *     var element = event.target,
+ *       leftPanelId = Panel.getPanelByName(Left Panel).getId();
+ *
+ *     event.preventDefault();
+ *   }
+ * });
+ * @exports PanelButtonOpenableMixin
+ * @namespace PanelButtonOpenableMixin
+ */
 var PanelButtonOpenableMixin = {
   _isListeningToOutsideClick: false,
 
@@ -65,7 +94,12 @@ var PanelButtonOpenableMixin = {
   }
 };
 
-var PanelControl = React.createClass({
+/**
+ * Wrapper for panel buttons.
+ * @class
+ * @ignore
+ */
+var PanelControl = React.createClass(/** @lends PanelControl.prototype */{
   _childObject: false,
 
   propTypes: {
@@ -154,8 +188,12 @@ var PanelControl = React.createClass({
   }
 });
 
-
-var PanelButton = React.createClass({
+/**
+ * A basic panel button.
+ * @class PanelButton
+ * @mixes PanelButtonMixin
+ */
+var PanelButton = React.createClass(/** @lends PanelButton.prototype */{
   mixins: [PanelButtonMixin],
 
   applyPreset: function (preset) {

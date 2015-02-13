@@ -6,19 +6,41 @@
  * Licensed under the MIT license.
  */
 
-var PanelContent = React.createClass({
+/**
+ * A PanelContent component that can be used within a {@link Panel}.
+ * @class PanelContent
+ * @namespace PanelContent
+ */
+var PanelContent = React.createClass(/** @lends PanelContent.prototype */{
 
   getDefaultProps: function () {
-    return {
+    /**
+     * @exports PanelContent/props
+     * @namespace PanelContent.props
+     */
+    var defaultProps = {
       "noPadding": false,
-      "_panel": {}, //DEPRECATED
       "_panelId": null,
       "_index": null,
       "_id": null,
+      /**
+       * Tab's title.
+       * @memberof! PanelContent.props#
+       * @member title
+       * @type {string}
+       */
       "title": "",
+      /**
+       * Tab's icon className, like the ones used in bootstrap's glyphicons or font-awesome.
+       * @memberof! PanelContent.props#
+       * @member icon
+       * @type {string}
+       * @default false
+       */
       "icon": false
     };
 
+    return defaultProps;
   },
 
   getInitialState: function () {
@@ -30,6 +52,10 @@ var PanelContent = React.createClass({
     this.setProps(props);
   },
 
+  /**
+   * Returns the Panel instance containing this PanelContent.
+   * @return {*}
+   */
   getPanel: function () {
     if (this.props._panelId != null) {
       return Panel.getPanel(this.props._panelId);
@@ -39,6 +65,10 @@ var PanelContent = React.createClass({
     }
   },
 
+  /**
+   * Returns this PanelContent's ID.
+   * @return {Number}
+   */
   getId: function () {
     return Number(this.props._id);
   },
