@@ -6,31 +6,89 @@
  * Licensed under the MIT license.
  */
 
-var Panel = React.createClass({displayName: "Panel",
+/**
+ * A panel component.
+ *
+ * @class Panel
+ * @namespace Panel
+ */
+var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel",
+
+  /**
+   * @exports Panel/props
+   * @namespace Panel.props
+   */
+  defaultProps: {
+    "icon": "",
+    /**
+     * Title of the panel.
+     * @memberof! Panel.props#
+     * @member title
+     */
+    "title": "",
+    /**
+     * Name of the panel (Not shown, you can use it to set/get panels by name).
+     * @memberof! Panel.props#
+     * @member name
+     * @see [getName]{@link Panel#getName}
+     * @see [setName]{@link Panel#setName}
+     * @see [getPanelByName]{@link Panel.getPanelByName}
+     */
+    "name": "",
+    "theme": "default",
+    "bordered": false,
+    "opaque": false,
+    "raised": false,
+    "rounded": false,
+    "forceTabs": false,
+    "panelState": "default",
+    "buttons": [],
+    "getTitleFromActiveTab": false,
+    "displayTabTitles": true,
+    "emptyPanelContent": function () {
+      return (React.createElement(PanelContent, {noPadding: true}));
+    },
+    /**
+     * Reports a change in the number of visible tabs before it happens.
+     * @memberof! Panel.props#
+     * @method onTabCountChange
+     *
+     * @example
+     * var someListener = function (panel, tabCountEvent) {
+     *   console.dir(panel);
+     *   console.dir(tabCountEvent);
+     * };
+     *
+     * var somePanel = (&lt;Panel ... onTabCountChange={someListener}&gt;...&lt;/Panel&gt;);
+     * @default false
+     * @param {Panel} self - {@link Panel} Instance.
+     * @param {*} value - A [TabCount]{@link Panel#event:TabCount} event.
+     * @listens Panel#event:TabCount
+     */
+    "onTabCountChange": false,
+    /**
+     * Reports a change in the number of visible tabs after it happened, triggered from <componentDidUpdate>.
+     * @memberof! Panel.props#
+     * @method onTabCountChanged
+     *
+     * @example
+     * var someListener = function (panel, tabCountEvent) {
+     *   console.dir(panel);
+     *   console.dir(tabCountEvent);
+     * };
+     *
+     * var somePanel = (&lt;Panel ... onTabCountChanged={someListener}&gt;...&lt;/Panel&gt;);
+     * @default false
+     * @param {Panel} self - {@link Panel} Instance.
+     * @param {*} value - A [TabCount]{@link Panel#event:TabCount} event.
+     * @listens Panel#event:TabCount
+     */
+    "onTabCountChanged": false
+  },
 
   applyPreset: function (preset) {
     var self = this,
-      defaultProps = {
-        "icon": "",
-        "title": "",
-        "name": "",
-        "theme": "default",
-        "bordered": false,
-        "opaque": false,
-        "raised": false,
-        "rounded": false,
-        "forceTabs": false,
-        "panelState": "default",
-        "buttons": [],
-        /** Set panel title based on the title of the active tab. */
-        "getTitleFromActiveTab": false,
-        "displayTabTitles": true,
-        "emptyPanelContent": (
-          React.createElement(PanelContent, {noPadding: true})
-        ),
-        "onTabCountChange": false,
-        "onTabCountChanged": false
-      };
+      defaultProps = this.defaultProps;
 
     Object.keys(defaultProps).forEach(function(prop) {
       var value = defaultProps[prop];
@@ -43,6 +101,9 @@ var Panel = React.createClass({displayName: "Panel",
 
       self.props[prop] = value;
     });
+    if (typeof self.props.emptyPanelContent === "function") {
+      self.props.emptyPanelContent = self.props.emptyPanelContent();
+    }
   },
 
   componentDidUpdate: function (prevProps, prevState) {
@@ -102,18 +163,33 @@ var Panel = React.createClass({displayName: "Panel",
     };
   },
 
+  /**
+   * Returns the id of this panel.
+   * @return {Number}
+   */
   getId: function () {
     return this._id;
   },
 
+  /**
+   * Returns the name of this panel.
+   * @return {string}
+   */
   getName: function () {
     return String(this.props.name);
   },
 
+  /**
+   * Sets the name of the panel.
+   * @param name
+   */
   setName: function (name) {
     this.setProps({"name": String(name)});
   },
 
+  /**
+   * Closes (in fact, it only hides) the panel.
+   */
   close: function () {
     this.setState({state: "closed"});
   },
@@ -130,6 +206,21 @@ var Panel = React.createClass({displayName: "Panel",
     this.setState({state: "fullscreen"});
   },
 
+   /**
+   * Event reporting a change in the number of visible tabs.
+   *
+   * @event Panel#event:TabCount
+   * @property {number] prev - Previous value.
+   * @property {number] next - Next value.
+   */
+
+  /**
+   * Get proper tab count.
+   * @fires Panel#event:TabCount
+   * @param [suppliedTabList]
+   * @returns {number}
+   * @private
+   */
   _getTabCount: function (suppliedTabList) {
     var count = 0;
 
@@ -252,18 +343,18 @@ var Panel = React.createClass({displayName: "Panel",
           if (predefinedButton || false) {
 
             /*"identifier": "toggleToolbar",
-              "icon": "fa fa-pencil-square-o",
-              "title": "Toggle toolbar of active tab",
-              "active": function (button) {
-              //return (["visible", "locked"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
-              return (["visible", "locked"].indexOf(self._getActivePanelContent().props.toolbarState) != -1);
-            },
-            "disabled": function (button) {
-              //return (["locked", "none"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
-              return (["locked", "none"].indexOf(self._getActivePanelContent().props.toolbarState) != -1);
-            },
-            "hiddenOnFullscreen": true,
-              "onClick": this.handleClickOnToggleToolbar*/
+             "icon": "fa fa-pencil-square-o",
+             "title": "Toggle toolbar of active tab",
+             "active": function (button) {
+             //return (["visible", "locked"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
+             return (["visible", "locked"].indexOf(self._getActivePanelContent().props.toolbarState) != -1);
+             },
+             "disabled": function (button) {
+             //return (["locked", "none"].indexOf(button.props.parent.state.tabList[button.props.parent.state.tabIndex].toolbar) != -1);
+             return (["locked", "none"].indexOf(self._getActivePanelContent().props.toolbarState) != -1);
+             },
+             "hiddenOnFullscreen": true,
+             "onClick": this.handleClickOnToggleToolbar*/
 
             control = (
               React.createElement(PanelControl, {preset: predefinedButton.props.preset, 
@@ -278,8 +369,8 @@ var Panel = React.createClass({displayName: "Panel",
           }
         } else if (React.isValidElement(button)) {
           /*var panelButton = (
-            <PanelButton {...button.props} />
-          );*/
+           <PanelButton {...button.props} />
+           );*/
 
           control = (
             React.createElement(PanelControl, React.__spread({},  button.props, 
@@ -387,13 +478,13 @@ var Panel = React.createClass({displayName: "Panel",
           tabs
         )
       ) : (
-        React.createElement("header", null, 
+      React.createElement("header", null, 
           icon, 
-          React.createElement("span", {className: "rpanel-title"}, title), 
+        React.createElement("span", {className: "rpanel-title"}, title), 
           buttons, 
           tabs
-        )
-      );
+      )
+    );
 
     var left = Number(this.props.left) || 80,
       top = Number(this.props.top) || 100,
@@ -686,10 +777,24 @@ var Panel = React.createClass({displayName: "Panel",
       return (Panel._panelList.push(panel) - 1);
     },
 
+    /**
+     * Returns the {@link Panel} with supplied id.
+     * @memberof Panel
+     * @static
+     * @param id
+     * @returns {*|boolean}
+     */
     getPanel: function (id) {
       return Panel._panelList[id] || false;
     },
 
+    /**
+     * Returns the {@link Panel} with specified name if found or false otherwise.
+     * @memberof Panel
+     * @static
+     * @param name
+     * @returns {*|boolean}
+     */
     getPanelByName: function (name) {
       for (var id = 0; id < Panel._panelList.length; ++id) {
         var panel = Panel.getPanel(id);
@@ -707,6 +812,13 @@ var Panel = React.createClass({displayName: "Panel",
       return Panel._panelContentList[id] || false;
     },
 
+    /**
+     * Returns the {@link PanelContent} with specified id if found or false otherwise.
+     * @memberof Panel
+     * @static
+     * @param id
+     * @returns {*|boolean}
+     */
     getPanelContent: function (id) {
       return Panel._panelContentObjectList[id] || false;
     },
@@ -745,7 +857,7 @@ var Panel = React.createClass({displayName: "Panel",
 
       if (targetPanelId != currentPanel.getId()) {
         targetIndex = ((typeof targetIndex === "undefined") || (targetIndex == null)) ?
-          targetPanel._childrenList.push(panelContentId) - 1 : targetIndex;
+        targetPanel._childrenList.push(panelContentId) - 1 : targetIndex;
 
         var currentTab = currentPanel.state.tabList[currentIndex],
           targetTab = {
@@ -846,19 +958,41 @@ var PanelTab = React.createClass({displayName: "PanelTab",
  * Licensed under the MIT license.
  */
 
-var PanelContent = React.createClass({displayName: "PanelContent",
+/**
+ * A PanelContent component that can be used within a {@link Panel}.
+ * @class PanelContent
+ * @namespace PanelContent
+ */
+var PanelContent = React.createClass(/** @lends PanelContent.prototype */{displayName: "PanelContent",
 
   getDefaultProps: function () {
-    return {
+    /**
+     * @exports PanelContent/props
+     * @namespace PanelContent.props
+     */
+    var defaultProps = {
       "noPadding": false,
-      "_panel": {}, //DEPRECATED
       "_panelId": null,
       "_index": null,
       "_id": null,
+      /**
+       * Tab's title.
+       * @memberof! PanelContent.props#
+       * @member title
+       * @type {string}
+       */
       "title": "",
+      /**
+       * Tab's icon className, like the ones used in bootstrap's glyphicons or font-awesome.
+       * @memberof! PanelContent.props#
+       * @member icon
+       * @type {string}
+       * @default false
+       */
       "icon": false
     };
 
+    return defaultProps;
   },
 
   getInitialState: function () {
@@ -870,6 +1004,10 @@ var PanelContent = React.createClass({displayName: "PanelContent",
     this.setProps(props);
   },
 
+  /**
+   * Returns the Panel instance containing this PanelContent.
+   * @return {*}
+   */
   getPanel: function () {
     if (this.props._panelId != null) {
       return Panel.getPanel(this.props._panelId);
@@ -879,6 +1017,10 @@ var PanelContent = React.createClass({displayName: "PanelContent",
     }
   },
 
+  /**
+   * Returns this PanelContent's ID.
+   * @return {Number}
+   */
   getId: function () {
     return Number(this.props._id);
   },
@@ -997,6 +1139,12 @@ var PanelContent = React.createClass({displayName: "PanelContent",
  * Licensed under the MIT license.
  */
 
+/**
+ * Main mixin for panel buttons.
+ *
+ * @exports PanelButtonMixin
+ * @namespace PanelButtonMixin
+ */
 var PanelButtonMixin = {
   getPanel: function () {
     if (this.props._panelId != null) {
@@ -1007,6 +1155,12 @@ var PanelButtonMixin = {
     }
   },
 
+  /**
+   * Returns true if button is active, false otherwise.
+   *
+   * @memberof! PanelButtonMixin#
+   * @method isActive
+   */
   isActive: function () {
     return this.props._active;
   },
@@ -1035,6 +1189,53 @@ var PanelButtonMixin = {
   }
 };
 
+/**
+ * Mixin for openable panel buttons.
+ *
+ * @example
+ * var MoveTabButton = React.createClass({
+ *   mixins: [PanelButtonMixin, PanelButtonOpenableMixin],
+ *   handleClick: function(event) {
+ *     var element = event.target,
+ *       leftPanelId = Panel.getPanelByName("Left Panel").getId();
+ *     while (isNaN(element.dataset.id)) {
+ *       element = element.parentElement;
+ *     }
+ *     Panel.movePanelContent(Number(element.dataset.id), leftPanelId, false);
+ *     event.preventDefault();
+ *   },
+ *   render: function() {
+ *     var self = this,
+ *       panel = self.getPanel(),
+ *       index = -1,
+ *       panelContentList = panel.getPanelContentList(true, true, true, false, true),
+ *       classes = (this.state.open) ? "dropdown open" : "dropdown";
+ *     return (
+ *       &lt;div className={classes}&gt;
+ *         &lt;a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false"&gt;
+ *           &lt;i className="glyphicon glyphicon-move"&gt;&lt;/i&gt;
+ *         &lt;/a&gt;
+ *         &lt;ul className="dropdown-menu dropdown-menu-right" role="menu"&gt;
+ *         {panelContentList.map(function(panelContent) {
+ *           var id = String(panelContent.getId()),
+ *             title = panelContent.getTitle(),
+ *             hidden = panelContent.isHidden(),
+ *             removed = panelContent.isRemoved(),
+ *             icon = "glyphicon glyphicon-" + ((hidden) ? "minus" : (removed) ? "remove" : "ok");
+ *           return (
+ *             &lt;li onClick={self.handleClick} data-id={id} key={++index}&gt;
+ *               &lt;a href="#"&gt;&lt;i className={icon}&gt;&lt;/i&gt; {title}&lt;/a&gt;
+ *             &lt;/li&gt;
+ *           );
+ *         })}
+ *         &lt;/ul&gt;
+ *       &lt;/div&gt;
+ *     );
+ *   }
+ * });
+ * @exports PanelButtonOpenableMixin
+ * @namespace PanelButtonOpenableMixin
+ */
 var PanelButtonOpenableMixin = {
   _isListeningToOutsideClick: false,
 
@@ -1056,7 +1257,12 @@ var PanelButtonOpenableMixin = {
   }
 };
 
-var PanelControl = React.createClass({displayName: "PanelControl",
+/**
+ * Wrapper for panel buttons.
+ * @class
+ * @ignore
+ */
+var PanelControl = React.createClass(/** @lends PanelControl.prototype */{displayName: "PanelControl",
   _childObject: false,
 
   propTypes: {
@@ -1145,8 +1351,12 @@ var PanelControl = React.createClass({displayName: "PanelControl",
   }
 });
 
-
-var PanelButton = React.createClass({displayName: "PanelButton",
+/**
+ * A basic panel button.
+ * @class PanelButton
+ * @mixes PanelButtonMixin
+ */
+var PanelButton = React.createClass(/** @lends PanelButton.prototype */{displayName: "PanelButton",
   mixins: [PanelButtonMixin],
 
   applyPreset: function (preset) {
