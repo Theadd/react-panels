@@ -62,12 +62,42 @@ var PanelButtonMixin = {
  * @example
  * var MoveTabButton = React.createClass({
  *   mixins: [PanelButtonMixin, PanelButtonOpenableMixin],
- *
  *   handleClick: function(event) {
  *     var element = event.target,
- *       leftPanelId = Panel.getPanelByName(Left Panel).getId();
- *
+ *       leftPanelId = Panel.getPanelByName("Left Panel").getId();
+ *     while (isNaN(element.dataset.id)) {
+ *       element = element.parentElement;
+ *     }
+ *     Panel.movePanelContent(Number(element.dataset.id), leftPanelId, false);
  *     event.preventDefault();
+ *   },
+ *   render: function() {
+ *     var self = this,
+ *       panel = self.getPanel(),
+ *       index = -1,
+ *       panelContentList = panel.getPanelContentList(true, true, true, false, true),
+ *       classes = (this.state.open) ? "dropdown open" : "dropdown";
+ *     return (
+ *       &lt;div className={classes}&gt;
+ *         &lt;a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false"&gt;
+ *           &lt;i className="glyphicon glyphicon-move"&gt;&lt;/i&gt;
+ *         &lt;/a&gt;
+ *         &lt;ul className="dropdown-menu dropdown-menu-right" role="menu"&gt;
+ *         {panelContentList.map(function(panelContent) {
+ *           var id = String(panelContent.getId()),
+ *             title = panelContent.getTitle(),
+ *             hidden = panelContent.isHidden(),
+ *             removed = panelContent.isRemoved(),
+ *             icon = "glyphicon glyphicon-" + ((hidden) ? "minus" : (removed) ? "remove" : "ok");
+ *           return (
+ *             &lt;li onClick={self.handleClick} data-id={id} key={++index}&gt;
+ *               &lt;a href="#"&gt;&lt;i className={icon}&gt;&lt;/i&gt; {title}&lt;/a&gt;
+ *             &lt;/li&gt;
+ *           );
+ *         })}
+ *         &lt;/ul&gt;
+ *       &lt;/div&gt;
+ *     );
  *   }
  * });
  * @exports PanelButtonOpenableMixin
