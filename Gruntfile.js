@@ -37,6 +37,14 @@ module.exports = function(grunt) {
           spawn: true,
           interrupt: false
         }
+      },
+      jsmin: {
+        files: ['dist/react-panels.js'],
+        tasks: ['uglify'],
+        options: {
+          spawn: true,
+          interrupt: false
+        }
       }
     },
     less: {
@@ -97,6 +105,16 @@ module.exports = function(grunt) {
         ],
         dest: 'index.js'
       }
+    },
+    uglify: {
+      components: {
+        options: {
+          sourceMap: true
+        },
+        files: {
+          'dist/react-panels.min.js': ['dist/react-panels.js']
+        }
+      }
     }
   });
 
@@ -105,8 +123,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['less', 'react', 'jsdoc']);
-  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc', 'concat']);
+  grunt.registerTask('default', ['less', 'react', 'jsdoc', 'concat', 'uglify']);
+  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc', 'concat', 'uglify']);
+  grunt.registerTask('live-base', ['watch', 'less', 'react']);
 
 };
