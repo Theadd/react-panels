@@ -29,6 +29,14 @@ module.exports = function(grunt) {
           spawn: true,
           interrupt: false
         }
+      },
+      commonjs: {
+        files: ['src/jsx/**'],
+        tasks: ['concat'],
+        options: {
+          spawn: true,
+          interrupt: false
+        }
       }
     },
     less: {
@@ -77,6 +85,18 @@ module.exports = function(grunt) {
           configure : "docs/templates/jaguar/conf.json"
         }
       }
+    },
+    concat: {
+      js: {
+        src: [
+          'src/misc/START',
+          'src/jsx/rpanel.jsx',
+          'src/jsx/rcontent.jsx',
+          'src/jsx/rbutton.jsx',
+          'src/misc/END'
+        ],
+        dest: 'index.js'
+      }
     }
   });
 
@@ -84,8 +104,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('default', ['less', 'react', 'jsdoc']);
-  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc']);
+  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc', 'concat']);
 
 };
