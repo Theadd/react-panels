@@ -31,11 +31,11 @@
     "react-bootstrap": "~0.13.3",
     "bootstrap": "~3.3.2"
   },
-  "_release": "f7f9d9bdd4",
+  "_release": "03efb3926b",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "f7f9d9bdd4c7e5b960cfd307d139ea56086a5383"
+    "commit": "03efb3926b2c6ea633e8265f946f18d6925c0d81"
   },
   "_source": "git://github.com/Theadd/react-panels.git",
   "_target": "*",

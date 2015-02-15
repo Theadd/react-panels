@@ -29,6 +29,22 @@ module.exports = function(grunt) {
           spawn: true,
           interrupt: false
         }
+      },
+      commonjs: {
+        files: ['src/jsx/**'],
+        tasks: ['concat'],
+        options: {
+          spawn: true,
+          interrupt: false
+        }
+      },
+      jsmin: {
+        files: ['dist/react-panels.js'],
+        tasks: ['uglify'],
+        options: {
+          spawn: true,
+          interrupt: false
+        }
       }
     },
     less: {
@@ -37,7 +53,8 @@ module.exports = function(grunt) {
           paths: ["src/less"]
         },
         files: {
-          "dist/react-panels.css": "src/less/rpanel.less"
+          "dist/react-panels.css": "src/less/main.less",
+          "dist/react-panels.base.css": "src/less/base.less"
         }
       },
       production: {
@@ -46,7 +63,8 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          "dist/react-panels.min.css": "src/less/rpanel.less"
+          "dist/react-panels.min.css": "src/less/main.less",
+          "dist/react-panels.base.min.css": "src/less/base.less"
         }
       }
     },
@@ -77,6 +95,28 @@ module.exports = function(grunt) {
           configure : "docs/templates/jaguar/conf.json"
         }
       }
+    },
+    concat: {
+      js: {
+        src: [
+          'src/misc/START',
+          'src/jsx/rpanel.jsx',
+          'src/jsx/rcontent.jsx',
+          'src/jsx/rbutton.jsx',
+          'src/misc/END'
+        ],
+        dest: 'index.js'
+      }
+    },
+    uglify: {
+      components: {
+        options: {
+          sourceMap: true
+        },
+        files: {
+          'dist/react-panels.min.js': ['dist/react-panels.js']
+        }
+      }
     }
   });
 
@@ -84,8 +124,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['less', 'react', 'jsdoc']);
-  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc']);
+  grunt.registerTask('default', ['less', 'react', 'jsdoc', 'concat', 'uglify']);
+  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc', 'concat', 'uglify']);
+  grunt.registerTask('live-base', ['watch', 'less', 'react']);
 
 };

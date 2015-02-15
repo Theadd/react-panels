@@ -1,255 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="google-translate-customization" content="5417d948061b56ad-a958f0a86e9ce3fc-gb8a4f09ff822561e-1e"></meta>
-    <title>Source: react-panels.js</title>
-    <meta name="description" content="Jaguar.js is a Javascript library that helps to create highly optimized animations and games using HTML 5. Collie runs on both PC and mobile using HTML 5 canvas and CSS 3D. Try out Jaguar.js for fast and easy development, tuned for best performance in various PC and mobile devices." />
-    <meta name="keywords" content="javascript,animation library,HTML5,Canvas,CSS,Mobile,Javascript Game,Web Game,Performance,game engine" />
-    <meta name="keyword" content="javascript,animation library,HTML5,Canvas,CSS,Mobile,Javascript Game,Web Game,Performance,game engine" />
-    <meta property="og:title" content="Jaguar.js - High Performance Animation Library for Javascript"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:image" content="http://jindo.dev.naver.com/collie/img/logo/logo_200x200.png"/>
-    <meta property="og:site_name" content="Jaguar.js"/>
-    <meta property="og:url" content="http://davidshimjs.github.io/jaguarjs"/>
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <script src="scripts/jquery.min.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34154461-2']);
-      _gaq.push(['_trackPageview']);
-    
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-</head>
-<body>
-<div id="wrap" class="clearfix">
-    
-<div class="navigation">
-    <h3 class="applicationName"><a href="index.html">react-panels</a></h3>
+/**
+ * @jsx React.DOM
+ */
+'use strict';
 
-    <div class="search">
-        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
-    </div>
-    <ul class="list">
-    
-        <li class="item" data-name="Panel">
-            <span class="title">
-                <a href="Panel.html">Panel</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="Panel.getPanel"><a href="Panel.html#getPanel">getPanel</a></li>
-            
-                <li data-name="Panel.getPanelByName"><a href="Panel.html#getPanelByName">getPanelByName</a></li>
-            
-                <li data-name="Panel.getPanelContent"><a href="Panel.html#getPanelContent">getPanelContent</a></li>
-            
-                <li data-name="Panel#_getTabCount"><a href="Panel.html#_getTabCount">_getTabCount</a></li>
-            
-                <li data-name="Panel#close"><a href="Panel.html#close">close</a></li>
-            
-                <li data-name="Panel#getId"><a href="Panel.html#getId">getId</a></li>
-            
-                <li data-name="Panel#getName"><a href="Panel.html#getName">getName</a></li>
-            
-                <li data-name="Panel#setName"><a href="Panel.html#setName">setName</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            <span class="subtitle">Events</span>
-            
-                <li data-name="Panel#event:TabCount"><a href="Panel.html#event:event:TabCount">event:TabCount</a></li>
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="Panel.props">
-            <span class="title">
-                <a href="Panel.props.html">Panel.props</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="Panel.props#name"><a href="Panel.props.html#name">name</a></li>
-            
-                <li data-name="Panel.props#title"><a href="Panel.props.html#title">title</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="Panel.props#onTabCountChange"><a href="Panel.props.html#onTabCountChange">onTabCountChange</a></li>
-            
-                <li data-name="Panel.props#onTabCountChanged"><a href="Panel.props.html#onTabCountChanged">onTabCountChanged</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="PanelButtonMixin">
-            <span class="title">
-                <a href="PanelButtonMixin.html">PanelButtonMixin</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="PanelButtonMixin#isActive"><a href="PanelButtonMixin.html#isActive">isActive</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="PanelButtonOpenableMixin">
-            <span class="title">
-                <a href="PanelButtonOpenableMixin.html">PanelButtonOpenableMixin</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="PanelContent">
-            <span class="title">
-                <a href="PanelContent.html">PanelContent</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            <span class="subtitle">Methods</span>
-            
-                <li data-name="PanelContent#getId"><a href="PanelContent.html#getId">getId</a></li>
-            
-                <li data-name="PanelContent#getPanel"><a href="PanelContent.html#getPanel">getPanel</a></li>
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="PanelContent.props">
-            <span class="title">
-                <a href="PanelContent.props.html">PanelContent.props</a>
-                
-                <span class="static">static</span>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            <span class="subtitle">Members</span>
-            
-                <li data-name="PanelContent.props#icon"><a href="PanelContent.props.html#icon">icon</a></li>
-            
-                <li data-name="PanelContent.props#title"><a href="PanelContent.props.html#title">title</a></li>
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-        <li class="item" data-name="PanelButton">
-            <span class="title">
-                <a href="PanelButton.html">PanelButton</a>
-                
-            </span>
-            <ul class="members itemMembers">
-            
-            </ul>
-            <ul class="typedefs itemMembers">
-            
-            </ul>
-            <ul class="methods itemMembers">
-            
-            </ul>
-            <ul class="events itemMembers">
-            
-            </ul>
-        </li>
-    
-    </ul>
-</div>
-    <div class="main">
-        <h1 class="page-title" data-filename="react-panels.js.html">Source: react-panels.js</h1>
-        
+var React = require('react');
 
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>/*
+/*
  * react-panels
  * https://github.com/Theadd/react-panels
  *
@@ -263,7 +19,7 @@
  * @class Panel
  * @namespace Panel
  */
-var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel",
+var Panel = React.createClass(/** @lends Panel.prototype */{
 
   /**
    * @exports Panel/props
@@ -297,7 +53,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
     "getTitleFromActiveTab": false,
     "displayTabTitles": true,
     "emptyPanelContent": function () {
-      return (React.createElement(PanelContent, {noPadding: true}));
+      return (<PanelContent noPadding={true} />);
     },
     /**
      * Reports a change in the number of visible tabs before it happens.
@@ -318,7 +74,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
      */
     "onTabCountChange": false,
     /**
-     * Reports a change in the number of visible tabs after it happened, triggered from &lt;componentDidUpdate>.
+     * Reports a change in the number of visible tabs after it happened, triggered from <componentDidUpdate>.
      * @memberof! Panel.props#
      * @method onTabCountChanged
      *
@@ -477,7 +233,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
 
     suppliedTabList = suppliedTabList || this.state.tabList;
 
-    for (var i = 0; i &lt; this._childrenList.length; ++i) {
+    for (var i = 0; i < this._childrenList.length; ++i) {
       if (this._childrenList[i] != null) {
         if (suppliedTabList[i].state == "visible") {
           ++count;
@@ -494,9 +250,9 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
 
     if (this.props.icon) {
       icon = (
-        React.createElement("span", {className: "rpanel-icon"}, 
-          React.createElement("i", {className: this.props.icon})
-        )
+        <span className="rpanel-icon">
+          <i className={this.props.icon}></i>
+        </span>
       );
     }
 
@@ -509,8 +265,8 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
       classes = "rpanel-tabs" + (((self.state.tabCount > 1) || (self.props.forceTabs || false)) ? "" : " hidden");
 
     return (
-      React.createElement("ul", {className: classes}, 
-        self._childrenList.map(function(id) {
+      <ul className={classes}>
+        {self._childrenList.map(function(id) {
           ++index;
           if (id == null) return null;
 
@@ -520,19 +276,19 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
             icon = child.props.icon || false;
 
           return (tab.state != "none") ? (
-            React.createElement(PanelTab, {
-              title: title, 
-              icon: icon, 
-              showTitle: self.props.displayTabTitles, 
-              index: index, 
-              key: index, 
-              selected: self.state.tabIndex, 
-              state: tab.state, 
-              _id: tab.id, 
-              onClick: self.handleClickOnTab}
-            )) : null;
-        })
-      )
+            <PanelTab
+              title={title}
+              icon={icon}
+              showTitle={self.props.displayTabTitles}
+              index={index}
+              key={index}
+              selected={self.state.tabIndex}
+              state={tab.state}
+              _id={tab.id}
+              onClick={self.handleClickOnTab}
+            />) : null;
+        })}
+      </ul>
     );
   },
 
@@ -541,9 +297,9 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
       index = -1;
 
     return (
-      React.createElement("div", {className: "rpanel-body"}, 
+      <div className="rpanel-body">
 
-        self._childrenList.map(function(id) {
+        {self._childrenList.map(function(id) {
           ++index;
           if (id == null) return null;
 
@@ -553,18 +309,18 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
             visibility = self.state.tabList[index].state;
 
           Panel._setPanelContent(
-            React.createElement(PanelContent, React.__spread({},  child.props, 
-              {key: index, 
-              _index: index, 
-              showToolbar: showToolbar, 
-              display: display, 
-              visibility: visibility})
-            )
+            <PanelContent {...child.props}
+              key={index}
+              _index={index}
+              showToolbar={showToolbar}
+              display={display}
+              visibility={visibility}
+            />
           );
 
           return Panel._getPanelContent(id);
-        })
-      )
+        })}
+      </div>
     );
   },
 
@@ -608,28 +364,28 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
              "onClick": this.handleClickOnToggleToolbar*/
 
             control = (
-              React.createElement(PanelControl, {preset: predefinedButton.props.preset, 
-                key: keyIndex, 
-                _panelId: id
-              }, 
-                predefinedButton
-              )
+              <PanelControl preset={predefinedButton.props.preset}
+                key={keyIndex}
+                _panelId={id}
+              >
+                {predefinedButton}
+              </PanelControl>
             );
             buttons.push(control);
             ++keyIndex;
           }
         } else if (React.isValidElement(button)) {
           /*var panelButton = (
-           &lt;PanelButton {...button.props} />
+           <PanelButton {...button.props} />
            );*/
 
           control = (
-            React.createElement(PanelControl, React.__spread({},  button.props, 
-              {key: keyIndex, 
-              _panelId: id
-            }), 
-              button
-            )
+            <PanelControl {...button.props}
+              key={keyIndex}
+              _panelId={id}
+            >
+              {button}
+            </PanelControl>
           );
           buttons.push(control);
           ++keyIndex;
@@ -719,22 +475,22 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
 
     var header = (this.props.draggable || false) ?
       (
-        React.createElement("header", {
-          draggable: "true", 
-          onDragEnd: this.dragEnd, 
-          onDragStart: this.dragStart}, 
-          icon, 
-          React.createElement("span", {className: "rpanel-title"}, title), 
-          buttons, 
-          tabs
-        )
+        <header
+          draggable="true"
+          onDragEnd={this.dragEnd}
+          onDragStart={this.dragStart}>
+          {icon}
+          <span className="rpanel-title">{title}</span>
+          {buttons}
+          {tabs}
+        </header>
       ) : (
-      React.createElement("header", null, 
-          icon, 
-        React.createElement("span", {className: "rpanel-title"}, title), 
-          buttons, 
-          tabs
-      )
+      <header>
+          {icon}
+        <span className="rpanel-title">{title}</span>
+          {buttons}
+          {tabs}
+      </header>
     );
 
     var left = Number(this.props.left) || 80,
@@ -743,21 +499,21 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
       transform = (this.state.state == "fullscreen") ? "inherit" : "translate3d(" + left + "px, " + top + "px, 0)";
 
     return ((this.props.floating || false) && (this.props.draggable)) ? (
-      React.createElement("div", {className: classes, style: {
+      <div className={classes} style={{
         WebkitTransform: transform,
         MozTransform: transform,
         msTransform: transform,
         transform: transform,
         width: (this.state.state == "fullscreen") ? "100%" : width
-      }}, 
-        header, 
-        body
-      )
+      }}>
+        {header}
+        {body}
+      </div>
     ) : (
-      React.createElement("div", {className: classes}, 
-        header, 
-        body
-      )
+      <div className={classes}>
+        {header}
+        {body}
+      </div>
     );
   },
 
@@ -867,7 +623,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
     });
 
     return (Object.keys(preset).length) ?
-      (React.createElement(PanelButton, {key: key, tabIndex: key, parent: this, preset: preset})) : null;
+      (<PanelButton key={key} tabIndex={key} parent={this} preset={preset} />) : null;
   },
 
   _registerPanelContent: function (panelContent) {
@@ -915,7 +671,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
     _state.tabList[index].state = newTabState;
     var newTabIndex = _state.tabIndex;
     if (switchToOtherTab) {
-      for (i = index + 1; i &lt; _state.tabList.length; ++i) {
+      for (i = index + 1; i < _state.tabList.length; ++i) {
         if (_state.tabList[i].state == "visible") {
           newTabIndex = i;
           break;
@@ -945,7 +701,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
     }
 
     i = (skipCurrentTabIndex || false) ? currentTabIndex + 1 : currentTabIndex;
-    for (; i &lt; _state.tabList.length; ++i) {
+    for (; i < _state.tabList.length; ++i) {
       if (_state.tabList[i].state == "visible" && this._childrenList[i] != null) {
         newTabIndex = i;
         break;
@@ -1047,7 +803,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
      * @returns {*|boolean}
      */
     getPanelByName: function (name) {
-      for (var id = 0; id &lt; Panel._panelList.length; ++id) {
+      for (var id = 0; id < Panel._panelList.length; ++id) {
         var panel = Panel.getPanel(id);
         if (panel) {
           if (panel.getName() == String(name)) {
@@ -1083,9 +839,9 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
       } else {
         id = Panel._panelContentList.length;
         Panel._panelContentList[id] = (
-          React.createElement(PanelContent, React.__spread({},  panelContent.props, 
-            {_id: id})
-          )
+          <PanelContent {...panelContent.props}
+            _id={id}
+          />
         );
       }
 
@@ -1138,7 +894,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
     getPanelList: function() {
       var list = [];
 
-      for (var i = 0; i &lt; Panel._panelList.length; ++i) {
+      for (var i = 0; i < Panel._panelList.length; ++i) {
         var _panel = {
           "id": i,
           "name": Panel.getPanel(i).getName()
@@ -1156,7 +912,7 @@ var Panel = React.createClass(/** @lends Panel.prototype */{displayName: "Panel"
 
 });
 
-var PanelTab = React.createClass({displayName: "PanelTab",
+var PanelTab = React.createClass({
   //This is the tab button in header not the tab's content
 
   getDefaultProps: function () {
@@ -1177,9 +933,9 @@ var PanelTab = React.createClass({displayName: "PanelTab",
   render: function() {
     var icon = null,
       title = (this.props.showTitle && this.props.title.length) ? (
-        React.createElement("span", {className: "rpanel-title"}, this.props.title)
+        <span className="rpanel-title">{this.props.title}</span>
       ) : (
-        React.createElement("span", {className: "rpanel-title rpanel-no-title"})
+        <span className="rpanel-title rpanel-no-title"></span>
       ),
       classes = (this.props.index == this.props.selected) ? "rpanel-tab active" : "rpanel-tab";
 
@@ -1187,16 +943,16 @@ var PanelTab = React.createClass({displayName: "PanelTab",
 
     if (this.props.icon) {
       icon = (
-        React.createElement("span", {className: "rpanel-icon"}, 
-          React.createElement("i", {className: this.props.icon})
-        )
+        <span className="rpanel-icon">
+          <i className={this.props.icon}></i>
+        </span>
       );
     }
 
     return (
-      React.createElement("li", {className: classes, onClick: this.handleClick}, 
-        React.createElement("a", {href: "#", title: this.props.title}, icon, " ", title)
-      )
+      <li className={classes} onClick={this.handleClick}>
+        <a href="#" title={this.props.title}>{icon} {title}</a>
+      </li>
     );
   }
 });
@@ -1214,7 +970,7 @@ var PanelTab = React.createClass({displayName: "PanelTab",
  * @class PanelContent
  * @namespace PanelContent
  */
-var PanelContent = React.createClass(/** @lends PanelContent.prototype */{displayName: "PanelContent",
+var PanelContent = React.createClass(/** @lends PanelContent.prototype */{
 
   getDefaultProps: function () {
     /**
@@ -1374,10 +1130,10 @@ var PanelContent = React.createClass(/** @lends PanelContent.prototype */{displa
     }
 
     return (!this.isRemoved()) ? (
-      React.createElement("div", {className: classes}, 
-        React.createElement("div", {className: toolbarClasses}, this.props.toolbar), 
-        React.createElement("div", {className: contentClasses}, childContent)
-      )
+      <div className={classes}>
+        <div className={toolbarClasses}>{this.props.toolbar}</div>
+        <div className={contentClasses}>{childContent}</div>
+      </div>
     ) : null;
   }
 });
@@ -1513,7 +1269,7 @@ var PanelButtonOpenableMixin = {
  * @class
  * @ignore
  */
-var PanelControl = React.createClass(/** @lends PanelControl.prototype */{displayName: "PanelControl",
+var PanelControl = React.createClass(/** @lends PanelControl.prototype */{
   _childObject: false,
 
   propTypes: {
@@ -1595,9 +1351,9 @@ var PanelControl = React.createClass(/** @lends PanelControl.prototype */{displa
     }
 
     return (
-      React.createElement("div", {className: classes, onClick: this.handleClick}, 
-        this.props.children
-      )
+      <div className={classes} onClick={this.handleClick}>
+        {this.props.children}
+      </div>
     );
   }
 });
@@ -1607,7 +1363,7 @@ var PanelControl = React.createClass(/** @lends PanelControl.prototype */{displa
  * @class PanelButton
  * @mixes PanelButtonMixin
  */
-var PanelButton = React.createClass(/** @lends PanelButton.prototype */{displayName: "PanelButton",
+var PanelButton = React.createClass(/** @lends PanelButton.prototype */{
   mixins: [PanelButtonMixin],
 
   applyPreset: function (preset) {
@@ -1619,9 +1375,9 @@ var PanelButton = React.createClass(/** @lends PanelButton.prototype */{displayN
         "showContent": false,
         "button": function (self) {
           return (
-            React.createElement("a", {href: "#", className: "rpanel-button", title: self.props.title}, 
-              React.createElement("i", {className: self.props.icon})
-            )
+            <a href="#" className="rpanel-button" title={self.props.title}>
+              <i className={self.props.icon}></i>
+            </a>
           );
         },
         "onClick": function () {},
@@ -1657,28 +1413,21 @@ var PanelButton = React.createClass(/** @lends PanelButton.prototype */{displayN
       button = this.props.button(this);
 
     return (
-      React.createElement("div", null, 
-        button
-      )
+      <div>
+        {button}
+      </div>
     );
   }
 
 });
-</code></pre>
-        </article>
-    </section>
 
 
+var ReactPanels = {};
 
+ReactPanels.Panel = Panel;
+ReactPanels.PanelContent = PanelContent;
+ReactPanels.PanelButton = PanelButton;
+ReactPanels.PanelButtonMixin = PanelButtonMixin;
+ReactPanels.PanelButtonOpenableMixin = PanelButtonOpenableMixin;
 
-
-        <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sun Feb 15 2015 18:48:55 GMT+0100 (CET)
-        </footer>
-    </div>
-</div>
-<script>prettyPrint();</script>
-<script src="scripts/linenumber.js"></script>
-<script src="scripts/main.js"></script>
-</body>
-</html>
+module.exports = ReactPanels;
