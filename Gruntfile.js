@@ -53,7 +53,8 @@ module.exports = function(grunt) {
           paths: ["src/less"]
         },
         files: {
-          "dist/react-panels.css": "src/less/rpanel.less"
+          "dist/react-panels.css": "src/less/main.less",
+          "dist/react-panels.base.css": "src/less/base.less"
         }
       },
       production: {
@@ -62,7 +63,8 @@ module.exports = function(grunt) {
           compress: true
         },
         files: {
-          "dist/react-panels.min.css": "src/less/rpanel.less"
+          "dist/react-panels.min.css": "src/less/main.less",
+          "dist/react-panels.base.min.css": "src/less/base.less"
         }
       }
     },
