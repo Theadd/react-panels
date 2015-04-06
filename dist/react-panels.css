@@ -5,62 +5,12 @@
  * Copyright (c) 2015 R.Beltran https://github.com/Theadd
  * Licensed under the MIT license.
  */
-.rpanel:not(.rpanel-state-fullscreen).rounded {
-  border-radius: 3px;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded > header {
-  border-radius: 3px 3px 0 0;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded > div:last-child {
-  border-radius: 0 0 3px 3px;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded > div:last-child > .rpanel-tab-body.active > div:last-child {
-  border-radius: 0 0 3px 3px;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded-top {
-  border-radius: 3px 3px 0 0;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded-top > header {
-  border-radius: 3px 3px 0 0;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded-bottom {
-  border-radius: 0 0 3px 3px;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded-bottom > div:last-child {
-  border-radius: 0 0 3px 3px;
-}
-.rpanel:not(.rpanel-state-fullscreen).rounded-bottom > div:last-child > .rpanel-tab-body.active > div:last-child {
-  border-radius: 0 0 3px 3px;
-}
-.rpanel.raised > header {
-  box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
-}
-.rpanel:not(.bordered) > header {
-  height: 32px;
-}
-.rpanel.bordered > header {
-  border: 1px solid black;
-  height: 34px;
-}
-.rpanel.bordered > header .rpanel-tabs > .rpanel-tab.active {
-  margin-top: -1px;
-  height: 34px;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-  box-shadow: 0 2px 0 black inset;
-}
-.rpanel.bordered > header .rpanel-tabs > .rpanel-tab.active > a {
-  margin-top: 1px !important;
-}
-.rpanel.bordered > .rpanel-body {
-  border: 1px solid black;
-  border-top: 0 none;
-}
-.rpanel > header {
+.react-panel > header {
   display: block;
   font-size: 14px;
+  height: 32px;
 }
-.rpanel > header .rpanel-icon {
+.react-panel > header .panel-icon {
   display: block;
   float: left;
   font-size: 125%;
@@ -70,55 +20,34 @@
   text-align: center;
   width: 30px;
 }
-.rpanel > header .rpanel-title {
+.react-panel > header .panel-title-box {
   margin-left: 10px;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+}
+.react-panel > header .panel-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  height: 100%;
-  display: inline-block;
   letter-spacing: 0;
   line-height: 32px;
-  position: relative;
   width: auto;
 }
-.rpanel > header .rpanel-control {
-  border-left: 1px solid black;
+.react-panel > header .panel-tabs-start,
+.react-panel > header .panel-tabs-end {
+  width: 20px;
+  height: 100%;
+}
+.react-panel > header .panel-tabs {
   float: right;
   height: 32px;
-  min-width: 32px;
-  display: inline-block;
-  line-height: 32px;
   margin: 0;
-  padding: 0;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.rpanel > header .rpanel-control.disabled {
-  cursor: default;
-  pointer-events: none;
-  opacity: 0.5;
-}
-.rpanel > header .rpanel-control.hidden {
-  display: none;
-}
-.rpanel > header .rpanel-tabs {
-  float: right;
-  height: 32px;
-  margin: 0 20px;
   min-width: 32px;
   display: inline-block;
   padding: 0;
 }
-.rpanel > header .rpanel-tabs.hidden {
-  display: none;
-}
-.rpanel > header .rpanel-tabs .rpanel-tab {
+.react-panel > header .panel-tabs .panel-tab {
   position: relative;
   float: left;
   display: block;
@@ -126,270 +55,125 @@
   padding: 0 5px;
   height: 32px;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab.hidden {
-  display: none;
-}
-.rpanel > header .rpanel-tabs .rpanel-tab > a {
+.react-panel > header .panel-tabs .panel-tab > a {
   position: relative;
   display: block;
   height: 32px;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab.active > a {
+.react-panel > header .panel-tabs .panel-tab.active > a {
   cursor: default;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab .rpanel-icon {
+.react-panel > header .panel-tabs .panel-tab .panel-icon {
   font-size: 100%;
   line-height: 30px;
   margin-right: -9px;
   margin-left: -3px;
   opacity: 0.85;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab .rpanel-title {
+.react-panel > header .panel-tabs .panel-tab .panel-title-box {
   line-height: 32px;
   margin-right: 6px;
   opacity: 0.85;
 }
-.rpanel > header .rpanel-tabs .rpanel-tab .rpanel-title.rpanel-no-title {
-  margin-left: 0;
-}
-.rpanel > header .rpanel-tabs * {
+.react-panel > header .panel-tabs * {
   text-decoration: none;
   color: inherit;
   font-size: 0.95em;
 }
-.rpanel > .rpanel-body > .rpanel-tab-body {
-  display: none;
-}
-.rpanel > .rpanel-body > .rpanel-tab-body.active:not(.hidden) {
-  display: block;
-}
-.rpanel > .rpanel-body > .rpanel-tab-body > .rpanel-toolbar {
+.react-panel > .panel-body > .panel-tab > .panel-toolbar {
   min-height: 32px;
   line-height: 32px;
-  border-bottom: 3px double black;
-  display: none;
   padding: 10px;
 }
-.rpanel > .rpanel-body > .rpanel-tab-body > .rpanel-toolbar.active {
-  display: block;
-}
-.rpanel > .rpanel-body > .rpanel-tab-body > .rpanel-content {
+.react-panel > .panel-body > .panel-tab > .panel-content {
   padding: 10px;
 }
-.rpanel > .rpanel-body > .rpanel-tab-body > .rpanel-content.no-padding {
-  padding: 0;
+.react-panel > .panel-body > .panel-tab > .panel-footer {
+  min-height: 32px;
+  line-height: 32px;
+  padding: 10px;
 }
-.rpanel,
-.rpanel * {
+.react-panel,
+.react-panel * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.rpanel.rpanel-state-closed {
-  display: none;
+.react-panel.chemical > header {
+  border-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
+  color: rgba(0, 0, 0, 0.9);
+  padding-right: 32px;
 }
-.rpanel.rpanel-state-collapsed > .rpanel-body {
-  display: none;
-}
-.rpanel.rpanel-state-fullscreen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-}
-.rpanel.rpanel-state-fullscreen > .rpanel-body {
-  height: calc(100% - 32px);
-  height: -moz-calc(100% - 32px);
-  height: -webkit-calc(100% - 32px);
-  height: -o-calc(100% - 32px);
-}
-.rpanel.rpanel-state-fullscreen > .rpanel-body > .rpanel-tab-body.active {
-  height: 100%;
-}
-.rpanel.rpanel-state-fullscreen > .rpanel-body > .rpanel-tab-body.active > .rpanel-toolbar {
-  display: none;
-}
-.rpanel.rpanel-state-fullscreen > .rpanel-body > .rpanel-tab-body.active > .rpanel-content {
-  height: 100%;
-}
-.rpanel.rpanel-state-fullscreen.bordered > .rpanel-body {
-  height: calc(100% - 34px);
-  height: -moz-calc(100% - 34px);
-  height: -webkit-calc(100% - 34px);
-  height: -o-calc(100% - 34px);
-}
-.rpanel.floating {
-  position: absolute;
-  width: 800px;
-  top: 0;
-  left: 0;
-  z-index: 910;
-  pointer-events: all;
-}
-.rpanel.default {
-  background-color: #ffffff;
-}
-.rpanel.default > header {
-  border-color: rgba(126, 142, 150, 0.75);
-  background-color: rgba(158, 178, 187, 0.5);
-  color: #000000;
-}
-.rpanel.default > header .rpanel-icon {
+.react-panel.chemical > header .panel-icon {
   color: #ffffff;
-  text-shadow: 2px 2px 2px #000000;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.9);
 }
-.rpanel.default > header .rpanel-title {
+.react-panel.chemical > header .panel-title {
   text-shadow: 1px 1px 1px #a6a6a6;
 }
-.rpanel.default > header .rpanel-control {
-  border-color: rgba(126, 142, 150, 0.75);
+.react-panel.chemical > header > .panel-icon,
+.react-panel.chemical > header > .panel-title {
+  float: left;
 }
-.rpanel.default > header .rpanel-control * {
-  color: #000000;
-  text-shadow: 1px 1px 1px #ffffff;
+.react-panel.chemical > header .panel-tabs-start {
+  width: 50px;
+  float: left;
 }
-.rpanel.default > header .rpanel-control.active {
-  background-color: #ffffff;
+.react-panel.chemical > header .panel-tabs-end {
+  width: 10px;
+  float: right;
 }
-.rpanel.default > header .rpanel-control:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+.react-panel.chemical > header .panel-tabs {
+  float: left;
 }
-.rpanel.default > header .rpanel-tabs .rpanel-tab .rpanel-icon,
-.rpanel.default > header .rpanel-tabs .rpanel-tab .rpanel-title {
-  color: #4f595e;
-  text-shadow: none;
+.react-panel.chemical > header .panel-tabs .panel-tab {
+  border-radius: 2px 2px 0 0;
+  margin-left: 1px;
 }
-.rpanel.default > header .rpanel-tabs .rpanel-tab.active {
-  border-color: rgba(126, 142, 150, 0.75);
-  background-color: #ffffff;
-  box-shadow: 0 2px 0 #8eb8cb inset;
-}
-.rpanel.default > header .rpanel-tabs .rpanel-tab.active .rpanel-icon,
-.rpanel.default > header .rpanel-tabs .rpanel-tab.active .rpanel-title {
-  color: #282d2f;
-}
-.rpanel.default > header .rpanel-tabs .rpanel-tab:not(.active):hover {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-.rpanel.default > .rpanel-body {
-  background-color: rgba(158, 178, 187, 0.5);
-  border-color: rgba(126, 142, 150, 0.75);
-}
-.rpanel.default > .rpanel-body .rpanel-toolbar {
-  background-color: #ffffff;
-  border-color: rgba(126, 142, 150, 0.4);
-}
-.rpanel.default > .rpanel-body .rpanel-content {
-  background-color: #ffffff;
-}
-.rpanel.grayscale > header {
-  border-color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(255, 255, 255, 0.15);
-  color: rgba(0, 0, 0, 0.75);
-}
-.rpanel.grayscale > header .rpanel-icon {
+.react-panel.chemical > header .panel-tabs .panel-tab .panel-icon,
+.react-panel.chemical > header .panel-tabs .panel-tab .panel-title {
   color: #ffffff;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.75);
+  text-shadow: 1px 1px 1px #bbbbbb;
 }
-.rpanel.grayscale > header .rpanel-title {
-  text-shadow: 1px 1px 1px #a6a6a6;
+.react-panel.chemical > header .panel-tabs .panel-tab.active {
+  border-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.9);
 }
-.rpanel.grayscale > header .rpanel-control {
-  border-color: rgba(0, 0, 0, 0.2);
+.react-panel.chemical > header .panel-tabs .panel-tab.active .panel-icon,
+.react-panel.chemical > header .panel-tabs .panel-tab.active .panel-title {
+  color: rgba(0, 0, 0, 0.9);
+  text-shadow: 1px 1px 1px #999999;
 }
-.rpanel.grayscale > header .rpanel-control * {
-  color: rgba(0, 0, 0, 0.75);
-  text-shadow: 1px 1px 1px #ffffff;
+.react-panel.chemical > header .panel-tabs .panel-tab:not(.active):hover {
+  background-color: rgba(224, 230, 240, 0.65);
 }
-.rpanel.grayscale > header .rpanel-control.active {
-  background-color: rgba(0, 0, 0, 0.2);
+.react-panel.chemical > header .panel-tabs .panel-tab:not(.active):hover .panel-icon,
+.react-panel.chemical > header .panel-tabs .panel-tab:not(.active):hover .panel-title {
+  color: rgba(0, 0, 0, 0.9);
+  text-shadow: 1px 1px 1px #999999;
 }
-.rpanel.grayscale > header .rpanel-control:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab .rpanel-icon,
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab .rpanel-title {
-  color: rgba(51, 51, 51, 0.45);
-  text-shadow: none;
-}
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab.active {
-  border-color: rgba(255, 255, 255, 0.65);
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab.active .rpanel-icon,
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab.active .rpanel-title {
-  color: rgba(20, 20, 20, 0.6);
-}
-.rpanel.grayscale > header .rpanel-tabs .rpanel-tab:not(.active):hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.rpanel.grayscale > .rpanel-body {
-  background-color: rgba(255, 255, 255, 0.15);
+.react-panel.chemical > .panel-body {
+  background-color: rgba(0, 0, 0, 0);
   border-color: rgba(0, 0, 0, 0.5);
 }
-.rpanel.grayscale > .rpanel-body .rpanel-toolbar {
-  background-color: rgba(0, 0, 0, 0.2);
+.react-panel.chemical > .panel-body > .panel-tab > .panel-content {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
   border-bottom: 0 none;
+  margin-bottom: 1px;
 }
-.rpanel.grayscale > .rpanel-body .rpanel-content {
-  background-color: transparent;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2) inset;
+.react-panel.chemical > .panel-body > .panel-tab > .panel-footer {
+  background-color: rgba(224, 230, 240, 0.8);
+  border-radius: 2px;
 }
-.rpanel.grayscale.rpanel-state-fullscreen > .rpanel-body > .rpanel-tab-body.active > .rpanel-content {
-  background-color: rgba(242, 242, 242, 0.85);
+.react-panel.chemical > .panel-body > .panel-tab.with-toolbar > .panel-toolbar {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-bottom: 0 none;
+  margin-bottom: 1px;
+  border-radius: 2px;
+  box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.1) inset;
 }
-.rpanel.lightblue > header {
-  border-color: rgba(126, 142, 150, 0.75);
-  background-color: rgba(158, 178, 187, 0.5);
-  color: #000000;
-}
-.rpanel.lightblue > header .rpanel-icon {
-  color: #ffffff;
-  text-shadow: 2px 2px 2px #000000;
-}
-.rpanel.lightblue > header .rpanel-title {
-  text-shadow: 1px 1px 1px #a6a6a6;
-}
-.rpanel.lightblue > header .rpanel-control {
-  border-color: rgba(126, 142, 150, 0.75);
-}
-.rpanel.lightblue > header .rpanel-control * {
-  color: #000000;
-  text-shadow: 1px 1px 1px #ffffff;
-}
-.rpanel.lightblue > header .rpanel-control.active {
-  background-color: rgba(255, 255, 255, 0.85);
-}
-.rpanel.lightblue > header .rpanel-control:hover {
-  background-color: rgba(255, 255, 255, 0.35);
-}
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab .rpanel-icon,
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab .rpanel-title {
-  color: #4f595e;
-  text-shadow: none;
-}
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab.active {
-  border-color: rgba(126, 142, 150, 0.75);
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 2px 0 #8eb8cb inset;
-}
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab.active .rpanel-icon,
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab.active .rpanel-title {
-  color: #282d2f;
-}
-.rpanel.lightblue > header .rpanel-tabs .rpanel-tab:not(.active):hover {
-  background-color: rgba(255, 255, 255, 0.35);
-}
-.rpanel.lightblue > .rpanel-body {
-  background-color: rgba(158, 178, 187, 0.5);
-  border-color: rgba(126, 142, 150, 0.75);
-}
-.rpanel.lightblue > .rpanel-body .rpanel-toolbar {
-  background-color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(126, 142, 150, 0.4);
-}
-.rpanel.lightblue > .rpanel-body .rpanel-content {
+.react-panel.chemical > .panel-body > .panel-tab.with-toolbar > .panel-content {
   background-color: rgba(255, 255, 255, 0.85);
 }

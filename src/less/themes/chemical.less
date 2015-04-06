@@ -1,0 +1,109 @@
+
+.react-panel.chemical {
+  @header-color: rgba(0, 0, 0, 0.9);
+  @header-bg-color: rgba(0, 0, 0, 0);
+  @content-bg-color: rgba(255, 255, 255, 0.9);
+
+  @border-color: rgba(0, 0, 0, 0.5);
+  @border-radius: 2px;
+  @margin-size: 1px;
+  @inactive-bg-color: rgba(255, 255, 255, 0.2);
+
+  > header {
+    border-color: @border-color;
+    background-color: @header-bg-color;
+    color: @header-color;
+    padding-right: 32px;
+
+    .panel-icon {
+      color: (#fff - @header-color);
+      text-shadow: 2px 2px 2px @header-color;
+    }
+
+    .panel-title {
+      text-shadow: 1px 1px 1px mix((#fff - @header-color), (#fff - (#fff - @header-color)), 65%);
+    }
+
+    > .panel-icon, > .panel-title {
+      float: left;
+    }
+
+    .panel-tabs-start {
+      width: 50px;
+      float: left;
+    }
+
+    .panel-tabs-end {
+      width: 10px;
+      float: right;
+    }
+
+    .panel-tabs {
+      float: left;
+
+      .panel-tab {
+        border-radius: @border-radius @border-radius 0 0;
+        margin-left: @margin-size;
+
+        .panel-icon, .panel-title {
+          color: (#fff - @header-color);
+          text-shadow: 1px 1px 1px ((#fff - @header-color) - #444);
+        }
+
+        &.active {
+          border-color: fadein(@header-bg-color, 50%);
+          background-color: @content-bg-color;
+
+          .panel-icon, .panel-title {
+            color: @header-color;
+            text-shadow: 1px 1px 1px ((#fff - @header-color) - #666);
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: rgba(224, 230, 240, 0.65);
+
+          .panel-icon, .panel-title {
+            color: @header-color;
+            text-shadow: 1px 1px 1px ((#fff - @header-color) - #666);
+          }
+        }
+      }
+    }
+  }
+
+  > .panel-body {
+    background-color: @header-bg-color;
+    border-color: @border-color;
+
+    > .panel-tab {
+
+      > .panel-content {
+        background-color: @content-bg-color;
+        border-radius: @border-radius;
+        border-bottom: 0 none;
+        margin-bottom: @margin-size;
+      }
+
+      > .panel-footer {
+        background-color: rgba(224, 230, 240, 0.8);
+        border-radius: @border-radius;
+      }
+
+      &.with-toolbar {
+
+        > .panel-toolbar {
+          background-color: @content-bg-color;
+          border-bottom: 0 none;
+          margin-bottom: @margin-size;
+          border-radius: @border-radius;
+          box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.1) inset;
+        }
+
+        > .panel-content {
+          background-color: fadeout(@content-bg-color, 5%);
+        }
+      }
+    }
+  }
+}

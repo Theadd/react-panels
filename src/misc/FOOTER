@@ -1,0 +1,15 @@
+
+window.ReactPanels = {
+  Panel: Panel,
+  FloatingPanelWrapper: FloatingPanelWrapper,
+  Tab: Tab,
+  Mixins: Mixins,
+  Toolbar: Toolbar,
+  Content: Content,
+  Footer: Footer,
+  addons: {
+    ScrollableTabContent: ScrollableTabContent
+  }
+};
+
+}());

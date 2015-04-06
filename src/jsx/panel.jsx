@@ -1,13 +1,3 @@
-/*
- * react-panels
- * https://github.com/Theadd/react-panels
- *
- * Copyright (c) 2015 R.Beltran https://github.com/Theadd
- * Licensed under the MIT license.
- */
-
-(function() {
-
 
 var Utils = {
   pixelsOf: function (value) {
@@ -97,9 +87,9 @@ var FloatingPanelWrapper = React.createClass({
     }
 
     return (
-      React.createElement("div", {className: "react-panel-wrapper", style: wrapperStyle}, 
-        child
-      )
+      <div className="react-panel-wrapper" style={wrapperStyle}>
+        {child}
+      </div>
     );
   }
 
@@ -142,9 +132,9 @@ var Panel = React.createClass({
 
     if (this.props.icon) {
       icon = (
-        React.createElement("span", {className: "panel-icon"}, 
-          React.createElement("i", {className: this.props.icon})
-        )
+        <span className="panel-icon">
+          <i className={this.props.icon}></i>
+        </span>
       );
     }
 
@@ -208,7 +198,7 @@ var Panel = React.createClass({
       classes = "react-panel" + ((typeof this.props.theme === "string") ? " " + this.props.theme : ""),
       icon = this._getIcon(),
       title = (this.props.title.length) ? (
-        React.createElement("div", {className: "panel-title-box", style: {maxWidth: Utils.pixelsOf(this.props.maxTitleWidth)}}, React.createElement("div", {className: "panel-title"}, this.props.title))
+        <div className="panel-title-box" style={{maxWidth: Utils.pixelsOf(this.props.maxTitleWidth)}}><div className="panel-title">{this.props.title}</div></div>
       ) : null,
       draggable = (this.props.floating) ? "true" : "false";
 
@@ -234,8 +224,8 @@ var Panel = React.createClass({
       }
 
       tabButtons.push(
-        React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, selectedIndex: selectedIndex, 
-          index: tabIndex, ref: ref, showTitle: showTitle, maxTitleWidth: self.props.maxTitleWidth, onClick: self.handleClick})
+        <TabButton key={tabIndex} title={props.title} icon={props.icon} selectedIndex={selectedIndex}
+          index={tabIndex} ref={ref} showTitle={showTitle} maxTitleWidth={self.props.maxTitleWidth} onClick={self.handleClick} />
       );
 
       tabs.push(
@@ -251,27 +241,27 @@ var Panel = React.createClass({
     });
 
     return (
-      React.createElement("div", {className: classes}, 
-        React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd, onDragStart: self.handleDragStart, ref: "header"}, 
-          icon, 
-          title, 
-          React.createElement("div", {className: "panel-tabs-start", ref: "tabs-start"}), 
-          React.createElement("ul", {className: "panel-tabs", ref: "tabs"}, 
-            tabButtons
-          ), 
-          React.createElement("div", {className: "panel-tabs-end", ref: "tabs-end"})
-        ), 
-        React.createElement("div", {className: "panel-body"}, 
-          tabs
-        )
-      )
+      <div className={classes}>
+        <header draggable={draggable} onDragEnd={self.handleDragEnd} onDragStart={self.handleDragStart} ref="header">
+          {icon}
+          {title}
+          <div className="panel-tabs-start" ref="tabs-start" />
+          <ul className="panel-tabs" ref="tabs">
+            {tabButtons}
+          </ul>
+          <div className="panel-tabs-end" ref="tabs-end" />
+        </header>
+        <div className="panel-body">
+          {tabs}
+        </div>
+      </div>
     );
   }
 
 });
 
 
-var TabButton = React.createClass({displayName: "TabButton",
+var TabButton = React.createClass({
 
   getDefaultProps: function () {
     return {
@@ -297,7 +287,7 @@ var TabButton = React.createClass({displayName: "TabButton",
       tabClasses = "panel-tab";
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (React.createElement("div", {className: "panel-title"}, this.props.title));
+      title = (<div className="panel-title">{this.props.title}</div>);
     } else {
       titleStyle = {
         marginLeft: 0
@@ -307,24 +297,24 @@ var TabButton = React.createClass({displayName: "TabButton",
 
     if (this.props.icon) {
       icon = (
-        React.createElement("div", {className: "panel-icon"}, 
-          React.createElement("i", {className: this.props.icon})
-        )
+        <div className="panel-icon">
+          <i className={this.props.icon}></i>
+        </div>
       );
     }
 
     return (
-      React.createElement("li", {className: tabClasses, onClick: this.handleClick}, 
-        React.createElement("div", {title: this.props.title}, 
-          icon, " ", React.createElement("div", {className: "panel-title-box", style: titleStyle}, title)
-        )
-      )
+      <li className={tabClasses} onClick={this.handleClick}>
+        <div title={this.props.title}>
+          {icon} <div className="panel-title-box" style={titleStyle}>{title}</div>
+        </div>
+      </li>
     );
   }
 });
 
 
-var Tab = React.createClass({displayName: "Tab",
+var Tab = React.createClass({
 
   getDefaultProps: function () {
     return {
@@ -389,17 +379,17 @@ var Tab = React.createClass({displayName: "Tab",
       switch (type) {
         case 0:
           hasToolbar = true;
-          return (React.createElement("div", {className: "panel-toolbar", key: vIndex++, style: toolbarStyle}, child));
-        case 1: return (React.createElement("div", {className: "panel-content", key: vIndex++}, child));
-        case 2: return (React.createElement("div", {className: "panel-footer", key: vIndex++}, child));
+          return (<div className="panel-toolbar" key={vIndex++} style={toolbarStyle}>{child}</div>);
+        case 1: return (<div className="panel-content" key={vIndex++}>{child}</div>);
+        case 2: return (<div className="panel-footer" key={vIndex++}>{child}</div>);
       }
     });
     tabClasses += (this.props.showToolbar && hasToolbar) ? " with-toolbar" : "";
 
     return (
-      React.createElement("div", {className: tabClasses, style: tabStyle}, 
-        innerContent
-      )
+      <div className={tabClasses} style={tabStyle}>
+        {innerContent}
+      </div>
     );
   }
 
@@ -459,9 +449,9 @@ var Toolbar = React.createClass({
 
   render: function () {
     return (
-      React.createElement("div", null, 
-        this.props.children
-      )
+      <div>
+        {this.props.children}
+      </div>
     );
   }
 
@@ -474,9 +464,9 @@ var Content = React.createClass({
 
   render: function () {
     return (
-      React.createElement("div", null, 
-        this.props.children
-      )
+      <div>
+        {this.props.children}
+      </div>
     );
   }
 
@@ -488,27 +478,11 @@ var Footer = React.createClass({
 
   render: function () {
     return (
-      React.createElement("div", null, 
-        this.props.children
-      )
+      <div>
+        {this.props.children}
+      </div>
     );
   }
 
 });
 
-
-
-window.ReactPanels = {
-  Panel: Panel,
-  FloatingPanelWrapper: FloatingPanelWrapper,
-  Tab: Tab,
-  Mixins: Mixins,
-  Toolbar: Toolbar,
-  Content: Content,
-  Footer: Footer,
-  addons: {
-    ScrollableTabContent: ScrollableTabContent
-  }
-};
-
-}());

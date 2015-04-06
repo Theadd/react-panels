@@ -1,6 +1,6 @@
 {
   "name": "react-panels",
-  "version": "0.6.2",
+  "version": "2.0.0",
   "homepage": "https://github.com/Theadd/react-panels",
   "authors": [
     "Theadd <pantallazo@gmail.com>"
@@ -28,8 +28,6 @@
     "tests"
   ],
   "devDependencies": {
-    "react": "~0.12.2",
-    "react-bootstrap": "~0.13.3",
-    "bootstrap": "~3.3.2"
+    "react": "~0.13.1"
   }
 }
