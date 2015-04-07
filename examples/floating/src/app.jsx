@@ -22,25 +22,20 @@ var MyFloatingPanel = React.createClass({
     var self = this;
 
     return (
-      <FloatingPanelWrapper left={200} top={100} width={520} >
-        <Panel
-          ref="myPanel"
-          theme="chemical"
-          floating={true}>
-          <MyMainTab
-            icon="fa fa-cubes"
-            title="List of Items"
-            pinned={true}
-            onClickOnItem={self.handleClickOnItem}
-          />
-          {self.itemsShown.map(function (item) {
-            return (
-              <MyItemTab title={item.name} icon="fa fa-cube" item={item}
-                onClose={self.handleClickOnCloseItemTab} key={item.id} />
-            );
-          })}
-        </Panel>
-      </FloatingPanelWrapper>
+      <FloatingPanel left={200} top={100} width={520} ref="myPanel" theme="chemical">
+        <MyMainTab
+          icon="fa fa-cubes"
+          title="List of Items"
+          pinned={true}
+          onClickOnItem={self.handleClickOnItem}
+        />
+        {self.itemsShown.map(function (item) {
+          return (
+            <MyItemTab title={item.name} icon="fa fa-cube" item={item}
+              onClose={self.handleClickOnCloseItemTab} key={item.id} />
+          );
+        })}
+      </FloatingPanel>
     );
   }
 });

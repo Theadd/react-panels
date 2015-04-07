@@ -1,7 +1,7 @@
 
 window.ReactPanels = {
   Panel: Panel,
-  FloatingPanelWrapper: FloatingPanelWrapper,
+  FloatingPanel: FloatingPanel,
   Tab: Tab,
   Mixins: Mixins,
   Toolbar: Toolbar,

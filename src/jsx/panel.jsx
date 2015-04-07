@@ -6,8 +6,8 @@ var Utils = {
   }
 };
 
-var FloatingPanelWrapper = React.createClass({
-  displayName: 'FloatingPanelWrapper',
+var FloatingPanel = React.createClass({
+  displayName: 'FloatingPanel',
 
   getDefaultProps: function () {
     return {
@@ -24,6 +24,14 @@ var FloatingPanelWrapper = React.createClass({
       top: parseInt(this.props.top),
       width: parseInt(this.props.width)
     };
+  },
+
+  getSelectedIndex: function () {
+    return this.refs.panel.getSelectedIndex();
+  },
+
+  setSelectedIndex: function (index) {
+    this.refs.panel.setSelectedIndex(index);
   },
 
   dragStart: function (e) {
@@ -70,25 +78,11 @@ var FloatingPanelWrapper = React.createClass({
         position: "absolute"
       }, {$merge: self.props.style});
 
-    var child = React.Children.only(this.props.children);
-
-    if (React.isValidElement(child)) {
-      // TODO: FIXME
-      /*child = React.addons.cloneWithProps(child, {
-        floating: true,
-        onDragStart: self.dragStart,
-        onDragEnd: self.dragEnd,
-        ref: child.ref
-      });*/
-      child.props.floating = true;
-      child.props.onDragStart = self.dragStart;
-      child.props.onDragEnd = self.dragEnd;
-
-    }
-
     return (
       <div className="react-panel-wrapper" style={wrapperStyle}>
-        {child}
+        <Panel {...self.props} ref="panel" onDragStart={self.dragStart} onDragEnd={self.dragEnd} floating={true}>
+          {this.props.children}
+        </Panel>
       </div>
     );
   }
