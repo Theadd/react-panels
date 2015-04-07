@@ -3,8 +3,14 @@ var MyMainTab = React.createClass({
   displayName: 'MyMainTab',
   mixins: [TabWrapperMixin],
 
-  handleChangeOnFilter: function (event) {
+  getInitialState: function () {
+    this.filter = "";
+    return {};
+  },
 
+  handleChangeOnFilter: function () {
+    this.filter = this.refs.filter.getDOMNode().value;
+    this.forceUpdate();
   },
 
   handleClick: function (event) {
@@ -40,6 +46,8 @@ var MyMainTab = React.createClass({
           <ul className="items-list">
             {$_data.map(function (item) {
               ++index;
+              if (self.filter.length && item.name.indexOf(self.filter) == -1 && item.type.indexOf(self.filter) == -1)
+                return null;
               return (<li key={index} data-index={index} onClick={self.handleClick}><strong>[{item.type}]</strong> {item.name}</li>);
             })}
           </ul>

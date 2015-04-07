@@ -12,6 +12,12 @@ var MyFloatingPanel = React.createClass({
     this.forceUpdate();
   },
 
+  handleClickOnCloseItemTab: function (itemIndex) {
+    this.itemsShown.splice(itemIndex - 1, 1);
+    this.refs.myPanel.setSelectedIndex(0);
+    this.forceUpdate();
+  },
+
   render: function() {
     var self = this;
 
@@ -28,7 +34,10 @@ var MyFloatingPanel = React.createClass({
             onClickOnItem={self.handleClickOnItem}
           />
           {self.itemsShown.map(function (item) {
-            return (<MyItemTab title={item.name} icon="fa fa-cube" item={item} />);
+            return (
+              <MyItemTab title={item.name} icon="fa fa-cube" item={item}
+                onClose={self.handleClickOnCloseItemTab} key={item.id} />
+            );
           })}
         </Panel>
       </FloatingPanelWrapper>
