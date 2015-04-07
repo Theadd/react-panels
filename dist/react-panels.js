@@ -345,6 +345,7 @@ var Tab = React.createClass({displayName: "Tab",
   },
 
   setInternalValues: function (values) {
+    // TODO, FIXME: newly added tabs appear stacked in main tab until we select another tab
     this._wrapped = true;
     this._internalValues = values;
   },
@@ -496,6 +497,7 @@ var Footer = React.createClass({
 
 });
 
+var PanelAddons = {};
 
 
 window.ReactPanels = {
@@ -506,9 +508,7 @@ window.ReactPanels = {
   Toolbar: Toolbar,
   Content: Content,
   Footer: Footer,
-  addons: {
-    ScrollableTabContent: ScrollableTabContent
-  }
+  addons: PanelAddons
 };
 
 }());

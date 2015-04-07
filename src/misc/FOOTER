@@ -7,9 +7,7 @@ window.ReactPanels = {
   Toolbar: Toolbar,
   Content: Content,
   Footer: Footer,
-  addons: {
-    ScrollableTabContent: ScrollableTabContent
-  }
+  addons: PanelAddons
 };
 
 }());

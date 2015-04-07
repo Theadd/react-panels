@@ -39,3 +39,5 @@ var ScrollableTabContent = React.createClass({
   }
 
 });
+
+PanelAddons.ScrollableTabContent = ScrollableTabContent;
