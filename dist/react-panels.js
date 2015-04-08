@@ -29,6 +29,8 @@ var FloatingPanel = React.createClass({
   },
 
   getInitialState: function () {
+    this._pflag = true;
+
     return {
       left: parseInt(this.props.left),
       top: parseInt(this.props.top),
@@ -88,11 +90,21 @@ var FloatingPanel = React.createClass({
         position: "absolute"
       }, {$merge: self.props.style});
 
+    if (self._pflag) {
+      var props = React.addons.update(self.props, {$merge: {style: {}}});
+      delete props.style;
+
+      self.inner = (
+        React.createElement(Panel, React.__spread({},  props, {ref: "panel", onDragStart: self.dragStart, onDragEnd: self.dragEnd, floating: true}), 
+          self.props.children
+        )
+      );
+      self._pflag = false;
+    }
+
     return (
       React.createElement("div", {className: "react-panel-wrapper", style: wrapperStyle}, 
-        React.createElement(Panel, React.__spread({},  self.props, {ref: "panel", onDragStart: self.dragStart, onDragEnd: self.dragEnd, floating: true}), 
-          this.props.children
-        )
+        self.inner
       )
     );
   }
