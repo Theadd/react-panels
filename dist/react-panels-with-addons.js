@@ -44,6 +44,8 @@ var FloatingPanel = React.createClass({
 
   setSelectedIndex: function (index) {
     this.refs.panel.setSelectedIndex(index);
+    this._pflag = true;
+    this.forceUpdate();
   },
 
   dragStart: function (e) {

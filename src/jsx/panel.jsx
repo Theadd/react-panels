@@ -34,6 +34,8 @@ var FloatingPanel = React.createClass({
 
   setSelectedIndex: function (index) {
     this.refs.panel.setSelectedIndex(index);
+    this._pflag = true;
+    this.forceUpdate();
   },
 
   dragStart: function (e) {
@@ -236,7 +238,6 @@ var Panel = React.createClass({
 
       tabs.push(
         React.addons.cloneWithProps(child, {
-          // key: (typeof child.key !== "undefined") ? child.key : tabIndex,
           key: tabIndex,
           ref: tabRef,  // TODO: Remove if not being used
           selectedIndex: selectedIndex,
