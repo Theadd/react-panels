@@ -22,6 +22,29 @@ var chemicalStyle = function (opts, skin) {
 
   return {
     panel: {
+      header: {
+        style: {
+          backgroundColor: "transparent",
+          paddingRight: Utils.pixelsOf(opts.headerHeight)
+        }
+      },
+      tabsStart: {
+        style: {
+          width: 50,
+          float: "left"
+        }
+      },
+      tabsEnd: {
+        style: {
+          width: 10,
+          float: "right"
+        }
+      },
+      tabs: {
+        style: {
+          float: "left"
+        }
+      },
       icon: {
         style: {
           color: colors.iconColor,
@@ -38,6 +61,12 @@ var chemicalStyle = function (opts, skin) {
         style: {
           color: colors.titleColor,
           textShadow: "1px 1px 1px " + colors.titleTextShadow
+        }
+      },
+      body: {
+        style: {
+          backgroundColor: "transparent",
+          borderColor: "rgba(0, 0, 0, 0.5)"
         }
       }
     },

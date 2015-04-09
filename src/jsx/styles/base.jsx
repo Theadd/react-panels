@@ -13,6 +13,35 @@ var buildStyle = function (opts) {
   var styles = {
     base: {
       panel: {
+        header: {
+          style: {
+            display: "block",
+            fontSize: Utils.pixelsOf(opts.headerFontSize),
+            height: opts.headerHeight
+          }
+        },
+        tabsStart: {
+          style: {
+            width: 20,
+            height: "100%"
+          }
+        },
+        tabsEnd: {
+          style: {
+            width: 20,
+            height: "100%"
+          }
+        },
+        tabs: {
+          style: {
+            height: opts.headerHeight,
+            float: "right",
+            display: "inline-block",
+            margin: 0,
+            minWidth: Utils.pixelsOf(opts.headerHeight),
+            padding: 0
+          }
+        },
         icon: {
           style: {
             display: "block",
@@ -43,6 +72,9 @@ var buildStyle = function (opts) {
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             width: "auto"
           }
+        },
+        body: {
+          style: {}
         }
       },
       TabButton: {

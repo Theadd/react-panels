@@ -32,6 +32,29 @@ var chemicalStyle = function (opts, skin) {
 
   return {
     panel: {
+      header: {
+        style: {
+          backgroundColor: "transparent",
+          paddingRight: Utils.pixelsOf(opts.headerHeight)
+        }
+      },
+      tabsStart: {
+        style: {
+          width: 50,
+          float: "left"
+        }
+      },
+      tabsEnd: {
+        style: {
+          width: 10,
+          float: "right"
+        }
+      },
+      tabs: {
+        style: {
+          float: "left"
+        }
+      },
       icon: {
         style: {
           color: colors.iconColor,
@@ -145,6 +168,35 @@ var buildStyle = function (opts) {
   var styles = {
     base: {
       panel: {
+        header: {
+          style: {
+            display: "block",
+            fontSize: Utils.pixelsOf(opts.headerFontSize),
+            height: opts.headerHeight
+          }
+        },
+        tabsStart: {
+          style: {
+            width: 20,
+            height: "100%"
+          }
+        },
+        tabsEnd: {
+          style: {
+            width: 20,
+            height: "100%"
+          }
+        },
+        tabs: {
+          style: {
+            height: opts.headerHeight,
+            float: "right",
+            display: "inline-block",
+            margin: 0,
+            minWidth: Utils.pixelsOf(opts.headerHeight),
+            padding: 0
+          }
+        },
         icon: {
           style: {
             display: "block",
