@@ -14,13 +14,14 @@ var chemicalStyle = function (opts, skin) {
         activeTabBorderColor: "rgba(0, 0, 0, 0.5)",
         titleTextShadow: "#a6a6a6",
         iconTextShadow: "rgba(0, 0, 0, 0.9)",
-        iconColor: "#ffffff"
+        iconColor: "#ffffff",
+        titleColor: "#ffffff"
       }
       break;
   }
 
   return {
-    header: {
+    panel: {
       icon: {
         style: {
           color: colors.iconColor,
@@ -30,13 +31,13 @@ var chemicalStyle = function (opts, skin) {
       },
       box: {
         style: {
-
+          float: "left"
         }
       },
       title: {
         style: {
-          textShadow: "1px 1px 1px " + colors.titleTextShadow,
-          float: "left"
+          color: colors.titleColor,
+          textShadow: "1px 1px 1px " + colors.titleTextShadow
         }
       }
     },

@@ -12,7 +12,7 @@ var buildStyle = function (opts) {
 
   var styles = {
     base: {
-      header: {
+      panel: {
         icon: {
           style: {
             display: "block",

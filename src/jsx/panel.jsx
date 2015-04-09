@@ -1,6 +1,67 @@
 
+var PanelWrapper = {
+
+  getDefaultProps: function () {
+    return {
+      "icon": false,
+      "title": "",
+      "selectedIndex": 0
+    };
+  },
+
+  getInitialState: function () {
+    var opts = {
+      theme: this.props.theme,
+      skin: this.props.skin,
+      headerHeight: this.props.headerHeight,
+      headerFontSize: this.props.headerFontSize,
+      borderRadius: this.props.borderRadius,
+      maxTitleWidth: this.props.maxTitleWidth
+    };
+    this._sheet = createSheet(opts);
+    this._pflag = true;
+    return {
+      selectedIndex: parseInt(this.props.selectedIndex)
+    };
+  },
+
+  childContextTypes: {
+    selectedIndex: React.PropTypes.number,
+    sheet: React.PropTypes.func,
+    onTabChange: React.PropTypes.func
+  },
+
+  getChildContext: function () {
+    return {
+      selectedIndex: this.state.selectedIndex,
+      sheet: this._sheet,
+      onTabChange: this.setSelectedIndex
+    };
+  },
+
+  getSelectedIndex: function () {
+    return this.state.selectedIndex;
+  },
+
+  setSelectedIndex: function (index) {
+    this.setState({selectedIndex: parseInt(index)});
+    this._pflag = true;
+    this.forceUpdate();
+  },
+
+  componentWillReceiveProps: function (nextProps) {
+    if (typeof nextProps.selectedIndex !== "undefined") {
+      if (nextProps.selectedIndex != this.props.selectedIndex) {
+        this.setSelectedIndex(nextProps.selectedIndex);
+      }
+    }
+  }
+
+};
+
 var FloatingPanel = React.createClass({
   displayName: 'FloatingPanel',
+  mixins: [PanelWrapper],
 
   getDefaultProps: function () {
     return {
@@ -12,8 +73,6 @@ var FloatingPanel = React.createClass({
   },
 
   getInitialState: function () {
-    this._pflag = true;
-
     return {
       left: parseInt(this.props.left),
       top: parseInt(this.props.top),
@@ -21,15 +80,6 @@ var FloatingPanel = React.createClass({
     };
   },
 
-  getSelectedIndex: function () {
-    return this.refs.panel.getSelectedIndex();
-  },
-
-  setSelectedIndex: function (index) {
-    this.refs.panel.setSelectedIndex(index);
-    this._pflag = true;
-    this.forceUpdate();
-  },
 
   dragStart: function (e) {
     this.panelBounds = {
@@ -64,32 +114,28 @@ var FloatingPanel = React.createClass({
   },
 
   render: function() {
-    var self = this,
-      transform = "translate3d(" + Utils.pixelsOf(self.state.left) + ", " + Utils.pixelsOf(self.state.top) + ", 0)",
+    var transform = "translate3d(" + Utils.pixelsOf(this.state.left) + ", " + Utils.pixelsOf(this.state.top) + ", 0)",
       wrapperStyle = React.addons.update({
         WebkitTransform: transform,
         MozTransform: transform,
         msTransform: transform,
         transform: transform,
-        width: Utils.pixelsOf(self.state.width),
+        width: Utils.pixelsOf(this.state.width),
         position: "absolute"
-      }, {$merge: self.props.style});
+      }, {$merge: this.props.style});
 
-    if (self._pflag) {
-      var props = React.addons.update(self.props, {$merge: {style: {}}});
-      delete props.style;
-
-      self.inner = (
-        <Panel {...props} ref="panel" onDragStart={self.dragStart} onDragEnd={self.dragEnd} floating={true}>
-          {self.props.children}
-        </Panel>
+    if (this._pflag) {
+      this.inner = (
+        <ReactPanel title={this.props.title} icon={this.props.icon} onDragStart={this.dragStart} onDragEnd={this.dragEnd} floating={true}>
+          {this.props.children}
+        </ReactPanel>
       );
-      self._pflag = false;
+      this._pflag = false;
     }
 
     return (
-      <div className="react-panel-wrapper" style={wrapperStyle}>
-        {self.inner}
+      <div style={wrapperStyle}>
+        {this.inner}
       </div>
     );
   }
@@ -98,12 +144,27 @@ var FloatingPanel = React.createClass({
 
 var Panel = React.createClass({
   displayName: 'Panel',
+  mixins: [PanelWrapper],
+
+  render: function() {
+    return (
+      <ReactPanel title={this.props.title} icon={this.props.icon}>
+        {this.props.children}
+      </ReactPanel>
+    );
+  }
+
+});
+
+var ReactPanel = React.createClass({
+  displayName: 'Panel',
+  mixins: [Mixins.Styleable],
 
   getDefaultProps: function () {
     return {
       "icon": false,
       "title": "",
-      "selectedIndex": 0,
+      "theme": "chemical",  //TODO: remove
       "autocompact": true,
       "floating": false,
       "onDragStart": null,
@@ -113,65 +174,23 @@ var Panel = React.createClass({
   },
 
   getInitialState: function () {
-    var opts = {
-      theme: this.props.theme,
-      skin: this.props.skin,
-      headerHeight: this.props.headerHeight,
-      headerFontSize: this.props.headerFontSize,
-      borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
-    };
-    this._sheet = createSheet(opts);
     return {
-      selectedIndex: parseInt(this.props.selectedIndex),
-      compacted: (this.props.autocompact),
-      theme: (typeof this.props.theme === "string") ? this.props.theme : "base"
+      compacted: (this.props.autocompact)
     };
   },
 
-  childContextTypes: {
+  contextTypes: {
     selectedIndex: React.PropTypes.number,
-    sheet: React.PropTypes.func
-  },
-
-  getChildContext: function () {
-    return {
-      selectedIndex: this.state.selectedIndex,
-      sheet: this._sheet
-    };
+    sheet: React.PropTypes.func,
+    onTabChange: React.PropTypes.func
   },
 
   getSelectedIndex: function () {
-    return this.state.selectedIndex;
-  },
-
-  setSelectedIndex: function (index) {
-    this.setState({selectedIndex: parseInt(index)});
-    this.forceUpdate();
-  },
-
-  _getIcon: function () {
-    var icon = null;
-
-    if (this.props.icon) {
-      icon = (
-        <span className="panel-icon">
-          <i className={this.props.icon}></i>
-        </span>
-      );
-    }
-
-    return icon;
+    return this.context.selectedIndex;
   },
 
   handleClick: function (event, index) {
-    if (typeof this.props.onTabClick === "function") {
-      if (this.props.onTabClick(index, this) !== false) {
-        this.setSelectedIndex(index);
-      }
-    } else {
-      this.setSelectedIndex(index);
-    }
+    this.context.onTabChange(parseInt(index));
   },
 
   componentDidMount: function () {
@@ -219,11 +238,17 @@ var Panel = React.createClass({
   render: function() {
     var self = this,
       classes = "react-panel" + ((typeof this.props.theme === "string") ? " " + this.props.theme : ""),
-      icon = this._getIcon(),
-      title = (this.props.title.length) ? (
-        <div className="panel-title-box" style={{maxWidth: Utils.pixelsOf(this.props.maxTitleWidth)}}><div className="panel-title">{this.props.title}</div></div>
+      draggable = (this.props.floating) ? "true" : "false",
+      sheet = this.getSheet("panel");
+
+    var icon = (this.props.icon) ? (
+        <span style={sheet.icon.style}>
+          <i className={this.props.icon}></i>
+        </span>
       ) : null,
-      draggable = (this.props.floating) ? "true" : "false";
+      title = (this.props.title.length) ? (
+        <div style={sheet.box.style}><div style={sheet.title.style}>{this.props.title}</div></div>
+      ) : null;
 
     var tabIndex = 0,
       selectedIndex = this.getSelectedIndex(),
