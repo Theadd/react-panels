@@ -5,7 +5,11 @@ var PanelWrapper = {
     return {
       "icon": false,
       "title": "",
-      "selectedIndex": 0
+      "selectedIndex": 0,
+      /** Triggered before a change tab event propagated from within the Panel (e.g., user's click).
+       *  Optionally, return false to stop it.
+       */
+      "onTabChange": null
     };
   },
 
@@ -35,8 +39,16 @@ var PanelWrapper = {
     return {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
-      onTabChange: this.setSelectedIndex
+      onTabChange: this.handleTabChange
     };
+  },
+
+  handleTabChange: function (index) {
+    if (typeof this.props.onTabChange === "function") {
+      if (this.props.onTabChange(index) !== false) {
+        this.setSelectedIndex(index);
+      }
+    }
   },
 
   getSelectedIndex: function () {
