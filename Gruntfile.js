@@ -64,7 +64,11 @@ module.exports = function(grunt) {
           'build/react-panels.js': [
             'src/jsx/styles/themes/chemical.jsx',
             'src/jsx/styles/base.jsx',
-            'src/jsx/panel.jsx'
+            'src/jsx/utils.jsx',
+            'src/jsx/mixins.jsx',
+            'src/jsx/panel.jsx',
+            'src/jsx/tab.jsx',
+            'src/jsx/ext.jsx'
           ],
           'build/addons.js': [
             'src/jsx/addons/scrollable-tab-content.jsx'

@@ -9,7 +9,6 @@
 (function() {
 
 
-
 var chemicalStyle = function (opts, skin) {
   var colors;
   skin = skin || opts.skin;
@@ -328,6 +327,7 @@ var Utils = {
   }
 };
 
+
 var Mixins = {
   Styleable: {
     getInitialState: function () {
@@ -402,37 +402,13 @@ var Mixins = {
         panelComponentType: "Footer"
       };
     }
-  },
-  TabWrapper: {
-    getDefaultProps: function () {
-      return {
-        panelComponentType: "TabWrapper",
-        icon: "",
-        title: "",
-        pinned: false
-      };
-    },
-    getInitialState: function () {
-      this._propagated = false;
-      return {};
-    },
-    componentWillReceiveProps: function(nextProps) {
-      if (!this._propagated || this.props.index != nextProps.index || this.props.selectedIndex != nextProps.selectedIndex) {
-        this._propagated = true;
-        this._reactInternalInstance._renderedComponent._instance.setInternalValues({
-          selectedIndex: nextProps.selectedIndex,
-          index: nextProps.index
-        });
-        this.forceUpdate();
-      }
-    }
   }
 };
 
 Mixins.StyleableWithEvents = {
   mixins: [Mixins.Styleable],
 
-    getInitialState: function () {
+  getInitialState: function () {
     this.listeners = {
       onMouseEnter: this.handleMouseEnter,
       onMouseLeave: this.handleMouseLeave
@@ -460,6 +436,34 @@ Mixins.StyleableWithEvents = {
   }
 
 };
+
+Mixins.TabWrapper = {
+
+  getDefaultProps: function () {
+    return {
+      panelComponentType: "TabWrapper",
+      icon: "",
+      title: "",
+      pinned: false
+    };
+  },
+
+  childContextTypes: {
+    index: React.PropTypes.number
+  },
+
+  getChildContext: function () {
+    return {
+      index: this.props.index
+    };
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number
+  }
+
+};
+
 
 var FloatingPanel = React.createClass({
   displayName: 'FloatingPanel',
@@ -710,7 +714,7 @@ var Panel = React.createClass({
 
       tabButtons.push(
         React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, selectedIndex: selectedIndex, 
-          index: tabIndex, ref: ref, showTitle: showTitle, maxTitleWidth: self.props.maxTitleWidth, onClick: self.handleClick})
+          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
       );
 
       tabs.push(
@@ -744,6 +748,7 @@ var Panel = React.createClass({
 
 });
 
+
 var TabButton = React.createClass({displayName: "TabButton",
   mixins: [Mixins.StyleableWithEvents],
 
@@ -753,8 +758,7 @@ var TabButton = React.createClass({displayName: "TabButton",
       "title": "",
       "index": 0,
       "selectedIndex": false,
-      "showTitle": true,
-      "maxTitleWidth": 130
+      "showTitle": true
     };
   },
 
@@ -793,46 +797,28 @@ var TabButton = React.createClass({displayName: "TabButton",
   }
 });
 
-
 var Tab = React.createClass({displayName: "Tab",
 
   getDefaultProps: function () {
     return {
       "icon": "",
       "title": "",
-      "index": 0,
-      "selectedIndex": 0,
       "pinned": false,
       "showToolbar": true,
       "panelComponentType": "Tab"
     };
   },
 
-  getInitialState: function () {
-    this._internalValues = {};
-    this._wrapped = false;
-    return {};
+  contextTypes: {
+    selectedIndex: React.PropTypes.number,
+    index: React.PropTypes.number
   },
 
-  setInternalValues: function (values) {
-    // TODO, FIXME: newly added tabs appear stacked in main tab until we select another tab
-    this._wrapped = true;
-    this._internalValues = values;
-  },
-
-  getSelectedIndex: function () {
-    if (this._wrapped) {
-      return this._internalValues.selectedIndex;
+  isActive: function () {
+    if (typeof this.props.index !== "undefined") {
+      return (this.props.index == this.context.selectedIndex);
     } else {
-      return this.props.selectedIndex;
-    }
-  },
-
-  getIndex: function () {
-    if (this._wrapped) {
-      return this._internalValues.index;
-    } else {
-      return this.props.index;
+      return (this.context.index == this.context.selectedIndex);
     }
   },
 
@@ -840,9 +826,8 @@ var Tab = React.createClass({displayName: "Tab",
     var self = this,
       numChilds = React.Children.count(this.props.children),
       vIndex = 0,
-      tabStyle = {
-        display: (this.getSelectedIndex() == this.getIndex()) ? "block" : "none"
-      }, toolbarStyle = {
+      tabStyle = {display: (this.isActive()) ? "block" : "none"},
+      toolbarStyle = {
         display: (this.props.showToolbar) ? "block" : "none"
       },
       tabClasses = "panel-tab",
@@ -875,6 +860,7 @@ var Tab = React.createClass({displayName: "Tab",
   }
 
 });
+ 
 
 var Toolbar = React.createClass({
   displayName: 'Toolbar',
@@ -889,7 +875,6 @@ var Toolbar = React.createClass({
   }
 
 });
-
 
 var Content = React.createClass({
   displayName: 'Content',
