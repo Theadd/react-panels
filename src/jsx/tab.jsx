@@ -7,9 +7,12 @@ var TabButton = React.createClass({
       "icon": "",
       "title": "",
       "index": 0,
-      "selectedIndex": false,
       "showTitle": true
     };
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -20,7 +23,7 @@ var TabButton = React.createClass({
   render: function() {
     var icon = null,
       title = "",
-      mods = (this.props.selectedIndex == this.props.index) ? ['active'] : [];
+      mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
     var sheet = this.getSheet("TabButton", mods, {});
@@ -38,11 +41,11 @@ var TabButton = React.createClass({
     }
 
     return (
-      <li onClick={this.handleClick} style={sheet.style} {...this.listeners}>
-        <div title={this.props.title}>
-          {icon} <div style={sheet.box.style}>{title}</div>
-        </div>
-      </li>
+      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+        React.createElement("div", {title: this.props.title},
+          icon, " ", React.createElement("div", {style: sheet.box.style}, title)
+        )
+      )
     );
   }
 });

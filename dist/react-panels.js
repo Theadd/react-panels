@@ -577,6 +577,7 @@ Mixins.StyleableWithEvents = {
 };
 
 Mixins.TabWrapper = {
+  observedProps: ['selectedIndex', 'index'],
 
   getDefaultProps: function () {
     return {
@@ -650,9 +651,11 @@ var PanelWrapper = {
 
   handleTabChange: function (index) {
     if (typeof this.props.onTabChange === "function") {
-      if (this.props.onTabChange(index) !== false) {
+      if (this.props.onTabChange(index, this) !== false) {
         this.setSelectedIndex(index);
       }
+    } else {
+      this.setSelectedIndex(index);
     }
   },
 
@@ -887,7 +890,7 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, selectedIndex: selectedIndex, 
+        React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, 
           index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
       );
 
@@ -932,9 +935,12 @@ var TabButton = React.createClass({displayName: "TabButton",
       "icon": "",
       "title": "",
       "index": 0,
-      "selectedIndex": false,
       "showTitle": true
     };
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -945,7 +951,7 @@ var TabButton = React.createClass({displayName: "TabButton",
   render: function() {
     var icon = null,
       title = "",
-      mods = (this.props.selectedIndex == this.props.index) ? ['active'] : [];
+      mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
     var sheet = this.getSheet("TabButton", mods, {});
@@ -963,8 +969,8 @@ var TabButton = React.createClass({displayName: "TabButton",
     }
 
     return (
-      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners), 
-        React.createElement("div", {title: this.props.title}, 
+      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+        React.createElement("div", {title: this.props.title},
           icon, " ", React.createElement("div", {style: sheet.box.style}, title)
         )
       )

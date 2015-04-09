@@ -45,9 +45,11 @@ var PanelWrapper = {
 
   handleTabChange: function (index) {
     if (typeof this.props.onTabChange === "function") {
-      if (this.props.onTabChange(index) !== false) {
+      if (this.props.onTabChange(index, this) !== false) {
         this.setSelectedIndex(index);
       }
+    } else {
+      this.setSelectedIndex(index);
     }
   },
 
@@ -282,7 +284,7 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        <TabButton key={tabIndex} title={props.title} icon={props.icon} selectedIndex={selectedIndex}
+        <TabButton key={tabIndex} title={props.title} icon={props.icon}
           index={tabIndex} ref={ref} showTitle={showTitle} onClick={self.handleClick} />
       );
 

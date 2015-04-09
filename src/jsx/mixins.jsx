@@ -109,6 +109,7 @@ Mixins.StyleableWithEvents = {
 };
 
 Mixins.TabWrapper = {
+  observedProps: ['selectedIndex', 'index'],
 
   getDefaultProps: function () {
     return {
