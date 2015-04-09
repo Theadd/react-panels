@@ -19,7 +19,7 @@ var MyItemTab = React.createClass({
       >
         <Content>
           <p><strong>Item value:</strong></p>
-          <pre>{strItem}</pre>
+          <pre style={{wordWrap: "break-word"}}>{strItem}</pre>
         </Content>
 
         <Footer>

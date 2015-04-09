@@ -3,7 +3,181 @@ var Utils = {
   pixelsOf: function (value) {
     var val = parseInt(value) || 0
     return (val) ? String(val) + "px" : "0";
+  },
+  /* Copyright (c) 2012 Nicholas Fisher (MIT License) https://github.com/KyleAMathews/deepmerge */
+  merge: function (target, src) {
+    var array = Array.isArray(src);
+    var dst = array && [] || {};
+
+    if (array) {
+      target = target || [];
+      dst = dst.concat(target);
+      src.forEach(function(e, i) {
+        if (typeof dst[i] === 'undefined') {
+          dst[i] = e;
+        } else if (typeof e === 'object') {
+          dst[i] = Utils.merge(target[i], e);
+        } else {
+          if (target.indexOf(e) === -1) {
+            dst.push(e);
+          }
+        }
+      });
+    } else {
+      if (target && typeof target === 'object') {
+        Object.keys(target).forEach(function (key) {
+          dst[key] = target[key];
+        })
+      }
+      Object.keys(src).forEach(function (key) {
+        if (typeof src[key] !== 'object' || !src[key]) {
+          dst[key] = src[key];
+        }
+        else {
+          if (!target[key]) {
+            dst[key] = src[key];
+          } else {
+            dst[key] = Utils.merge(target[key], src[key]);
+          }
+        }
+      });
+    }
+
+    return dst;
   }
+};
+
+var Mixins = {
+  Styleable: {
+    getInitialState: function () {
+      this.__ssv = {};
+      this.__ssvh = false;
+      this.__ssa = {target: '', mods: [], alter: {}};
+      return {};
+    },
+    contextTypes: {
+      sheet: React.PropTypes.func
+    },
+    getSheet: function (target, mods, alter) {
+      var rebuild = false, i;
+
+      mods = mods || []
+      alter = alter || {}
+      if (target != this.__ssa.target) rebuild = true;
+      else {
+        if (mods.length != this.__ssa.mods.length) rebuild = true;
+        else if (mods.length != 0) {
+          for (i = mods.length; --i >= 0;) {
+            if (this.__ssa.mods.indexOf(mods[i]) == -1) {
+              rebuild = true;
+              break;
+            }
+          }
+        }
+        // TODO: check if alter has changed
+      }
+
+      if (rebuild) {
+        this.__ssv = this.context.sheet(target, mods, alter);
+        this.__ssvh = false;
+        this.__ssa = {
+          target: target,
+          mods: Utils.merge(mods, []),
+          alter: Utils.merge(alter, {})
+        };
+      }
+      if ((typeof this.state._hover === "boolean")) {
+        if (this.state._hover) {
+          if (this.__ssvh || false) {
+            return this.__ssvh;
+          }
+          if ((this.__ssv.state || false) && (this.__ssv.state.hover || false)) {
+            this.__ssvh = Utils.merge(this.__ssv, this.__ssv.state.hover);
+            return this.__ssvh;
+          }
+        }
+      }
+
+      return this.__ssv;
+    }
+  },
+  Toolbar: {
+    getDefaultProps: function () {
+      return {
+        panelComponentType: "Toolbar"
+      };
+    }
+  },
+  Content: {
+    getDefaultProps: function () {
+      return {
+        panelComponentType: "Content"
+      };
+    }
+  },
+  Footer: {
+    getDefaultProps: function () {
+      return {
+        panelComponentType: "Footer"
+      };
+    }
+  },
+  TabWrapper: {
+    getDefaultProps: function () {
+      return {
+        panelComponentType: "TabWrapper",
+        icon: "",
+        title: "",
+        pinned: false
+      };
+    },
+    getInitialState: function () {
+      this._propagated = false;
+      return {};
+    },
+    componentWillReceiveProps: function(nextProps) {
+      if (!this._propagated || this.props.index != nextProps.index || this.props.selectedIndex != nextProps.selectedIndex) {
+        this._propagated = true;
+        this._reactInternalInstance._renderedComponent._instance.setInternalValues({
+          selectedIndex: nextProps.selectedIndex,
+          index: nextProps.index
+        });
+        this.forceUpdate();
+      }
+    }
+  }
+};
+
+Mixins.StyleableWithEvents = {
+  mixins: [Mixins.Styleable],
+
+    getInitialState: function () {
+    this.listeners = {
+      onMouseEnter: this.handleMouseEnter,
+      onMouseLeave: this.handleMouseLeave
+    };
+    return {
+      _hover: false,
+      _focus: false
+    };
+  },
+
+  handleMouseEnter: function (ev) {
+    if (typeof this.props['onMouseEnter'] === "function") this.props['onMouseEnter'](ev);
+
+    this.setState({
+      _hover: true
+    });
+  },
+
+  handleMouseLeave: function (ev) {
+    if (typeof this.props['onMouseLeave'] === "function") this.props['onMouseLeave'](ev);
+
+    this.setState({
+      _hover: false
+    });
+  }
+
 };
 
 var FloatingPanel = React.createClass({
@@ -120,9 +294,31 @@ var Panel = React.createClass({
   },
 
   getInitialState: function () {
+    var opts = {
+      theme: this.props.theme,
+      skin: this.props.skin,
+      headerHeight: this.props.headerHeight,
+      headerFontSize: this.props.headerFontSize,
+      borderRadius: this.props.borderRadius,
+      maxTitleWidth: this.props.maxTitleWidth
+    };
+    this._sheet = createSheet(opts);
     return {
       selectedIndex: parseInt(this.props.selectedIndex),
-      compacted: (this.props.autocompact)
+      compacted: (this.props.autocompact),
+      theme: (typeof this.props.theme === "string") ? this.props.theme : "base"
+    };
+  },
+
+  childContextTypes: {
+    selectedIndex: React.PropTypes.number,
+    sheet: React.PropTypes.func
+  },
+
+  getChildContext: function () {
+    return {
+      selectedIndex: this.state.selectedIndex,
+      sheet: this._sheet
     };
   },
 
@@ -267,8 +463,8 @@ var Panel = React.createClass({
 
 });
 
-
 var TabButton = React.createClass({
+  mixins: [Mixins.StyleableWithEvents],
 
   getDefaultProps: function () {
     return {
@@ -288,32 +484,28 @@ var TabButton = React.createClass({
 
   render: function() {
     var icon = null,
-      titleStyle = {maxWidth: Utils.pixelsOf(this.props.maxTitleWidth)},
-      selected = (this.props.selectedIndex == this.props.index),
       title = "",
-      tabClasses = "panel-tab";
+      mods = (this.props.selectedIndex == this.props.index) ? ['active'] : [];
+
+    if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
+    var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (<div className="panel-title">{this.props.title}</div>);
-    } else {
-      titleStyle = {
-        marginLeft: 0
-      };
+      title = (<div style={sheet.title.style}>{this.props.title}</div>);
     }
-    tabClasses += (selected) ? " active" : "";
 
     if (this.props.icon) {
       icon = (
-        <div className="panel-icon">
+        <div style={sheet.icon.style}>
           <i className={this.props.icon}></i>
         </div>
       );
     }
 
     return (
-      <li className={tabClasses} onClick={this.handleClick}>
+      <li onClick={this.handleClick} style={sheet.style} {...this.listeners}>
         <div title={this.props.title}>
-          {icon} <div className="panel-title-box" style={titleStyle}>{title}</div>
+          {icon} <div style={sheet.box.style}>{title}</div>
         </div>
       </li>
     );
@@ -402,54 +594,6 @@ var Tab = React.createClass({
   }
 
 });
-
-var Mixins = {
-  Toolbar: {
-    getDefaultProps: function () {
-      return {
-        panelComponentType: "Toolbar"
-      };
-    }
-  },
-  Content: {
-    getDefaultProps: function () {
-      return {
-        panelComponentType: "Content"
-      };
-    }
-  },
-  Footer: {
-    getDefaultProps: function () {
-      return {
-        panelComponentType: "Footer"
-      };
-    }
-  },
-  TabWrapper: {
-    getDefaultProps: function () {
-      return {
-        panelComponentType: "TabWrapper",
-        icon: "",
-        title: "",
-        pinned: false
-      };
-    },
-    getInitialState: function () {
-      this._propagated = false;
-      return {};
-    },
-    componentWillReceiveProps: function(nextProps) {
-      if (!this._propagated || this.props.index != nextProps.index || this.props.selectedIndex != nextProps.selectedIndex) {
-        this._propagated = true;
-        this._reactInternalInstance._renderedComponent._instance.setInternalValues({
-          selectedIndex: nextProps.selectedIndex,
-          index: nextProps.index
-        });
-        this.forceUpdate();
-      }
-    }
-  }
-};
 
 var Toolbar = React.createClass({
   displayName: 'Toolbar',

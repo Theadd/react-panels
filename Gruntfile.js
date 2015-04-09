@@ -62,6 +62,8 @@ module.exports = function(grunt) {
       combined_file_output: {
         files: {
           'build/react-panels.js': [
+            'src/jsx/styles/themes/chemical.jsx',
+            'src/jsx/styles/base.jsx',
             'src/jsx/panel.jsx'
           ],
           'build/addons.js': [
