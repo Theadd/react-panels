@@ -12,7 +12,8 @@ var buildStyle = function (opts) {
 
   var styles = {
     base: {
-      panel: {
+      Panel: {
+        style: {},
         header: {
           style: {
             display: "block",
@@ -130,6 +131,45 @@ var buildStyle = function (opts) {
             letterSpacing: 0,
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             width: "auto"
+          }
+        }
+      },
+      Tab: {
+        style: {
+          display: "none"
+        },
+        mods: {
+          active: {
+            style: {
+              display: "block"
+            }
+          },
+          withToolbar: {
+            toolbar: {
+              style: {
+                display: "block"
+              }
+            }
+          }
+        },
+        toolbar: {
+          style: {
+            minHeight: Utils.pixelsOf(opts.headerHeight),
+            lineHeight: Utils.pixelsOf(opts.headerHeight),
+            padding: "10px",
+            display: "none"
+          }
+        },
+        content: {
+          style: {
+            padding: "10px"
+          }
+        },
+        footer: {
+          style: {
+            minHeight: Utils.pixelsOf(opts.headerHeight),
+            lineHeight: Utils.pixelsOf(opts.headerHeight),
+            padding: "10px"
           }
         }
       }

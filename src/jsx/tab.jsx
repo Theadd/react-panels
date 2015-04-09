@@ -48,6 +48,8 @@ var TabButton = React.createClass({
 });
 
 var Tab = React.createClass({
+  displayName: 'Tab',
+  mixins: [Mixins.Styleable],
 
   getDefaultProps: function () {
     return {
@@ -76,12 +78,8 @@ var Tab = React.createClass({
     var self = this,
       numChilds = React.Children.count(this.props.children),
       vIndex = 0,
-      tabStyle = {display: (this.isActive()) ? "block" : "none"},
-      toolbarStyle = {
-        display: (this.props.showToolbar) ? "block" : "none"
-      },
-      tabClasses = "panel-tab",
-      hasToolbar = false;
+      mods = (this.isActive()) ? ['active'] : [],
+      sheet = {};
 
     var innerContent = React.Children.map(self.props.children, function(child) {
       var type = (vIndex == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
@@ -92,18 +90,19 @@ var Tab = React.createClass({
           case "Footer": type = 2; break;
         }
       }
+      if (vIndex == 0) {
+        if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
+        sheet = self.getSheet("Tab", mods);
+      }
       switch (type) {
-        case 0:
-          hasToolbar = true;
-          return (<div className="panel-toolbar" key={vIndex++} style={toolbarStyle}>{child}</div>);
-        case 1: return (<div className="panel-content" key={vIndex++}>{child}</div>);
-        case 2: return (<div className="panel-footer" key={vIndex++}>{child}</div>);
+        case 0: return (<div key={vIndex++} style={sheet.toolbar.style}>{child}</div>);
+        case 1: return (<div key={vIndex++} style={sheet.content.style}>{child}</div>);
+        case 2: return (<div key={vIndex++} style={sheet.footer.style}>{child}</div>);
       }
     });
-    tabClasses += (this.props.showToolbar && hasToolbar) ? " with-toolbar" : "";
 
     return (
-      <div className={tabClasses} style={tabStyle}>
+      <div style={sheet.style}>
         {innerContent}
       </div>
     );

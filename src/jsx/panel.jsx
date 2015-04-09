@@ -164,7 +164,6 @@ var ReactPanel = React.createClass({
     return {
       "icon": false,
       "title": "",
-      "theme": "chemical",  //TODO: remove
       "autocompact": true,
       "floating": false,
       "onDragStart": null,
@@ -237,9 +236,8 @@ var ReactPanel = React.createClass({
 
   render: function() {
     var self = this,
-      classes = "react-panel" + ((typeof this.props.theme === "string") ? " " + this.props.theme : ""),
       draggable = (this.props.floating) ? "true" : "false",
-      sheet = this.getSheet("panel");
+      sheet = this.getSheet("Panel");
 
     var icon = (this.props.icon) ? (
         <span style={sheet.icon.style}>
@@ -288,17 +286,18 @@ var ReactPanel = React.createClass({
     });
 
     return (
-      <div className={classes}>
-        <header draggable={draggable} onDragEnd={self.handleDragEnd} onDragStart={self.handleDragStart} ref="header">
+      <div style={sheet.style}>
+        <header draggable={draggable} onDragEnd={self.handleDragEnd}
+            onDragStart={self.handleDragStart} ref="header" style={sheet.header.style}>
           {icon}
           {title}
-          <div className="panel-tabs-start" ref="tabs-start" />
-          <ul className="panel-tabs" ref="tabs">
+          <div style={sheet.tabsStart.style} ref="tabs-start" />
+          <ul style={sheet.tabs.style} ref="tabs">
             {tabButtons}
           </ul>
-          <div className="panel-tabs-end" ref="tabs-end" />
+          <div style={sheet.tabsEnd.style} ref="tabs-end" />
         </header>
-        <div className="panel-body">
+        <div style={sheet.body.style}>
           {tabs}
         </div>
       </div>

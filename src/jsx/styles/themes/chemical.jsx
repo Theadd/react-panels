@@ -15,13 +15,16 @@ var chemicalStyle = function (opts, skin) {
         titleTextShadow: "#a6a6a6",
         iconTextShadow: "rgba(0, 0, 0, 0.9)",
         iconColor: "#ffffff",
-        titleColor: "#ffffff"
-      }
+        titleColor: "#ffffff",
+        toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
+        contentBackgroundColorWithToolbar: "rgba(255, 255, 255, 0.85)",
+        footerBackgroundColor: "rgba(224, 230, 240, 0.8)"
+      };
       break;
   }
 
   return {
-    panel: {
+    Panel: {
       header: {
         style: {
           backgroundColor: "transparent",
@@ -145,6 +148,40 @@ var chemicalStyle = function (opts, skin) {
           textShadow: "1px 1px 1px " + colors.tabTextShadow
         }
       }
+    },
+    Tab: {
+      mods: {
+        withToolbar: {
+          content: {
+            style: {
+              backgroundColor: colors.contentBackgroundColorWithToolbar
+            }
+          }
+        }
+      },
+      toolbar: {
+        style: {
+          backgroundColor: colors.activeTabBackgroundColor,
+          borderBottom: "0 none",
+          marginBottom: "1px",
+          borderRadius: "2px",
+          boxShadow: "0 -2px 0 " + colors.toolbarBoxShadow + " inset"
+        }
+      },
+      content: {
+        style: {
+          backgroundColor: colors.activeTabBackgroundColor,
+          borderBottom: "0 none",
+          marginBottom: "1px",
+          borderRadius: "2px"
+        }
+      },
+      footer: {
+        style: {
+          backgroundColor: colors.footerBackgroundColor,
+          borderRadius: "2px"
+        }
+      }
     }
   };
-}
+};
