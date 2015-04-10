@@ -6,40 +6,24 @@ module.exports = function(grunt) {
   grunt.initConfig({
 
     watch: {
-      styles: {
-        files: ['src/less/**'],
-        tasks: ['less'],
-        options: {
-          spawn: true,
-          interrupt: true
-        }
-      },
       sources: {
-        files: ['src/jsx/**', 'examples/bootstrap.html_files/src/**'],
+        files: ['src/jsx/**', 'examples/floating/src/**'],
         tasks: ['react'],
         options: {
           spawn: true,
           interrupt: true
         }
       },
-      docs: {
-        files: ['dist/react-panels.js'],
-        tasks: ['jsdoc'],
-        options: {
-          spawn: true,
-          interrupt: false
-        }
-      },
-      commonjs: {
-        files: ['src/jsx/**'],
+      build: {
+        files: ['build/**'],
         tasks: ['concat'],
         options: {
           spawn: true,
-          interrupt: false
+          interrupt: true
         }
       },
       jsmin: {
-        files: ['dist/react-panels.js'],
+        files: ['dist/react-panels.js', 'dist/react-panels-with-addons.js'],
         tasks: ['uglify'],
         options: {
           spawn: true,
@@ -47,65 +31,38 @@ module.exports = function(grunt) {
         }
       }
     },
-    less: {
-      development: {
-        options: {
-          paths: ["src/less"]
-        },
-        files: {
-          "dist/react-panels.css": "src/less/main.less",
-          "dist/react-panels.base.css": "src/less/base.less"
-        }
-      },
-      production: {
-        options: {
-          paths: ["src/less"],
-          compress: true
-        },
-        files: {
-          "dist/react-panels.min.css": "src/less/main.less",
-          "dist/react-panels.base.min.css": "src/less/base.less"
-        }
-      }
-    },
     react: {
       combined_file_output: {
         files: {
-          'dist/react-panels.js': [
-            'src/jsx/rpanel.jsx',
-            'src/jsx/rcontent.jsx',
-            'src/jsx/rbutton.jsx'
+          'build/react-panels.js': [
+            'src/jsx/styles/themes/chemical.jsx',
+            'src/jsx/styles/base.jsx',
+            'src/jsx/utils.jsx',
+            'src/jsx/mixins.jsx',
+            'src/jsx/panel.jsx',
+            'src/jsx/tab.jsx',
+            'src/jsx/buttons.jsx',
+            'src/jsx/ext.jsx'
           ],
-          'examples/bootstrap.html_files/main.js': [
-            'examples/bootstrap.html_files/src/buttons.jsx',
-            'examples/bootstrap.html_files/src/toolbars.jsx',
-            'examples/bootstrap.html_files/src/panel-contents.jsx',
-            'examples/bootstrap.html_files/src/panels.jsx',
-            'examples/bootstrap.html_files/src/main.jsx'
+          'build/addons.js': [
+            'src/jsx/addons/scrollable-tab-content.jsx'
+          ],
+          'examples/floating/floating.js': [
+            'examples/floating/src/item-tab.jsx',
+            'examples/floating/src/main-tab.jsx',
+            'examples/floating/src/app.jsx'
           ]
         }
       }
     },
-    jsdoc : {
-      dist : {
-        src: ['dist/react-panels.js'],
-        options: {
-          destination: 'docs/dist',
-          template : "docs/templates/jaguar",
-          configure : "docs/templates/jaguar/conf.json"
-        }
-      }
-    },
     concat: {
-      js: {
-        src: [
-          'src/misc/START',
-          'src/jsx/rpanel.jsx',
-          'src/jsx/rcontent.jsx',
-          'src/jsx/rbutton.jsx',
-          'src/misc/END'
-        ],
-        dest: 'index.js'
+      basic: {
+        src: ['src/misc/HEADER', 'build/react-panels.js', 'src/misc/FOOTER'],
+        dest: 'dist/react-panels.js'
+      },
+      addons: {
+        src: ['src/misc/HEADER', 'build/react-panels.js', 'build/addons.js', 'src/misc/FOOTER'],
+        dest: 'dist/react-panels-with-addons.js'
       }
     },
     uglify: {
@@ -114,21 +71,20 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'dist/react-panels.min.js': ['dist/react-panels.js']
+          'dist/react-panels.min.js': ['dist/react-panels.js'],
+          'dist/react-panels-with-addons.min.js': ['dist/react-panels-with-addons.js']
         }
       }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-react');
-  grunt.loadNpmTasks('grunt-jsdoc');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
-  grunt.registerTask('default', ['less', 'react', 'jsdoc', 'concat', 'uglify']);
-  grunt.registerTask('live', ['watch', 'less', 'react', 'jsdoc', 'concat', 'uglify']);
-  grunt.registerTask('live-base', ['watch', 'less', 'react']);
+  grunt.registerTask('default', ['react', 'concat', 'uglify']);
+  grunt.registerTask('live', ['watch', 'react', 'concat', 'uglify']);
+  grunt.registerTask('live-dev', ['watch', 'react', 'concat']);
 
 };
