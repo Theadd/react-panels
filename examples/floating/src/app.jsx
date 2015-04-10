@@ -22,7 +22,12 @@ var MyFloatingPanel = React.createClass({
     var self = this;
 
     return (
-      <FloatingPanel left={200} top={100} width={520} ref="myPanel" theme="chemical">
+      <FloatingPanel left={200} top={100} width={520} ref="myPanel" theme="chemical"
+        buttons={[
+          <ToggleButton>
+            <i className="fa fa-wrench"></i>
+          </ToggleButton>
+        ]}>
         <MyMainTab
           icon="fa fa-cubes"
           title="List of Items"

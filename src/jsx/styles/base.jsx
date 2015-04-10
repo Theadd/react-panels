@@ -74,6 +74,12 @@ var buildStyle = function (opts) {
             width: "auto"
           }
         },
+        group: {
+          style: {
+            padding: "0 5px",
+            backgroundColor: "#990000"
+          }
+        },
         body: {
           style: {}
         }
@@ -172,6 +178,40 @@ var buildStyle = function (opts) {
             padding: "10px"
           }
         }
+      },
+      ToggleButton: {
+        style: {
+          float: "right",
+          height: 32,
+          minWidth: 32,
+          display: "inline-block",
+          lineHeight: "32px",
+          margin: 0,
+          padding: 0,
+          textAlign: "center",
+          cursor: "pointer",
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          msUserSelect: "none",
+          userSelect: "none"
+        },
+        mods: {
+          disabled: {
+            style: {
+              cursor: "default",
+              pointerEvents: "none",
+              opacity: 0.5
+            }
+          },
+          hidden: {
+            style: {
+              display: "none"
+            }
+          }
+        },
+        children: {
+          style: {}
+        }
       }
     },
     /* THEME: Chemical */
@@ -202,7 +242,7 @@ var createSheet = (function (opts) {
     var sheet = React.addons.update(using[target], {$merge: {}}),
       i;
     for (i = 0; i < mods.length; ++i) {
-      if (sheet.mods[mods[i]] || false) {
+      if ((sheet.mods || false) && (sheet.mods[mods[i]] || false)) {
         sheet = Utils.merge(sheet, sheet.mods[mods[i]]);
       }
     }

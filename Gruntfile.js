@@ -41,6 +41,7 @@ module.exports = function(grunt) {
             'src/jsx/mixins.jsx',
             'src/jsx/panel.jsx',
             'src/jsx/tab.jsx',
+            'src/jsx/buttons.jsx',
             'src/jsx/ext.jsx'
           ],
           'build/addons.js': [

@@ -1,81 +1,7 @@
 
-var PanelWrapper = {
-
-  getDefaultProps: function () {
-    return {
-      "icon": false,
-      "title": "",
-      "selectedIndex": 0,
-      /** Triggered before a change tab event propagated from within the Panel (e.g., user's click).
-       *  Optionally, return false to stop it.
-       */
-      "onTabChange": null
-    };
-  },
-
-  getInitialState: function () {
-    var opts = {
-      theme: this.props.theme,
-      skin: this.props.skin,
-      headerHeight: this.props.headerHeight,
-      headerFontSize: this.props.headerFontSize,
-      borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
-    };
-    this._sheet = createSheet(opts);
-    this._pflag = true;
-    return {
-      selectedIndex: parseInt(this.props.selectedIndex)
-    };
-  },
-
-  childContextTypes: {
-    selectedIndex: React.PropTypes.number,
-    sheet: React.PropTypes.func,
-    onTabChange: React.PropTypes.func
-  },
-
-  getChildContext: function () {
-    return {
-      selectedIndex: this.state.selectedIndex,
-      sheet: this._sheet,
-      onTabChange: this.handleTabChange
-    };
-  },
-
-  handleTabChange: function (index) {
-    if (typeof this.props.onTabChange === "function") {
-      if (this.props.onTabChange(index, this) !== false) {
-        this.setSelectedIndex(index);
-      }
-    } else {
-      this.setSelectedIndex(index);
-    }
-  },
-
-  getSelectedIndex: function () {
-    return this.state.selectedIndex;
-  },
-
-  setSelectedIndex: function (index) {
-    this.setState({selectedIndex: parseInt(index)});
-    this._pflag = true;
-    this.forceUpdate();
-  },
-
-  componentWillReceiveProps: function (nextProps) {
-    if (typeof nextProps.selectedIndex !== "undefined") {
-      if (nextProps.selectedIndex != this.props.selectedIndex) {
-        this.setSelectedIndex(nextProps.selectedIndex);
-      }
-    }
-  }
-
-};
-
 var FloatingPanel = React.createClass({
   displayName: 'FloatingPanel',
-  mixins: [PanelWrapper],
+  mixins: [Mixins.PanelWrapper],
 
   getDefaultProps: function () {
     return {
@@ -140,7 +66,8 @@ var FloatingPanel = React.createClass({
 
     if (this._pflag) {
       this.inner = (
-        <ReactPanel title={this.props.title} icon={this.props.icon} onDragStart={this.dragStart} onDragEnd={this.dragEnd} floating={true}>
+        <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}
+          onDragStart={this.dragStart} onDragEnd={this.dragEnd} floating={true}>
           {this.props.children}
         </ReactPanel>
       );
@@ -158,11 +85,11 @@ var FloatingPanel = React.createClass({
 
 var Panel = React.createClass({
   displayName: 'Panel',
-  mixins: [PanelWrapper],
+  mixins: [Mixins.PanelWrapper],
 
   render: function() {
     return (
-      <ReactPanel title={this.props.title} icon={this.props.icon}>
+      <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}>
         {this.props.children}
       </ReactPanel>
     );
@@ -182,7 +109,8 @@ var ReactPanel = React.createClass({
       "floating": false,
       "onDragStart": null,
       "onDragEnd": null,
-      "maxTitleWidth": 130
+      "maxTitleWidth": 130,
+      "buttons": []
     };
   },
 
@@ -248,6 +176,36 @@ var ReactPanel = React.createClass({
     }
   },
 
+  _getGroupedButtons: function () {
+    var len = this.props.buttons.length,
+      i, j, item, group = [], groups = [];
+
+    for (i = 0; i < len; ++i) {
+      item = this.props.buttons[i];
+
+      if (typeof item === "object" && item instanceof Array) {
+        if (group.length) {
+          groups.push(group);
+          group = [];
+        }
+        for (j = 0; j < item.length; ++j) {
+          group.push(React.addons.cloneWithProps(item[j], {key: j}));
+        }
+        if (group.length) {
+          groups.push(group);
+          group = [];
+        }
+      } else {
+        group.push(React.addons.cloneWithProps(item, {key: i}));
+      }
+    }
+    if (group.length) {
+      groups.push(group);
+    }
+
+    return groups;
+  },
+
   render: function() {
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
@@ -265,7 +223,8 @@ var ReactPanel = React.createClass({
     var tabIndex = 0,
       selectedIndex = this.getSelectedIndex(),
       tabButtons = [],
-      tabs = [];
+      tabs = [],
+      groupIndex = 0;
 
     React.Children.forEach(self.props.children, function(child) {
       var ref = "tabb-" + tabIndex,
@@ -310,6 +269,13 @@ var ReactPanel = React.createClass({
             {tabButtons}
           </ul>
           <div style={sheet.tabsEnd.style} ref="tabs-end" />
+          {this._getGroupedButtons().map(function (group) {
+            return (
+              <ul style={sheet.group.style} key={groupIndex++}>
+                {group}
+              </ul>
+            );
+          })}
         </header>
         <div style={sheet.body.style}>
           {tabs}

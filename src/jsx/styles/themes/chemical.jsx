@@ -182,6 +182,39 @@ var chemicalStyle = function (opts, skin) {
           borderRadius: "2px"
         }
       }
+    },
+    ToggleButton: {
+      style: {
+        borderRadius: "2px 2px 0 0",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        marginLeft: "1px"
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: "rgba(255, 255, 255, 0.9)"
+          },
+          children: {
+            style: {
+              color: "rgba(0, 0, 0, 0.9)",
+              textShadow: "1px 1px 1px #ffffff"
+            }
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            backgroundColor: "rgba(255, 255, 255, 0.9)"
+          }
+        }
+      },
+      children: {
+        style: {
+          color: "#ffffff",
+          textShadow: "1px 1px 1px rgba(0, 0, 0, 0.9)"
+        }
+      }
     }
   };
 };

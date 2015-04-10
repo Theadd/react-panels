@@ -192,6 +192,39 @@ var chemicalStyle = function (opts, skin) {
           borderRadius: "2px"
         }
       }
+    },
+    ToggleButton: {
+      style: {
+        borderRadius: "2px 2px 0 0",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        marginLeft: "1px"
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: "rgba(255, 255, 255, 0.9)"
+          },
+          children: {
+            style: {
+              color: "rgba(0, 0, 0, 0.9)",
+              textShadow: "1px 1px 1px #ffffff"
+            }
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            backgroundColor: "rgba(255, 255, 255, 0.9)"
+          }
+        }
+      },
+      children: {
+        style: {
+          color: "#ffffff",
+          textShadow: "1px 1px 1px rgba(0, 0, 0, 0.9)"
+        }
+      }
     }
   };
 };
@@ -270,6 +303,12 @@ var buildStyle = function (opts) {
             letterSpacing: 0,
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             width: "auto"
+          }
+        },
+        group: {
+          style: {
+            padding: "0 5px",
+            backgroundColor: "#990000"
           }
         },
         body: {
@@ -370,6 +409,40 @@ var buildStyle = function (opts) {
             padding: "10px"
           }
         }
+      },
+      ToggleButton: {
+        style: {
+          float: "right",
+          height: 32,
+          minWidth: 32,
+          display: "inline-block",
+          lineHeight: "32px",
+          margin: 0,
+          padding: 0,
+          textAlign: "center",
+          cursor: "pointer",
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          msUserSelect: "none",
+          userSelect: "none"
+        },
+        mods: {
+          disabled: {
+            style: {
+              cursor: "default",
+              pointerEvents: "none",
+              opacity: 0.5
+            }
+          },
+          hidden: {
+            style: {
+              display: "none"
+            }
+          }
+        },
+        children: {
+          style: {}
+        }
       }
     },
     /* THEME: Chemical */
@@ -400,7 +473,7 @@ var createSheet = (function (opts) {
     var sheet = React.addons.update(using[target], {$merge: {}}),
       i;
     for (i = 0; i < mods.length; ++i) {
-      if (sheet.mods[mods[i]] || false) {
+      if ((sheet.mods || false) && (sheet.mods[mods[i]] || false)) {
         sheet = Utils.merge(sheet, sheet.mods[mods[i]]);
       }
     }
@@ -481,7 +554,7 @@ var Mixins = {
     getSheet: function (target, mods, alter) {
       var rebuild = false, i;
 
-      mods = mods || []
+      mods = (typeof this['getSheetMods'] === "function") ? this['getSheetMods'](mods || []) : mods || [];
       alter = alter || {}
       if (target != this.__ssa.target) rebuild = true;
       else {
@@ -547,6 +620,13 @@ var Mixins = {
 Mixins.StyleableWithEvents = {
   mixins: [Mixins.Styleable],
 
+  getDefaultProps: function () {
+    return {
+      onMouseEnter: false,
+      onMouseLeave: false
+    };
+  },
+
   getInitialState: function () {
     this.listeners = {
       onMouseEnter: this.handleMouseEnter,
@@ -576,36 +656,7 @@ Mixins.StyleableWithEvents = {
 
 };
 
-Mixins.TabWrapper = {
-  observedProps: ['selectedIndex', 'index'],
-
-  getDefaultProps: function () {
-    return {
-      panelComponentType: "TabWrapper",
-      icon: "",
-      title: "",
-      pinned: false
-    };
-  },
-
-  childContextTypes: {
-    index: React.PropTypes.number
-  },
-
-  getChildContext: function () {
-    return {
-      index: this.props.index
-    };
-  },
-
-  contextTypes: {
-    selectedIndex: React.PropTypes.number
-  }
-
-};
-
-
-var PanelWrapper = {
+Mixins.PanelWrapper = {
 
   getDefaultProps: function () {
     return {
@@ -615,7 +666,8 @@ var PanelWrapper = {
       /** Triggered before a change tab event propagated from within the Panel (e.g., user's click).
        *  Optionally, return false to stop it.
        */
-      "onTabChange": null
+      "onTabChange": null,
+      "buttons": []
     };
   },
 
@@ -679,9 +731,121 @@ var PanelWrapper = {
 
 };
 
+Mixins.TabWrapper = {
+  observedProps: ['selectedIndex', 'index'],
+
+  getDefaultProps: function () {
+    return {
+      panelComponentType: "TabWrapper",
+      icon: "",
+      title: "",
+      pinned: false
+    };
+  },
+
+  childContextTypes: {
+    index: React.PropTypes.number
+  },
+
+  getChildContext: function () {
+    return {
+      index: this.props.index
+    };
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number
+  }
+
+};
+
+Mixins.Button = {
+  mixins: [Mixins.StyleableWithEvents],
+
+  getDefaultProps: function () {
+    return {
+      name: "default",
+      title: "",
+      visible: true,
+      enabled: true,
+      active: false,
+      onClick: false,
+      onDoubleClick: false,
+      onContextMenu: false,
+      onChange: false
+    };
+  },
+
+  getInitialState: function () {
+    this.listeners.onClick = this._handleClick;
+    this.listeners.onDoubleClick = this._handleDoubleClick;
+    this.listeners.onContextMenu = this._handleContextMenu;
+    return {
+      visible: this.props.visible,
+      enabled: this.props.enabled,
+      active: this.props.active
+    };
+  },
+
+  childContextTypes: {
+    btnTitle: React.PropTypes.string,
+    btnVisible: React.PropTypes.bool,
+    btnEnabled: React.PropTypes.bool,
+    btnActive: React.PropTypes.bool
+  },
+
+  getChildContext: function () {
+    return {
+      btnTitle: this.props.title,
+      btnVisible: this.state.visible,
+      btnEnabled: this.state.enabled,
+      btnActive: this.state.active
+    };
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number
+  },
+
+  getSheetMods: function (otherMods) {
+    var mods = otherMods || [];   //np
+    if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
+    if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
+    if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+
+    return mods;
+  },
+
+  _handleDoubleClick: function (ev) {
+    if (typeof this.props.onDoubleClick === "function" && this.props.onDoubleClick(ev, this) === false) return;
+
+    if (typeof this['handleDoubleClick'] === "function") {
+      return this['handleDoubleClick'](ev);
+    }
+  },
+
+  _handleClick: function (ev) {
+    if (typeof this.props.onClick === "function" && this.props.onClick(ev, this) === false) return;
+
+    if (typeof this['handleClick'] === "function") {
+      return this['handleClick'](ev);
+    }
+  },
+
+  _handleContextMenu: function (ev) {
+    if (typeof this.props.onContextMenu === "function" && this.props.onContextMenu(ev, this) === false) return;
+
+    if (typeof this['handleContextMenu'] === "function") {
+      return this['handleContextMenu'](ev);
+    }
+  }
+
+};
+
+
 var FloatingPanel = React.createClass({
   displayName: 'FloatingPanel',
-  mixins: [PanelWrapper],
+  mixins: [Mixins.PanelWrapper],
 
   getDefaultProps: function () {
     return {
@@ -746,7 +910,8 @@ var FloatingPanel = React.createClass({
 
     if (this._pflag) {
       this.inner = (
-        React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, onDragStart: this.dragStart, onDragEnd: this.dragEnd, floating: true}, 
+        React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons, 
+          onDragStart: this.dragStart, onDragEnd: this.dragEnd, floating: true}, 
           this.props.children
         )
       );
@@ -764,11 +929,11 @@ var FloatingPanel = React.createClass({
 
 var Panel = React.createClass({
   displayName: 'Panel',
-  mixins: [PanelWrapper],
+  mixins: [Mixins.PanelWrapper],
 
   render: function() {
     return (
-      React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon}, 
+      React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons}, 
         this.props.children
       )
     );
@@ -788,7 +953,8 @@ var ReactPanel = React.createClass({
       "floating": false,
       "onDragStart": null,
       "onDragEnd": null,
-      "maxTitleWidth": 130
+      "maxTitleWidth": 130,
+      "buttons": []
     };
   },
 
@@ -854,6 +1020,36 @@ var ReactPanel = React.createClass({
     }
   },
 
+  _getGroupedButtons: function () {
+    var len = this.props.buttons.length,
+      i, j, item, group = [], groups = [];
+
+    for (i = 0; i < len; ++i) {
+      item = this.props.buttons[i];
+
+      if (typeof item === "object" && item instanceof Array) {
+        if (group.length) {
+          groups.push(group);
+          group = [];
+        }
+        for (j = 0; j < item.length; ++j) {
+          group.push(React.addons.cloneWithProps(item[j], {key: j}));
+        }
+        if (group.length) {
+          groups.push(group);
+          group = [];
+        }
+      } else {
+        group.push(React.addons.cloneWithProps(item, {key: i}));
+      }
+    }
+    if (group.length) {
+      groups.push(group);
+    }
+
+    return groups;
+  },
+
   render: function() {
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
@@ -871,7 +1067,8 @@ var ReactPanel = React.createClass({
     var tabIndex = 0,
       selectedIndex = this.getSelectedIndex(),
       tabButtons = [],
-      tabs = [];
+      tabs = [],
+      groupIndex = 0;
 
     React.Children.forEach(self.props.children, function(child) {
       var ref = "tabb-" + tabIndex,
@@ -915,7 +1112,14 @@ var ReactPanel = React.createClass({
           React.createElement("ul", {style: sheet.tabs.style, ref: "tabs"}, 
             tabButtons
           ), 
-          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"})
+          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}), 
+          this._getGroupedButtons().map(function (group) {
+            return (
+              React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, 
+                group
+              )
+            );
+          })
         ), 
         React.createElement("div", {style: sheet.body.style}, 
           tabs
@@ -1042,6 +1246,35 @@ var Tab = React.createClass({
 });
 
 
+var ToggleButton = React.createClass({
+  displayName: 'ToggleButton',
+  mixins: [Mixins.Button],
+
+  handleClick: function (ev) {
+    var self = this;
+
+    this.setState({active: !this.state.active});
+    this.forceUpdate(function () {
+      if (typeof self.props.onChange === "function") {
+        self.props.onChange(this);
+      }
+    });
+  },
+
+  render: function () {
+    var sheet = this.getSheet('ToggleButton');
+
+    return (
+      React.createElement("li", React.__spread({style: sheet.style},  this.listeners, {title: this.props.title}), 
+        React.createElement("span", {style: sheet.children.style}, 
+          this.props.children
+        )
+      )
+    );
+  }
+});
+
+
 var Toolbar = React.createClass({
   displayName: 'Toolbar',
   mixins: [Mixins.Toolbar],
@@ -1139,6 +1372,7 @@ window.ReactPanels = {
   Toolbar: Toolbar,
   Content: Content,
   Footer: Footer,
+  ToggleButton: ToggleButton,
   addons: PanelAddons
 };
 

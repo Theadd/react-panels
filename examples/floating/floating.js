@@ -130,7 +130,12 @@ var MyFloatingPanel = React.createClass({
     var self = this;
 
     return (
-      React.createElement(FloatingPanel, {left: 200, top: 100, width: 520, ref: "myPanel", theme: "chemical"}, 
+      React.createElement(FloatingPanel, {left: 200, top: 100, width: 520, ref: "myPanel", theme: "chemical", 
+        buttons: [
+          React.createElement(ToggleButton, null, 
+            React.createElement("i", {className: "fa fa-wrench"})
+          )
+        ]}, 
         React.createElement(MyMainTab, {
           icon: "fa fa-cubes", 
           title: "List of Items", 
