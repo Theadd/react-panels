@@ -17,12 +17,13 @@ var ToggleButton = React.createClass({
   render: function () {
     var sheet = this.getSheet('ToggleButton');
 
+    //JSX source: https://github.com/Theadd/react-panels/blob/v2/src/jsx/buttons.jsx#L21-L25
     return (
-      <li style={sheet.style} {...this.listeners} title={this.props.title}>
-        <span style={sheet.children.style}>
-          {this.props.children}
-        </span>
-      </li>
+      React.createElement("li", React.__spread({style: sheet.style},  this.listeners, {title: this.props.title}),
+        React.createElement("span", {style: sheet.children.style},
+          this.props.children
+        )
+      )
     );
   }
 });
