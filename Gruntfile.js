@@ -63,6 +63,14 @@ module.exports = function(grunt) {
       addons: {
         src: ['src/misc/HEADER', 'build/react-panels.js', 'build/addons.js', 'src/misc/FOOTER'],
         dest: 'dist/react-panels-with-addons.js'
+      },
+      basicC: {
+        src: ['src/misc/HEADER_C', 'build/react-panels.js', 'src/misc/FOOTER_C'],
+        dest: 'index.js'
+      },
+      addonsC: {
+        src: ['src/misc/HEADER_C', 'build/react-panels.js', 'build/addons.js', 'src/misc/FOOTER_C'],
+        dest: 'addons.js'
       }
     },
     uglify: {

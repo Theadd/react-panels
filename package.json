@@ -25,6 +25,12 @@
   },
   "homepage": "http://theadd.github.io/react-panels/",
   "license": "MIT",
+  "files": [
+    "README.md",
+    "addons.js",
+    "index.js",
+    "dist/"
+  ],
   "main": "index.js",
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -33,5 +39,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jsdoc": "^0.5.7",
     "grunt-react": "^0.10.0"
+  },
+  "dependencies": {
+    "react": "^0.13.1"
   }
 }

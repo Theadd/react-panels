@@ -6,7 +6,7 @@
  * Licensed under the MIT license.
  */
 
-(function() {
+var React = require('react');
 
 
 var chemicalStyle = function (opts, skin) {
@@ -1377,6 +1377,4 @@ var ScrollableTabContent = React.createClass({
 PanelAddons.ScrollableTabContent = ScrollableTabContent;
 
 
-window.ReactPanels = ReactPanels;
-
-}());
+module.exports = ReactPanels;
