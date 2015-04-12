@@ -1320,8 +1320,7 @@ var Footer = React.createClass({
 
 var PanelAddons = {};
 
-
-window.ReactPanels = {
+var ReactPanels = {
   Panel: Panel,
   FloatingPanel: FloatingPanel,
   Tab: Tab,
@@ -1332,5 +1331,8 @@ window.ReactPanels = {
   ToggleButton: ToggleButton,
   addons: PanelAddons
 };
+
+
+window.ReactPanels = ReactPanels;
 
 }());

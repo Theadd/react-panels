@@ -42,3 +42,15 @@ var Footer = React.createClass({
 });
 
 var PanelAddons = {};
+
+var ReactPanels = {
+  Panel: Panel,
+  FloatingPanel: FloatingPanel,
+  Tab: Tab,
+  Mixins: Mixins,
+  Toolbar: Toolbar,
+  Content: Content,
+  Footer: Footer,
+  ToggleButton: ToggleButton,
+  addons: PanelAddons
+};
