@@ -35,13 +35,13 @@ module.exports = function(grunt) {
       combined_file_output: {
         files: {
           'build/react-panels.js': [
-            'src/jsx/styles/themes/chemical.jsx',
-            'src/jsx/styles/base.jsx',
-            'src/jsx/utils.jsx',
-            'src/jsx/mixins.jsx',
+            'src/jsx/styles/themes/chemical.js',
+            'src/jsx/styles/base.js',
+            'src/jsx/utils.js',
+            'src/jsx/mixins.js',
             'src/jsx/panel.jsx',
             'src/jsx/tab.jsx',
-            'src/jsx/buttons.jsx',
+            'src/jsx/buttons.js',
             'src/jsx/ext.jsx'
           ],
           'build/addons.js': [
