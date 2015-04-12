@@ -1,6 +1,6 @@
 {
   "name": "react-panels",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "React.js panel widget with tabs, toolbars, buttons, floating windows and customizable themes",
   "repository": {
     "type": "git",
