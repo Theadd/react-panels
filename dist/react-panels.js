@@ -681,7 +681,6 @@ Mixins.PanelWrapper = {
       maxTitleWidth: this.props.maxTitleWidth
     };
     this._sheet = createSheet(opts);
-    this._pflag = true;
     return {
       selectedIndex: parseInt(this.props.selectedIndex)
     };
@@ -717,7 +716,6 @@ Mixins.PanelWrapper = {
 
   setSelectedIndex: function (index) {
     this.setState({selectedIndex: parseInt(index)});
-    this._pflag = true;
     this.forceUpdate();
   },
 
@@ -739,7 +737,8 @@ Mixins.TabWrapper = {
       panelComponentType: "TabWrapper",
       icon: "",
       title: "",
-      pinned: false
+      pinned: false,
+      showToolbar: true
     };
   },
 
@@ -857,6 +856,7 @@ var FloatingPanel = React.createClass({
   },
 
   getInitialState: function () {
+    this.skipUpdate = false;
     return {
       left: parseInt(this.props.left),
       top: parseInt(this.props.top),
@@ -893,6 +893,7 @@ var FloatingPanel = React.createClass({
     if (this.panelBounds || false) {
       var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
         top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
+      this.skipUpdate = true;
       this.setState({ left: left, top: top });
     }
   },
@@ -908,14 +909,15 @@ var FloatingPanel = React.createClass({
         position: "absolute"
       }, {$merge: this.props.style});
 
-    if (this._pflag) {
+    if (!this.skipUpdate) {
       this.inner = (
         React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons, 
           onDragStart: this.dragStart, onDragEnd: this.dragEnd, floating: true}, 
           this.props.children
         )
       );
-      this._pflag = false;
+    } else {
+      this.skipUpdate = false;
     }
 
     return (
@@ -1072,7 +1074,6 @@ var ReactPanel = React.createClass({
 
     React.Children.forEach(self.props.children, function(child) {
       var ref = "tabb-" + tabIndex,
-        tabRef = "tab-" + tabIndex,
         showTitle = true,
         props = {
           "icon": child.props.icon,
@@ -1094,7 +1095,6 @@ var ReactPanel = React.createClass({
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
-          ref: tabRef,  // TODO: Remove if not being used
           selectedIndex: selectedIndex,
           index: tabIndex
         })

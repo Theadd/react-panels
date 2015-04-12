@@ -66,7 +66,8 @@ var MyMainTab = React.createClass({
     return (
       React.createElement(Tab, {
         icon: this.props.icon, 
-        title: this.props.title
+        title: this.props.title, 
+        showToolbar: this.props.showToolbar
       }, 
         React.createElement(Toolbar, null, 
           React.createElement("input", {type: "text", 
@@ -112,7 +113,7 @@ var MyFloatingPanel = React.createClass({
 
   getInitialState: function () {
     this.itemsShown = [];
-    return {};
+    return {toolbars: true};
   },
 
   handleClickOnItem: function (itemIndex) {
@@ -126,13 +127,18 @@ var MyFloatingPanel = React.createClass({
     this.forceUpdate();
   },
 
+  handleToggleToolbars: function () {
+    this.setState({toolbars: !this.state.toolbars});
+    this.forceUpdate();
+  },
+
   render: function() {
     var self = this;
 
     return (
       React.createElement(FloatingPanel, {left: 200, top: 100, width: 520, ref: "myPanel", theme: "chemical", 
         buttons: [
-          React.createElement(ToggleButton, null, 
+          React.createElement(ToggleButton, {title: "Toggle Toolbar", active: self.state.toolbars, onChange: self.handleToggleToolbars}, 
             React.createElement("i", {className: "fa fa-wrench"})
           )
         ]}, 
@@ -140,11 +146,12 @@ var MyFloatingPanel = React.createClass({
           icon: "fa fa-cubes", 
           title: "List of Items", 
           pinned: true, 
-          onClickOnItem: self.handleClickOnItem}
+          onClickOnItem: self.handleClickOnItem, 
+          showToolbar: self.state.toolbars}
         ), 
         self.itemsShown.map(function (item) {
           return (
-            React.createElement(MyItemTab, {title: item.name, icon: "fa fa-cube", item: item, 
+            React.createElement(MyItemTab, {title: item.name, icon: "fa fa-cube", item: item, showToolbar: self.state.toolbars, 
               onClose: self.handleClickOnCloseItemTab, key: item.id})
           );
         })

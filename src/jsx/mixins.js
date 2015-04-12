@@ -140,7 +140,6 @@ Mixins.PanelWrapper = {
       maxTitleWidth: this.props.maxTitleWidth
     };
     this._sheet = createSheet(opts);
-    this._pflag = true;
     return {
       selectedIndex: parseInt(this.props.selectedIndex)
     };
@@ -176,7 +175,6 @@ Mixins.PanelWrapper = {
 
   setSelectedIndex: function (index) {
     this.setState({selectedIndex: parseInt(index)});
-    this._pflag = true;
     this.forceUpdate();
   },
 
@@ -198,7 +196,8 @@ Mixins.TabWrapper = {
       panelComponentType: "TabWrapper",
       icon: "",
       title: "",
-      pinned: false
+      pinned: false,
+      showToolbar: true
     };
   },
 

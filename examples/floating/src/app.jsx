@@ -4,7 +4,7 @@ var MyFloatingPanel = React.createClass({
 
   getInitialState: function () {
     this.itemsShown = [];
-    return {};
+    return {toolbars: true};
   },
 
   handleClickOnItem: function (itemIndex) {
@@ -18,13 +18,18 @@ var MyFloatingPanel = React.createClass({
     this.forceUpdate();
   },
 
+  handleToggleToolbars: function () {
+    this.setState({toolbars: !this.state.toolbars});
+    this.forceUpdate();
+  },
+
   render: function() {
     var self = this;
 
     return (
       <FloatingPanel left={200} top={100} width={520} ref="myPanel" theme="chemical"
         buttons={[
-          <ToggleButton>
+          <ToggleButton title="Toggle Toolbar" active={self.state.toolbars} onChange={self.handleToggleToolbars}>
             <i className="fa fa-wrench"></i>
           </ToggleButton>
         ]}>
@@ -33,10 +38,11 @@ var MyFloatingPanel = React.createClass({
           title="List of Items"
           pinned={true}
           onClickOnItem={self.handleClickOnItem}
+          showToolbar={self.state.toolbars}
         />
         {self.itemsShown.map(function (item) {
           return (
-            <MyItemTab title={item.name} icon="fa fa-cube" item={item}
+            <MyItemTab title={item.name} icon="fa fa-cube" item={item} showToolbar={self.state.toolbars}
               onClose={self.handleClickOnCloseItemTab} key={item.id} />
           );
         })}

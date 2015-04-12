@@ -32,6 +32,7 @@ var MyMainTab = React.createClass({
       <Tab
         icon={this.props.icon}
         title={this.props.title}
+        showToolbar={this.props.showToolbar}
       >
         <Toolbar>
           <input type="text"
