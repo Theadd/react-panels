@@ -6,7 +6,7 @@
  * Licensed under the MIT license.
  */
 
-var React = require('react');
+var React = require('react/addons');
 
 
 var chemicalStyle = function (opts, skin) {
