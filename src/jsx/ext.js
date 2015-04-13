@@ -4,11 +4,7 @@ var Toolbar = React.createClass({
   mixins: [Mixins.Toolbar],
 
   render: function () {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -18,11 +14,7 @@ var Content = React.createClass({
   mixins: [Mixins.Content],
 
   render: function () {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -32,11 +24,7 @@ var Footer = React.createClass({
   mixins: [Mixins.Footer],
 
   render: function () {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });

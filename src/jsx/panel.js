@@ -68,20 +68,16 @@ var FloatingPanel = React.createClass({
 
     if (!this.skipUpdate) {
       this.inner = (
-        <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}
-          onDragStart={this.dragStart} onDragEnd={this.dragEnd} floating={true}>
-          {this.props.children}
-        </ReactPanel>
+        React.createElement("ReactPanel",{title:this.props.title, icon:this.props.icon, buttons:this.props.buttons,
+          onDragStart:this.dragStart, onDragEnd:this.dragEnd, floating:true},
+          this.props.children
+        )
       );
     } else {
       this.skipUpdate = false;
     }
 
-    return (
-      <div style={wrapperStyle}>
-        {this.inner}
-      </div>
-    );
+    return React.createElement("div", {style:wrapperStyle}, this.inner);
   }
 
 });
@@ -91,10 +87,8 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return (
-      <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}>
-        {this.props.children}
-      </ReactPanel>
+    return React.createElement("ReactPanel", {title:this.props.title, icon:this.props.icon, buttons:this.props.buttons},
+        this.props.children
     );
   }
 
@@ -215,12 +209,16 @@ var ReactPanel = React.createClass({
       sheet = this.getSheet("Panel");
 
     var icon = (this.props.icon) ? (
-        <span style={sheet.icon.style}>
-          <i className={this.props.icon}></i>
-        </span>
+        React.createElement("span", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
+        )
       ) : null,
       title = (this.props.title.length) ? (
-        <div style={sheet.box.style}><div style={sheet.title.style}>{this.props.title}</div></div>
+        React.createElement("div", {style:sheet.box.style},
+          React.createElement("div", {style:sheet.title.style},
+            this.props.title
+          )
+        )
       ) : null;
 
     var tabIndex = 0,
@@ -245,8 +243,8 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        <TabButton key={tabIndex} title={props.title} icon={props.icon}
-          index={tabIndex} ref={ref} showTitle={showTitle} onClick={self.handleClick} />
+        React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, 
+          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
       );
 
       tabs.push(
@@ -260,28 +258,19 @@ var ReactPanel = React.createClass({
     });
 
     return (
-      <div style={sheet.style}>
-        <header draggable={draggable} onDragEnd={self.handleDragEnd}
-            onDragStart={self.handleDragStart} ref="header" style={sheet.header.style}>
-          {icon}
-          {title}
-          <div style={sheet.tabsStart.style} ref="tabs-start" />
-          <ul style={sheet.tabs.style} ref="tabs">
-            {tabButtons}
-          </ul>
-          <div style={sheet.tabsEnd.style} ref="tabs-end" />
-          {this._getGroupedButtons().map(function (group) {
-            return (
-              <ul style={sheet.group.style} key={groupIndex++}>
-                {group}
-              </ul>
-            );
-          })}
-        </header>
-        <div style={sheet.body.style}>
-          {tabs}
-        </div>
-      </div>
+      React.createElement("div", {style: sheet.style}, 
+        React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd, 
+            onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style}, 
+          icon, title, 
+          React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}), 
+          React.createElement("ul", {style: sheet.tabs.style, ref: "tabs"}, tabButtons), 
+          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}), 
+          this._getGroupedButtons().map(function (group) {
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
+          })
+        ), 
+        React.createElement("div", {style: sheet.body.style}, tabs )
+      )
     );
   }
 
