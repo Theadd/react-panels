@@ -29,14 +29,14 @@ var TabButton = React.createClass({
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (<div style={sheet.title.style}>{this.props.title}</div>);
+      title = React.createElement("div", {style:sheet.title.style},this.props.title);
     }
 
     if (this.props.icon) {
       icon = (
-        <div style={sheet.icon.style}>
-          <i className={this.props.icon}></i>
-        </div>
+        React.createElement("div", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
+        )
       );
     }
 
@@ -98,17 +98,14 @@ var Tab = React.createClass({
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
-        case 0: return (<div key={vIndex++} style={sheet.toolbar.style}>{child}</div>);
-        case 1: return (<div key={vIndex++} style={sheet.content.style}>{child}</div>);
-        case 2: return (<div key={vIndex++} style={sheet.footer.style}>{child}</div>);
+        case 0: return React.createElement("div",{ key:vIndex++, style:sheet.toolbar.style}, child);
+        case 1: return React.createElement("div",{ key:vIndex++, style:sheet.content.style}, child);
+        case 2: return React.createElement("div",{ key:vIndex++, style:sheet.footer.style}, child);
       }
     });
 
-    return (
-      <div style={sheet.style}>
-        {innerContent}
-      </div>
-    );
+    return React.createElement("div",{style:sheet.style}, innerContent );
+
   }
 
 });
