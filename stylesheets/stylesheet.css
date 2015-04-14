@@ -434,3 +434,12 @@ Small Device Styles
   border: 1px solid #aaa;
   width: 100%;
 }
+
+img.react-logo {
+  margin: 0;
+  border: 0;
+  box-shadow: 0 0 0 transparent;
+  padding: 0;
+  top: 5px;
+  position: relative;
+}

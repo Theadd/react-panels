@@ -9,13 +9,12 @@
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/prettify-desert.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" media="screen" href="bower_components/react-panels/dist/react-panels.min.css">
 
   <script src="javascripts/prettify.js"></script>
   <script src="javascripts/lang-css.js"></script>
-  <script src="bower_components/react/react.min.js"></script>
+  <!--<script src="bower_components/react/react.min.js"></script>
   <script src="bower_components/react/JSXTransformer.js"></script>
-  <script src="bower_components/react-panels/dist/react-panels.js"></script>
+  <script src="bower_components/react-panels/dist/react-panels.js"></script>-->
 
   <title>react-panels</title>
 </head>
@@ -24,11 +23,11 @@
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
-  <header class="inner" style="padding-top: 0px;">
+  <header class="inner" style="padding-top: 0;">
     <a id="forkme_banner" href="https://github.com/Theadd/react-panels">View on GitHub</a>
 
     <h1 id="project_title">react-panels</h1>
-    <h2 id="project_tagline"><a href="http://facebook.github.io/react/" target="_blank">React.js</a> panel widget with support for dynamic tabs, toolbars, buttons, floating windows and customizable themes</h2>
+    <h2 id="project_tagline"><img class="react-logo" src="images/react.png" width="24" height="24"> <a href="http://facebook.github.io/react/" target="_blank" style="color: #00d8ff;">React.js</a> panel widget with tabs, toolbars, buttons, floating windows and customizable themes</h2>
 
     <div style="width: 100%; text-align: center;">
       <div style="width: 285px; margin: 0 auto; padding-left: 10px;">
@@ -62,160 +61,40 @@
   <section id="main_content" class="inner">
     <h3>
       <a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-      react-panels
+      react-panels v2
     </h3>
 
-    <p>A panel widget with extended features made with React and LESS. It does not depend on any third party module although some examples might use Font Awesome for icons.</p>
-    <p><strong>** Still in active development, changes are expected.</strong></p>
+    <p>* Requires <strong>React v0.13.1</strong> with <strong>addons</strong></p>
+    <p style="font-size: 12px; opacity: 0.4;">** The old react-panels v1 page can be found <a href="v1/index.html" title="v1">here</a>.</p>
 
     <h3>
-      <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-      Usage
+      <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+      Install
     </h3>
 <pre><code>$ bower install react-panels
 </code></pre>
-    <p>* Include <code>react-panels[.min].css</code>, <code>react[.min].js</code>, <code>[JSXTransformer.js]</code> and <code>react-panels.js</code> in your HTML.</p>
+    <p style="font-size: 13px;">
+      <strong>*</strong> Include <code style="font-size: 12px;">bower_components/react-panels/dist/react-panels[.min].js</code> somewhere after <code style="font-size: 12px;">react-with-addons[.min].js</code>
+    </p>
 
     <h3>
       <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>
       Examples
     </h3>
-
-    <div id="panel0"></div>
-    <script type="text/jsx">
-      var panel0 = (
-        <Panel
-          theme="lightblue"
-          icon="fa fa-cube"
-          title="Panel Title"
-          bordered={true}
-          opaque={true}
-          raised={true}
-          rounded={true}
-          buttons={['toggleToolbar', 'collapse', 'close']}>
-          <PanelContent
-            active={true}
-            icon="fa fa-area-chart"
-            title="Area Chart"
-            toolbarState="visible"
-            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-            <div>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-              <br /><br />
-            Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-            </div>
-          </PanelContent>
-          <PanelContent
-            icon="fa fa-pie-chart"
-            title="Pie Chart"
-            toolbarState="hidden"
-            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-            <div>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </div>
-          </PanelContent>
-          <PanelContent
-            icon="fa fa-line-chart"
-            title="Line Chart"
-            toolbarState="locked"
-            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-            <div>
-            At solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles. Ma quande lingues coalesce, li grammatica del resultant lingue es plu simplic e regulari quam ti del coalescent lingues.
-            </div>
-          </PanelContent>
-          <PanelContent
-            icon="fa fa-bar-chart"
-            title="Bar Chart"
-            toolbarState="none"
-            toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
-            <div>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-              <br /><br />
-            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-            </div>
-          </PanelContent>
-        </Panel>
-      );
-
-      React.render(panel0, document.getElementById('panel0'));
-    </script>
-
-    <div id="panel1"></div>
-
-    <script type="text/jsx">
-      var panel1 = (
-        <Panel
-          icon="fa fa-paw"
-          title="Example: Floating Window"
-          floating={true}
-          draggable={true}
-          rounded={true}
-          bordered={true}
-          left="520"
-          top="520"
-          width="350"
-          buttons={['collapse', 'close']}>
-          <PanelContent noPadding={true}>
-            <div>
-              <pre className="prettyprint lang-js linenums nonums">
-                &lt;Panel<br />
-                &nbsp; icon=&quot;fa fa-paw&quot;<br />
-                &nbsp; title=&quot;Example: Floating Window&quot;<br />
-                &nbsp; floating=&#123;true&#125;<br />
-                &nbsp; draggable=&#123;true&#125;<br />
-                &nbsp; rounded=&#123;true&#125;<br />
-                &nbsp; bordered=&#123;true&#125;<br />
-                &nbsp; left=&quot;520&quot; top=&quot;520&quot; width=&quot;350&quot;<br />
-                &nbsp; buttons=&#123;&#91;&#39;collapse&#39;, &#39;close&#39;&#93;&#125;&gt;<br />
-                &nbsp; &lt;PanelContent noPadding=&#123;true&#125;&gt;<br />
-                &nbsp; &nbsp; &lt;div&gt;...&lt;/div&gt;<br />
-                &nbsp; &lt;/PanelContent&gt;<br />
-                &lt;/Panel&gt;
-              </pre>
-            </div>
-          </PanelContent>
-        </Panel>
-      );
-
-      React.render(panel1, document.getElementById('panel1'), function () {
-        prettyPrint();
-      });
-    </script>
-
-    <br /><strong>More:</strong><br /><br />
     <ul>
-      <li><a href="bower_components/react-panels/examples/basic.html">basic</a></li>
-      <li><a href="bower_components/react-panels/examples/basic-with-fa-icons.html">basic with <em>font awesome</em> icons</a></li>
-      <li><a href="bower_components/react-panels/examples/complete.html">tabs, icons, buttons and toolbars</a></li>
-      <li><a href="bower_components/react-panels/examples/complete-floating-window.html">floating window</a></li>
-      <li><a href="bower_components/react-panels/examples/complete-theme-grayscale-blue.html">grayscale theme with blue background image</a></li>
-      <li><a href="bower_components/react-panels/examples/complete-theme-grayscale-gold.html">grayscale theme with gold (color) background image</a></li>
-      <li><a href="bower_components/react-panels/examples/compact-and-presets.html">compact and presets</a></li>
-      <li><a href="bower_components/react-panels/examples/custom-buttons.html">custom buttons</a></li>
-      <li><a href="bower_components/react-panels/examples/dynamic-tabs.html">dynamic tabs</a></li>
-      <li>
-        <strong>
-          <a href="bower_components/react-panels/examples/bootstrap.html">react-bootstrap integration</a>
-        </strong>
-        <em style="font-size: 0.9em;"> (advanced example showcasing react-panels potential)</em>
-        <ul style="font-size: 0.8em; opacity: 0.5; list-style-type: square; margin-left: 5px;">
-          <li>full dynamic tabs: create, remove, hide and restore</li>
-          <li>multiple panels (one is a draggable floating panel which automatically hides when it has no tabs)</li>
-          <li>fully functional custom buttons with dropdown menus from bootstrap</li>
-          <li>custom react components for panels content and toolbars</li>
-          <li><strong>move tabs from one panel to another</strong></li>
-          <li>pre-compiled JSX</li>
-        </ul>
-      </li>
+      <li><a href="bower_components/react-panels/examples/simple/index.html">simple</a></li>
+      <li><a href="bower_components/react-panels/examples/floating/index.html">FloatingPanel (much better example)</a></li>
     </ul>
 
+    <h3>
+      <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+      Usage
+    </h3>
+    <p style="color: #999;">
+      Coming soon...
+    </p>
     <br />
 
-    <h3>
-      <a id="docs" class="anchor" href="#docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-      Documentation
-    </h3>
-    <p>Documentation is <strong>still in progress</strong> and can be found <a href="bower_components/react-panels/docs/dist/Panel.html">here</a>.</p>
   </section>
 </div>
 

@@ -1,7 +1,7 @@
 {
   "name": "react-panels",
-  "version": "0.6.2",
-  "description": "React.js panel widget with support for dynamic tabs, toolbars, buttons, floating windows and customizable themes",
+  "version": "2.1.0",
+  "description": "React.js panel widget with tabs, toolbars, buttons, floating windows and customizable themes",
   "repository": {
     "type": "git",
     "url": "https://github.com/Theadd/react-panels.git"
@@ -13,6 +13,7 @@
     "window",
     "tabbed",
     "javascript",
+    "browser",
     "react-component"
   ],
   "author": {
@@ -27,16 +28,10 @@
   "main": "index.js",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-less": "^1.0.0",
+    "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jsdoc": "^0.5.7",
-    "grunt-react": "^0.10.0",
-    "react": "^0.12.2",
-    "react-tools": "^0.12.2"
-  },
-  "peerDependencies": {
-    "react": "^0.12.2"
+    "grunt-react": "^0.10.0"
   }
 }

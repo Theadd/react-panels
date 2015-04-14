@@ -1,11 +1,11 @@
 {
   "name": "react-panels",
-  "version": "2.1.0",
+  "version": "0.6.2",
   "homepage": "https://github.com/Theadd/react-panels",
   "authors": [
     "Theadd <pantallazo@gmail.com>"
   ],
-  "description": "React.js panel widget with tabs, toolbars, buttons, floating windows and customizable themes",
+  "description": "React.js panel widget with support for dynamic tabs, toolbars, buttons, floating windows and customizable themes",
   "main": "dist/react-panels.js",
   "moduleType": [
     "globals"
@@ -28,6 +28,8 @@
     "tests"
   ],
   "devDependencies": {
-    "react": "~0.13.1"
+    "react": "~0.12.2",
+    "react-bootstrap": "~0.13.3",
+    "bootstrap": "~3.3.2"
   }
 }
