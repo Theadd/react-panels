@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>react-panels: basic</title>
+  <link rel="stylesheet" href="../dist/react-panels.css" type="text/css" />
+
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      padding: 20px;
+      background-color: #F2F2F2;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-width: 300px;
+      width: 50%;
+    }
+  </style>
+
+  <script src="../bower_components/react/react.js"></script>
+  <script src="../bower_components/react/JSXTransformer.js"></script>
+  <script src="../dist/react-panels.js"></script>
+</head>
+<body>
+
+  <div id="example"></div>
+
+  <script type="text/jsx">
+    React.render(
+      <Panel title="Panel Title">
+        <PanelContent>
+          <div>Panel content here</div>
+        </PanelContent>
+      </Panel>,
+      document.getElementById('example')
+    );
+  </script>
+
+
+</body>
+</html>

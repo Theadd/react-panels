@@ -1,0 +1,82 @@
+
+.rpanel.grayscale {
+  @header-color: rgba(0, 0, 0, 0.75);
+  @header-bg-color: rgba(255, 255, 255, 0.15);
+  @content-bg-color: rgba(0, 0, 0, 0.2);
+
+  @border-color: rgba(0, 0, 0, 0.5);
+
+  > header {
+    border-color: @border-color;
+    background-color: @header-bg-color;
+    color: @header-color;
+
+    .rpanel-icon {
+      color: (#fff - @header-color);
+      text-shadow: 2px 2px 2px @header-color;
+    }
+
+    .rpanel-title {
+      text-shadow: 1px 1px 1px mix((#fff - @header-color), (#fff - (#fff - @header-color)), 65%);
+    }
+
+    .rpanel-control {
+      border-color: @content-bg-color;
+
+      & * {
+        color: @header-color;
+        text-shadow: 1px 1px 1px (#fff - @header-color);
+      }
+
+      &.active {
+        background-color: @content-bg-color;
+      }
+
+      &:hover {
+        background-color: fadeout(@content-bg-color, 10%);
+      }
+    }
+
+    .rpanel-tabs {
+
+      .rpanel-tab {
+
+        .rpanel-icon, .rpanel-title {
+          color: mix(@header-bg-color, @header-color, 50%);
+          text-shadow: none;
+        }
+
+        &.active {
+          border-color: fadein(@header-bg-color, 50%);
+          background-color: @content-bg-color;
+
+          .rpanel-icon, .rpanel-title {
+            color: mix(@header-bg-color, @header-color, 25%);
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: fadeout(@content-bg-color, 10%);
+        }
+      }
+    }
+  }
+
+  > .rpanel-body {
+    background-color: @header-bg-color;
+    border-color: @border-color;
+
+    .rpanel-toolbar {
+      background-color: @content-bg-color;
+      border-bottom: 0 none;
+    }
+    .rpanel-content {
+      background-color: transparent;
+      box-shadow: 0 2px 0 @content-bg-color inset;
+    }
+  }
+
+  &.rpanel-state-fullscreen > .rpanel-body > .rpanel-tab-body.active > .rpanel-content {
+    background-color: darken(fadein(@header-bg-color, 70%), 5%);
+  }
+}

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>react-panels: floating window</title>
+  <link rel="stylesheet" href="../dist/react-panels.css" type="text/css" />
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #F2F2F2;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      font-size: 13px;
+    }
+    .input-example {
+      padding: 5px 10px;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-height: 32px;
+      border: 1px solid #aaa;
+      width: 100%;
+    }
+    .clearfix:after {
+      content:"";
+      display:table;
+      clear:both;
+    }
+  </style>
+
+  <script src="../bower_components/react/react.js"></script>
+  <script src="../bower_components/react/JSXTransformer.js"></script>
+  <script src="../dist/react-panels.js"></script>
+</head>
+<body>
+
+  <div id="example"></div>
+
+  <script type="text/jsx">
+    React.render(
+      <Panel
+        icon="fa fa-comments"
+        title="Panel Title"
+        bordered={true}
+        opaque={true}
+        raised={true}
+        rounded={true}
+        floating={true}
+        draggable={true}
+        left="200"
+        top="150"
+        width="650"
+        buttons={['toggleToolbar', 'collapse', 'fullscreen', 'close']}>
+        <PanelContent
+          icon="fa fa-area-chart"
+          title="Tab 0"
+          toolbarState="visible"
+          toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+          <div>
+            <strong>Tab 0</strong>
+            <ul>
+              <li>
+                Toolbar state is <strong>visible</strong> by default, which can be toggled
+                using the <strong>toggleToolbar</strong> button
+              </li>
+            </ul>
+          </div>
+        </PanelContent>
+        <PanelContent
+          icon="fa fa-pie-chart"
+          title="Tab 1"
+          toolbarState="hidden"
+          noPadding={true}
+          toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+          <div>
+            <strong>Tab 1</strong>
+            <ul>
+              <li><strong>noPadding</strong> is enabled</li>
+              <li>
+                Toolbar state is <strong>hidden</strong> by default, which can be toggled
+                using the <strong>toggleToolbar</strong> button
+              </li>
+            </ul>
+            <div className="clearfix"></div>
+          </div>
+        </PanelContent>
+        <PanelContent
+          active={true}
+          icon="fa fa-line-chart"
+          title="Tab 2"
+          toolbarState="locked"
+          toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+          <div>
+            <strong>Tab 2</strong>
+            <ul>
+              <li>Selected by default (active)</li>
+              <li>Toolbar state is <strong>locked</strong> (Always visible)</li>
+            </ul>
+          </div>
+        </PanelContent>
+        <PanelContent
+          icon="fa fa-bar-chart"
+          title="Tab 3"
+          toolbarState="none"
+          toolbar={(<span><input type="text" placeholder="Example text input in toolbar" className="input-example" /></span>)}>
+          <div>
+            <strong>Tab 1</strong>
+            <ul>
+              <li>
+                Toolbar state is <strong>none</strong>. This means that it will always be <strong>hidden</strong>.
+              </li>
+            </ul>
+          </div>
+        </PanelContent>
+      </Panel>,
+      document.getElementById('example')
+    );
+  </script>
+
+
+</body>
+</html>
