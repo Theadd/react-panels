@@ -264,13 +264,16 @@ var buildStyle = function (opts) {
     headerHeight: opts.headerHeight || 32,
     headerFontSize: opts.headerFontSize || 14,
     borderRadius: opts.borderRadius || 3,
-    maxTitleWidth: opts.maxTitleWidth || 130
+    maxTitleWidth: opts.maxTitleWidth || 130,
+    useAvailableHeight: opts.useAvailableHeight || false
   };
 
   var styles = {
     base: {
       Panel: {
-        style: {},
+        style: {
+          height: (opts.useAvailableHeight) ? "100%" : "inherit"
+        },
         header: {
           style: {
             display: "block",
@@ -338,7 +341,9 @@ var buildStyle = function (opts) {
           }
         },
         body: {
-          style: {}
+          style: {
+            height: (opts.useAvailableHeight) ? "calc(100% - " + opts.headerHeight + "px)" : "inherit"
+          }
         }
       },
       TabButton: {
@@ -404,7 +409,12 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: "block"
+              display: (opts.useAvailableHeight) ? "flex" : "block",
+              minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              flexDirection: (opts.useAvailableHeight) ? "column" : "inherit"
+            },
+            content: {
+              style: (opts.useAvailableHeight) ? { flex: 1 } : { }
             }
           },
           withToolbar: {
@@ -695,7 +705,8 @@ Mixins.PanelWrapper = {
       headerHeight: this.props.headerHeight,
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
+      maxTitleWidth: this.props.maxTitleWidth,
+      useAvailableHeight: this.props.useAvailableHeight
     };
     this._sheet = createSheet(opts);
     return {

@@ -137,7 +137,8 @@ Mixins.PanelWrapper = {
       headerHeight: this.props.headerHeight,
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
+      maxTitleWidth: this.props.maxTitleWidth,
+      useAvailableHeight: this.props.useAvailableHeight
     };
     this._sheet = createSheet(opts);
     return {
