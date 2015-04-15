@@ -4,6 +4,28 @@ var chemicalStyle = function (opts, skin) {
   skin = skin || opts.skin;
 
   switch (skin) {
+    case "blueish":
+      colors = {
+        tabColor: "rgba(0, 0, 0, 0.8)",
+        activeTabColor: "rgba(0, 0, 0, 0.9)",
+        tabTextShadow: "#bbbbbb",
+        activeTabTextShadow: "#999999",
+        activeTabBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeTabBorderColor: "rgba(0, 0, 0, 0.5)",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "rgba(0, 0, 0, 0.9)",
+        iconColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "rgba(0, 0, 0, 0.8)",
+        toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
+        contentBackgroundColorWithToolbar: "rgba(102, 143, 182, 0.25)",
+        footerBackgroundColor: "rgba(165, 165, 165, 0.32)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        hoverButtonBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeButtonBackgroundColor: "rgba(102, 143, 182, 0.25)"
+      };
+
+      break;
     default:
       colors = {
         tabColor: "#ffffff",
@@ -18,7 +40,11 @@ var chemicalStyle = function (opts, skin) {
         titleColor: "#ffffff",
         toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
         contentBackgroundColorWithToolbar: "rgba(255, 255, 255, 0.85)",
-        footerBackgroundColor: "rgba(224, 230, 240, 0.8)"
+        footerBackgroundColor: "rgba(224, 230, 240, 0.8)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(255, 255, 255, 0.2)",
+        hoverButtonBackgroundColor: "rgba(255, 255, 255, 0.9)",
+        activeButtonBackgroundColor: "rgba(255, 255, 255, 0.9)"
       };
       break;
   }
@@ -81,7 +107,7 @@ var chemicalStyle = function (opts, skin) {
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(224, 230, 240, 0.65)"
+            backgroundColor: colors.hoverTabBackgroundColor
           },
           icon: {
             style: {
@@ -186,13 +212,13 @@ var chemicalStyle = function (opts, skin) {
     ToggleButton: {
       style: {
         borderRadius: "2px 2px 0 0",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: colors.buttonBackgroundColor,
         marginLeft: "1px"
       },
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.hoverButtonBackgroundColor
           },
           children: {
             style: {
@@ -205,7 +231,7 @@ var chemicalStyle = function (opts, skin) {
       mods: {
         active: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.activeButtonBackgroundColor
           }
         }
       },

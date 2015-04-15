@@ -249,12 +249,3 @@ var createSheet = (function (opts) {
     return sheet;
   }
 });
-
-/*var alter = {
-  skin: 'light',
-  merge: {  //TODO
-    style: {
-      fontWeight: 'bold'
-    }
-  }
-};*/

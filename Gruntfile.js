@@ -39,13 +39,13 @@ module.exports = function(grunt) {
             'src/jsx/styles/base.js',
             'src/jsx/utils.js',
             'src/jsx/mixins.js',
-            'src/jsx/panel.jsx',
-            'src/jsx/tab.jsx',
+            'src/jsx/panel.js',
+            'src/jsx/tab.js',
             'src/jsx/buttons.js',
-            'src/jsx/ext.jsx'
+            'src/jsx/ext.js'
           ],
           'build/addons.js': [
-            'src/jsx/addons/scrollable-tab-content.jsx'
+            'src/jsx/addons/scrollable-tab-content.js'
           ],
           'examples/floating/floating.js': [
             'examples/floating/src/item-tab.jsx',

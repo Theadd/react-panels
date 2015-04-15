@@ -14,6 +14,28 @@ var chemicalStyle = function (opts, skin) {
   skin = skin || opts.skin;
 
   switch (skin) {
+    case "blueish":
+      colors = {
+        tabColor: "rgba(0, 0, 0, 0.8)",
+        activeTabColor: "rgba(0, 0, 0, 0.9)",
+        tabTextShadow: "#bbbbbb",
+        activeTabTextShadow: "#999999",
+        activeTabBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeTabBorderColor: "rgba(0, 0, 0, 0.5)",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "rgba(0, 0, 0, 0.9)",
+        iconColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "rgba(0, 0, 0, 0.8)",
+        toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
+        contentBackgroundColorWithToolbar: "rgba(102, 143, 182, 0.25)",
+        footerBackgroundColor: "rgba(165, 165, 165, 0.32)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        hoverButtonBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeButtonBackgroundColor: "rgba(102, 143, 182, 0.25)"
+      };
+
+      break;
     default:
       colors = {
         tabColor: "#ffffff",
@@ -28,7 +50,11 @@ var chemicalStyle = function (opts, skin) {
         titleColor: "#ffffff",
         toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
         contentBackgroundColorWithToolbar: "rgba(255, 255, 255, 0.85)",
-        footerBackgroundColor: "rgba(224, 230, 240, 0.8)"
+        footerBackgroundColor: "rgba(224, 230, 240, 0.8)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(255, 255, 255, 0.2)",
+        hoverButtonBackgroundColor: "rgba(255, 255, 255, 0.9)",
+        activeButtonBackgroundColor: "rgba(255, 255, 255, 0.9)"
       };
       break;
   }
@@ -91,7 +117,7 @@ var chemicalStyle = function (opts, skin) {
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(224, 230, 240, 0.65)"
+            backgroundColor: colors.hoverTabBackgroundColor
           },
           icon: {
             style: {
@@ -196,13 +222,13 @@ var chemicalStyle = function (opts, skin) {
     ToggleButton: {
       style: {
         borderRadius: "2px 2px 0 0",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: colors.buttonBackgroundColor,
         marginLeft: "1px"
       },
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.hoverButtonBackgroundColor
           },
           children: {
             style: {
@@ -215,7 +241,7 @@ var chemicalStyle = function (opts, skin) {
       mods: {
         active: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.activeButtonBackgroundColor
           }
         }
       },
@@ -480,15 +506,6 @@ var createSheet = (function (opts) {
     return sheet;
   }
 });
-
-/*var alter = {
-  skin: 'light',
-  merge: {  //TODO
-    style: {
-      fontWeight: 'bold'
-    }
-  }
-};*/
 
 
 var Utils = {
@@ -911,8 +928,8 @@ var FloatingPanel = React.createClass({
 
     if (!this.skipUpdate) {
       this.inner = (
-        React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons, 
-          onDragStart: this.dragStart, onDragEnd: this.dragEnd, floating: true}, 
+        React.createElement(ReactPanel,{title:this.props.title, icon:this.props.icon, buttons:this.props.buttons,
+          onDragStart:this.dragStart, onDragEnd:this.dragEnd, floating:true},
           this.props.children
         )
       );
@@ -920,11 +937,7 @@ var FloatingPanel = React.createClass({
       this.skipUpdate = false;
     }
 
-    return (
-      React.createElement("div", {style: wrapperStyle}, 
-        this.inner
-      )
-    );
+    return React.createElement("div", {style:wrapperStyle}, this.inner);
   }
 
 });
@@ -934,10 +947,8 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return (
-      React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons}, 
+    return React.createElement(ReactPanel, {title:this.props.title, icon:this.props.icon, buttons:this.props.buttons},
         this.props.children
-      )
     );
   }
 
@@ -1058,12 +1069,16 @@ var ReactPanel = React.createClass({
       sheet = this.getSheet("Panel");
 
     var icon = (this.props.icon) ? (
-        React.createElement("span", {style: sheet.icon.style}, 
-          React.createElement("i", {className: this.props.icon})
+        React.createElement("span", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
         )
       ) : null,
       title = (this.props.title.length) ? (
-        React.createElement("div", {style: sheet.box.style}, React.createElement("div", {style: sheet.title.style}, this.props.title))
+        React.createElement("div", {style:sheet.box.style},
+          React.createElement("div", {style:sheet.title.style},
+            this.props.title
+          )
+        )
       ) : null;
 
     var tabIndex = 0,
@@ -1106,24 +1121,15 @@ var ReactPanel = React.createClass({
       React.createElement("div", {style: sheet.style}, 
         React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd, 
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style}, 
-          icon, 
-          title, 
+          icon, title, 
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}), 
-          React.createElement("ul", {style: sheet.tabs.style, ref: "tabs"}, 
-            tabButtons
-          ), 
+          React.createElement("ul", {style: sheet.tabs.style, ref: "tabs"}, tabButtons), 
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}), 
           this._getGroupedButtons().map(function (group) {
-            return (
-              React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, 
-                group
-              )
-            );
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           })
         ), 
-        React.createElement("div", {style: sheet.body.style}, 
-          tabs
-        )
+        React.createElement("div", {style: sheet.body.style}, tabs )
       )
     );
   }
@@ -1161,13 +1167,13 @@ var TabButton = React.createClass({displayName: "TabButton",
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (React.createElement("div", {style: sheet.title.style}, this.props.title));
+      title = React.createElement("div", {style:sheet.title.style},this.props.title);
     }
 
     if (this.props.icon) {
       icon = (
-        React.createElement("div", {style: sheet.icon.style}, 
-          React.createElement("i", {className: this.props.icon})
+        React.createElement("div", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
         )
       );
     }
@@ -1230,17 +1236,14 @@ var Tab = React.createClass({
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
-        case 0: return (React.createElement("div", {key: vIndex++, style: sheet.toolbar.style}, child));
-        case 1: return (React.createElement("div", {key: vIndex++, style: sheet.content.style}, child));
-        case 2: return (React.createElement("div", {key: vIndex++, style: sheet.footer.style}, child));
+        case 0: return React.createElement("div",{ key:vIndex++, style:sheet.toolbar.style}, child);
+        case 1: return React.createElement("div",{ key:vIndex++, style:sheet.content.style}, child);
+        case 2: return React.createElement("div",{ key:vIndex++, style:sheet.footer.style}, child);
       }
     });
 
-    return (
-      React.createElement("div", {style: sheet.style}, 
-        innerContent
-      )
-    );
+    return React.createElement("div",{style:sheet.style}, innerContent );
+
   }
 
 });
@@ -1281,11 +1284,7 @@ var Toolbar = React.createClass({
   mixins: [Mixins.Toolbar],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -1295,11 +1294,7 @@ var Content = React.createClass({
   mixins: [Mixins.Content],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -1309,11 +1304,7 @@ var Footer = React.createClass({
   mixins: [Mixins.Footer],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });

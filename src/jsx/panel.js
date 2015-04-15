@@ -68,7 +68,7 @@ var FloatingPanel = React.createClass({
 
     if (!this.skipUpdate) {
       this.inner = (
-        React.createElement("ReactPanel",{title:this.props.title, icon:this.props.icon, buttons:this.props.buttons,
+        React.createElement(ReactPanel,{title:this.props.title, icon:this.props.icon, buttons:this.props.buttons,
           onDragStart:this.dragStart, onDragEnd:this.dragEnd, floating:true},
           this.props.children
         )
@@ -87,7 +87,7 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return React.createElement("ReactPanel", {title:this.props.title, icon:this.props.icon, buttons:this.props.buttons},
+    return React.createElement(ReactPanel, {title:this.props.title, icon:this.props.icon, buttons:this.props.buttons},
         this.props.children
     );
   }
