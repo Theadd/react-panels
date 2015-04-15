@@ -955,7 +955,7 @@ var Panel = React.createClass({
 });
 
 var ReactPanel = React.createClass({
-  displayName: 'Panel',
+  displayName: 'ReactPanel',
   mixins: [Mixins.Styleable],
 
   getDefaultProps: function () {
@@ -1314,6 +1314,7 @@ var PanelAddons = {};
 var ReactPanels = {
   Panel: Panel,
   FloatingPanel: FloatingPanel,
+  ReactPanel: ReactPanel,
   Tab: Tab,
   Mixins: Mixins,
   Toolbar: Toolbar,

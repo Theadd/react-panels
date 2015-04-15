@@ -34,6 +34,7 @@ var PanelAddons = {};
 var ReactPanels = {
   Panel: Panel,
   FloatingPanel: FloatingPanel,
+  ReactPanel: ReactPanel,
   Tab: Tab,
   Mixins: Mixins,
   Toolbar: Toolbar,

@@ -1,7 +1,7 @@
 {
   "name": "react-panels",
-  "version": "2.1.1",
-  "description": "React.js panel widget with tabs, toolbars, buttons, floating windows and customizable themes",
+  "version": "2.1.2",
+  "description": "React.js panel component with tabs, toolbars, buttons, floating windows and customizable themes",
   "repository": {
     "type": "git",
     "url": "https://github.com/Theadd/react-panels.git"

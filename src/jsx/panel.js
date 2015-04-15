@@ -95,7 +95,7 @@ var Panel = React.createClass({
 });
 
 var ReactPanel = React.createClass({
-  displayName: 'Panel',
+  displayName: 'ReactPanel',
   mixins: [Mixins.Styleable],
 
   getDefaultProps: function () {
