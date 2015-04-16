@@ -68,8 +68,9 @@ var FloatingPanel = React.createClass({
 
     if (!this.skipUpdate) {
       this.inner = (
-        React.createElement(ReactPanel,{title:this.props.title, icon:this.props.icon, buttons:this.props.buttons,
-          onDragStart:this.dragStart, onDragEnd:this.dragEnd, floating:true},
+        React.createElement(ReactPanel, React.addons.update({title:this.props.title, icon:this.props.icon,
+            buttons:this.props.buttons, onDragStart:this.dragStart, onDragEnd:this.dragEnd, floating:true},
+            {$merge: this.config}),
           this.props.children
         )
       );
@@ -87,7 +88,7 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return React.createElement(ReactPanel, {title:this.props.title, icon:this.props.icon, buttons:this.props.buttons},
+    return React.createElement(ReactPanel, React.addons.update({title:this.props.title, icon:this.props.icon, buttons:this.props.buttons}, {$merge: this.config}),
         this.props.children
     );
   }
@@ -132,32 +133,36 @@ var ReactPanel = React.createClass({
   },
 
   componentDidMount: function () {
-    var tabsStart = this.refs['tabs-start'].getDOMNode(),
-      tabsEnd = this.refs['tabs-end'].getDOMNode(),
-      using = this.refs.tabs.getDOMNode().offsetWidth,
-      total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
+    if (this.props.autocompact) {
+      var tabsStart = this.refs['tabs-start'].getDOMNode(),
+        tabsEnd = this.refs['tabs-end'].getDOMNode(),
+        using = this.refs.tabs.getDOMNode().offsetWidth,
+        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
 
-    if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
-      this.setState({compacted: false});
+      if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
+        this.setState({compacted: false});
+      }
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var childs = React.Children.count(this.props.children),
-      next_childs = React.Children.count(nextProps.children);
+    if (this.props.autocompact) {
+      var childs = React.Children.count(this.props.children),
+        next_childs = React.Children.count(nextProps.children);
 
-    if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
-      var tabsStart = this.refs['tabs-start'].getDOMNode(),
-        tabsEnd = this.refs['tabs-end'].getDOMNode(),
-        using = this.refs.tabs.getDOMNode().offsetWidth,
-        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
-        maxTabWidth = this.props.maxTitleWidth + 35;
+      if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
+        var tabsStart = this.refs['tabs-start'].getDOMNode(),
+          tabsEnd = this.refs['tabs-end'].getDOMNode(),
+          using = this.refs.tabs.getDOMNode().offsetWidth,
+          total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
+          maxTabWidth = this.props.maxTitleWidth + 35;
 
-      if (using + maxTabWidth >= total) {
-        this.setState({compacted: true});
+        if (using + maxTabWidth >= total) {
+          this.setState({compacted: true});
+        }
+      } else {
+        // TODO
       }
-    } else {
-      // TODO
     }
   },
 

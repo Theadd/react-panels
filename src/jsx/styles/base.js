@@ -13,6 +13,12 @@ var buildStyle = function (opts) {
 
   var styles = {
     base: {
+      PanelWrapper: {
+        style: {},
+        config: {
+          autocompact: true
+        }
+      },
       Panel: {
         style: {
           height: (opts.useAvailableHeight) ? "100%" : "inherit"
@@ -80,7 +86,7 @@ var buildStyle = function (opts) {
         group: {
           style: {
             padding: "0 5px",
-            backgroundColor: "#990000"
+            backgroundColor: "transparent"
           }
         },
         body: {
@@ -192,10 +198,10 @@ var buildStyle = function (opts) {
       ToggleButton: {
         style: {
           float: "right",
-          height: 32,
-          minWidth: 32,
+          height: Utils.pixelsOf(opts.headerHeight),
+          minWidth: Utils.pixelsOf(opts.headerHeight),
           display: "inline-block",
-          lineHeight: "32px",
+          lineHeight: Utils.pixelsOf(opts.headerHeight),
           margin: 0,
           padding: 0,
           textAlign: "center",
@@ -225,7 +231,8 @@ var buildStyle = function (opts) {
       }
     },
     /* THEME: Chemical */
-    chemical: chemicalStyle
+    chemical: chemicalStyle,
+    flexbox: flexboxStyle
   };
 
   var theme = (opts.theme != "base") ? styles[opts.theme](opts) : {};

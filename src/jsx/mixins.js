@@ -141,6 +141,8 @@ Mixins.PanelWrapper = {
       useAvailableHeight: this.props.useAvailableHeight
     };
     this._sheet = createSheet(opts);
+    this.config = this._sheet("PanelWrapper").config;
+
     return {
       selectedIndex: parseInt(this.props.selectedIndex)
     };
