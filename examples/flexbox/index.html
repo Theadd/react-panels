@@ -10,7 +10,7 @@
     html {
       background-color: #454646;
       margin: 0;
-      padding: 100px 120px;
+      padding: 0 60px;
     }
     body {
       background-color: transparent;
@@ -24,16 +24,24 @@
       -moz-box-sizing: border-box;
       box-sizing: border-box;
     }
-    #root {
+    #flexbox-fiery {
       width: 450px;
       height: 300px;
+      float: left;
+    }
+    #flexbox {
+      width: 450px;
+      height: 300px;
+      margin-left: 530px;
+      margin-top: 80px;
     }
   </style>
 
 </head>
 <body>
 
-<div id="root"></div>
+<div id="flexbox-fiery"></div>
+<div id="flexbox"></div>
 
 <script type="text/javascript" src="../../bower_components/react/react-with-addons.js"></script>
 <script type="text/javascript" src="../../bower_components/react/JSXTransformer.js"></script>
@@ -54,14 +62,14 @@
     },
 
     handleToggleToolbars: function () {
-      console.debug("IN handleToggleToolbars");
       this.setState({toolbars: !this.state.toolbars});
     },
 
     render: function () {
-      console.debug("IN RENDER 1, toolbars: " + this.state.toolbars);
+      var skin = this.props.skin || "default";
+
       return (
-        <Panel theme="flexbox" useAvailableHeight={true} buttons={[
+        <Panel theme="flexbox" skin={skin} useAvailableHeight={true} buttons={[
           <ToggleButton title="Toggle Toolbar" active={this.state.toolbars} onChange={this.handleToggleToolbars}>
             <i className="fa fa-wrench"></i>
           </ToggleButton>
@@ -79,7 +87,8 @@
     }
   });
 
-  React.render(<MyPanel />,document.getElementById('root'));
+  React.render(<MyPanel skin="fiery" />,document.getElementById('flexbox-fiery'));
+  React.render(<MyPanel />,document.getElementById('flexbox'));
 </script>
 
 </body>

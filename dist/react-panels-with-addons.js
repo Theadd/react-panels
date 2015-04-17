@@ -14,6 +14,29 @@ var flexboxStyle = function (opts, skin) {
   skin = skin || opts.skin;
 
   switch (skin) {
+    case "fiery":
+      colors = {
+        tabColor: "#b0b0b0",
+        tabIconColor: "#616161",
+        activeTabColor: "#A30808",
+        tabTextShadow: "#000000",
+        activeTabTextShadow: "#000000",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "#000000",
+        iconColor: "#ffffff",
+        titleColor: "#ffffff",
+        buttonBackgroundColor: "#202020",
+        hoverButtonBackgroundColor: "#342828",
+        activeButtonBackgroundColor: "#4d2c2c",
+        tabBackgroundColor: "#202020",
+        activeTabBackgroundColor: "#2e2e2e",
+        hoverTabBackgroundColor: "#342828",
+        toolbarBackgroundColor: "#4d2c2c",
+        contentBackgroundColor: "#3e3e3e",
+        footerBackgroundColor: "#4e4e4e"
+      };
+      break;
+
     default:
       colors = {
         tabColor: "#b0b0b0",
