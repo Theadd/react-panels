@@ -287,11 +287,11 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          <ReactCSSTransitionGroup component="ul" ref="tabs" style={sheet.tabs.style} transitionName={tp.transitionName}
-            transitionAppear={tp.transitionAppear} transitionEnter={tp.transitionEnter}
-            transitionLeave={tp.transitionLeave}>
-            {tabButtons}
-          </ReactCSSTransitionGroup>,
+          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+              transitionLeave: tp.transitionLeave},
+            tabButtons
+          ),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
           this._getGroupedButtons().map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );

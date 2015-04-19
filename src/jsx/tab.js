@@ -102,37 +102,37 @@ var Tab = React.createClass({
       switch (type) {
         case 0:
           return (self.props.showToolbar) ? (
-            <div key={i} style={sheet.toolbar.style}>
-              <div className="tab-toolbar" style={sheet.toolbar.children.style}>
-                {child}
-              </div>
-            </div>
+            React.createElement("div", {key: i, style: sheet.toolbar.style},
+              React.createElement("div", {className: "tab-toolbar", style: sheet.toolbar.children.style},
+                child
+              )
+            )
           ) : null;
         case 1:
           return (
-            <div key={i} style={sheet.content.style}>
-              <div className="tab-content" style={sheet.content.children.style}>
-                {child}
-              </div>
-            </div>
+            React.createElement("div", {key: i, style: sheet.content.style},
+              React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
+                child
+              )
+            )
           );
         case 2:
           return (
-            <div key={i} style={sheet.footer.style}>
-              <div className="tab-footer" style={sheet.footer.children.style}>
-                {child}
-              </div>
-            </div>
+            React.createElement("div", {key: i, style: sheet.footer.style},
+              React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
+                child
+              )
+            )
           );
       }
     }.bind(this));
 
     return (
-      <ReactCSSTransitionGroup component="div" style={sheet.style} transitionName={tp.transitionName}
-        transitionAppear={tp.transitionAppear && active} transitionEnter={tp.transitionEnter && active}
-        transitionLeave={tp.transitionLeave && active}>
-        {innerContent}
-      </ReactCSSTransitionGroup>
+      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
+          transitionLeave: tp.transitionLeave && active},
+        innerContent
+      )
     );
 
   }

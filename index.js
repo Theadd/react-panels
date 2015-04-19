@@ -1522,9 +1522,9 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName, 
-            transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter, 
-            transitionLeave: tp.transitionLeave}, 
+          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+              transitionLeave: tp.transitionLeave},
             tabButtons
           ),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
@@ -1643,24 +1643,24 @@ var Tab = React.createClass({
       switch (type) {
         case 0:
           return (self.props.showToolbar) ? (
-            React.createElement("div", {key: i, style: sheet.toolbar.style}, 
-              React.createElement("div", {className: "tab-toolbar", style: sheet.toolbar.children.style}, 
+            React.createElement("div", {key: i, style: sheet.toolbar.style},
+              React.createElement("div", {className: "tab-toolbar", style: sheet.toolbar.children.style},
                 child
               )
             )
           ) : null;
         case 1:
           return (
-            React.createElement("div", {key: i, style: sheet.content.style}, 
-              React.createElement("div", {className: "tab-content", style: sheet.content.children.style}, 
+            React.createElement("div", {key: i, style: sheet.content.style},
+              React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
                 child
               )
             )
           );
         case 2:
           return (
-            React.createElement("div", {key: i, style: sheet.footer.style}, 
-              React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style}, 
+            React.createElement("div", {key: i, style: sheet.footer.style},
+              React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
                 child
               )
             )
@@ -1669,9 +1669,9 @@ var Tab = React.createClass({
     }.bind(this));
 
     return (
-      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName, 
-        transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active, 
-        transitionLeave: tp.transitionLeave && active}, 
+      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
+          transitionLeave: tp.transitionLeave && active},
         innerContent
       )
     );
