@@ -209,7 +209,7 @@ var chemicalStyle = function (opts, skin) {
         }
       }
     },
-    ToggleButton: {
+    Button: {
       style: {
         borderRadius: "2px 2px 0 0",
         backgroundColor: colors.buttonBackgroundColor,

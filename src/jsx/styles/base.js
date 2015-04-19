@@ -103,7 +103,8 @@ var buildStyle = function (opts) {
           listStyle: "none",
           padding: "0 5px",
           height: opts.headerHeight,
-          fontSize: "0.95em"
+          fontSize: "0.95em",
+          cursor: "pointer"
         },
         mods: {
           untitled: {
@@ -111,6 +112,11 @@ var buildStyle = function (opts) {
               style: {
                 marginLeft: 0
               }
+            }
+          },
+          active: {
+            style: {
+              cursor: "default"
             }
           }
         },
@@ -160,7 +166,8 @@ var buildStyle = function (opts) {
             style: {
               display: (opts.useAvailableHeight) ? "flex" : "block",
               minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
-              flexDirection: (opts.useAvailableHeight) ? "column" : "inherit"
+              flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
+              height: "100%"
             },
             content: {
               style: (opts.useAvailableHeight) ? { flex: 1 } : { }
@@ -169,7 +176,7 @@ var buildStyle = function (opts) {
           withToolbar: {
             toolbar: {
               style: {
-                display: "block"
+                //display: "block"
               }
             }
           }
@@ -178,13 +185,19 @@ var buildStyle = function (opts) {
           style: {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
-            padding: "10px",
-            display: "none"
+            padding: "10px"
+            //display: "none"
+          },
+          children: {
+            style: {}
           }
         },
         content: {
           style: {
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         },
         footer: {
@@ -192,10 +205,13 @@ var buildStyle = function (opts) {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         }
       },
-      ToggleButton: {
+      Button: {
         style: {
           float: "right",
           height: Utils.pixelsOf(opts.headerHeight),

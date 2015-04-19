@@ -41,5 +41,6 @@ var ReactPanels = {
   Content: Content,
   Footer: Footer,
   ToggleButton: ToggleButton,
+  Button: Button,
   addons: PanelAddons
 };

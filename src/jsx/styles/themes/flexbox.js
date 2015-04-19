@@ -8,7 +8,7 @@ var flexboxStyle = function (opts, skin) {
       colors = {
         tabColor: "#b0b0b0",
         tabIconColor: "#616161",
-        activeTabColor: "#A30808",
+        activeTabColor: "#f72121",
         tabTextShadow: "#000000",
         activeTabTextShadow: "#000000",
         titleTextShadow: "#a6a6a6",
@@ -18,12 +18,16 @@ var flexboxStyle = function (opts, skin) {
         buttonBackgroundColor: "#202020",
         hoverButtonBackgroundColor: "#342828",
         activeButtonBackgroundColor: "#4d2c2c",
+        buttonColor: "#eaeaea",
+        hoverButtonColor: "#ffffff",
+        activeButtonColor: "#f72121",
+        buttonTextShadow: "#7F7F7F",
         tabBackgroundColor: "#202020",
         activeTabBackgroundColor: "#2e2e2e",
         hoverTabBackgroundColor: "#342828",
         toolbarBackgroundColor: "#4d2c2c",
         contentBackgroundColor: "#3e3e3e",
-        footerBackgroundColor: "#4e4e4e" 
+        footerBackgroundColor: "#4e4e4e"
       };
       break;
 
@@ -41,6 +45,10 @@ var flexboxStyle = function (opts, skin) {
         buttonBackgroundColor: "#202020",
         hoverButtonBackgroundColor: "#2a2a2a",
         activeButtonBackgroundColor: "#4e4e4e",
+        buttonColor: "#eaeaea",
+        hoverButtonColor: "#ffffff",
+        activeButtonColor: "#ffffff",
+        buttonTextShadow: "#7F7F7F",
         tabBackgroundColor: "#202020",
         activeTabBackgroundColor: "#2e2e2e",
         hoverTabBackgroundColor: "#2a2a2a",
@@ -83,7 +91,8 @@ var flexboxStyle = function (opts, skin) {
         style: {
           float: "none",
           flex: 1,
-          display: "flex"
+          display: "flex",
+          overflow: "hidden"
         }
       },
       icon: {
@@ -125,7 +134,8 @@ var flexboxStyle = function (opts, skin) {
         margin: "0 0 1px 1px",
         position: "inherit",
         float: "none",
-        flex: 1
+        overflow: "hidden",
+        flex: "1 0 0px"
       },
       state: {
         hover: {
@@ -183,13 +193,32 @@ var flexboxStyle = function (opts, skin) {
           color: colors.tabColor,
           textShadow: "1px 1px 1px " + colors.tabTextShadow
         }
+      },
+      box: {
+        style: {
+          marginRight: 0,
+          maxWidth: "calc(100% - " + Utils.pixelsOf(opts.headerHeight) + ")"
+        }
       }
     },
     Tab: {
       toolbar: {
         style: {
-          backgroundColor: colors.toolbarBackgroundColor,
-          marginBottom: "1px"
+          minHeight: 0,
+          lineHeight: "inherit",
+          padding: "0",
+          display: "block",
+          position: "relative",
+          top: "-1px"
+        },
+        children: {
+          style: {
+            padding: "10px",
+            lineHeight: Utils.pixelsOf(opts.headerHeight),
+            position: "relative",
+            marginTop: "1px",
+            backgroundColor: colors.toolbarBackgroundColor
+          }
         }
       },
       content: {
@@ -205,7 +234,7 @@ var flexboxStyle = function (opts, skin) {
         }
       }
     },
-    ToggleButton: {
+    Button: {
       style: {
         height: Utils.pixelsOf(opts.headerHeight - 1),
         backgroundColor: colors.buttonBackgroundColor,
@@ -213,8 +242,8 @@ var flexboxStyle = function (opts, skin) {
       },
       children: {
         style: {
-          color: colors.activeTabColor,
-          textShadow: "1px 1px 1px " + colors.tabTextShadow
+          color: colors.buttonColor,
+          textShadow: "1px 1px 1px " + colors.buttonTextShadow
         }
       },
       state: {
@@ -224,8 +253,7 @@ var flexboxStyle = function (opts, skin) {
           },
           children: {
             style: {
-              color: colors.activeTabColor,
-              textShadow: "1px 1px 1px " + colors.activeTabTextShadow
+              color: colors.hoverButtonColor
             }
           }
         }
@@ -237,8 +265,7 @@ var flexboxStyle = function (opts, skin) {
           },
           children: {
             style: {
-              color: colors.activeTabColor,
-              textShadow: "1px 1px 1px " + colors.tabTextShadow
+              color: colors.activeButtonColor
             }
           }
         }

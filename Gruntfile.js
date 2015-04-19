@@ -22,6 +22,22 @@ module.exports = function(grunt) {
           interrupt: true
         }
       },
+      reactdev: {
+        files: ['src/jsx/**', 'examples/floating/src/**'],
+        tasks: ['react'],
+        options: {
+          spawn: false,
+          interrupt: false
+        }
+      },
+      builddev: {
+        files: ['build/react-panels.js'],
+        tasks: ['concat:basic'],
+        options: {
+          spawn: false,
+          interrupt: false
+        }
+      },
       jsmin: {
         files: ['dist/react-panels.js', 'dist/react-panels-with-addons.js'],
         tasks: ['uglify'],
@@ -93,6 +109,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('default', ['react', 'concat', 'uglify']);
+  grunt.registerTask('watch-dev', ['watch:reactdev', 'watch:builddev', 'react', 'concat:basic']);
   grunt.registerTask('live', ['watch', 'react', 'concat', 'uglify']);
   grunt.registerTask('live-dev', ['watch', 'react', 'concat']);
 

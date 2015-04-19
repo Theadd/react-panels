@@ -1,0 +1,54 @@
+
+.animated-flex-panel-enter {
+    flex-grow: 0.00001 !important;
+    transition: flex-grow 0.3s linear;
+}
+
+.animated-flex-panel-enter.animated-flex-panel-enter-active {
+    flex-grow: 1 !important;
+}
+
+.animated-flex-panel-enter > div {
+    opacity: 0.01;
+    transition: opacity 1s linear;
+}
+
+.animated-flex-panel-enter.animated-flex-panel-enter-active > div {
+    opacity: 1;
+}
+
+.animated-flex-panel-appear {
+    padding-left: 100% !important;
+    transition: padding-left 0.5s linear;
+}
+
+.animated-flex-panel-appear.animated-flex-panel-appear-active {
+    padding-left: 5px !important;
+}
+
+.animated-flex-panel-appear > div {
+    opacity: 0.01;
+    transition: opacity 1s linear;
+}
+
+.animated-flex-panel-appear.animated-flex-panel-appear-active > div {
+    opacity: 1;
+}
+
+.animated-flex-panel-leave {
+    flex-grow: 1 !important;
+    transition: flex-grow 0.5s linear;
+}
+
+.animated-flex-panel-leave.animated-flex-panel-leave-active {
+    flex-grow: 0.00001 !important;
+}
+
+.animated-flex-panel-leave > div {
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+.animated-flex-panel-leave.animated-flex-panel-leave-active > div {
+    opacity: 0.00001;
+}
