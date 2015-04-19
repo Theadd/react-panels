@@ -9,11 +9,309 @@
 (function() {
 
 
+var flexboxStyle = function (opts, skin) {
+  var colors;
+  skin = skin || opts.skin;
+
+  switch (skin) {
+    case "fiery":
+      colors = {
+        tabColor: "#b0b0b0",
+        tabIconColor: "#616161",
+        activeTabColor: "#f72121",
+        tabTextShadow: "#000000",
+        activeTabTextShadow: "#000000",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "#000000",
+        iconColor: "#ffffff",
+        titleColor: "#ffffff",
+        buttonBackgroundColor: "#202020",
+        hoverButtonBackgroundColor: "#342828",
+        activeButtonBackgroundColor: "#4d2c2c",
+        buttonColor: "#eaeaea",
+        hoverButtonColor: "#ffffff",
+        activeButtonColor: "#f72121",
+        buttonTextShadow: "#7F7F7F",
+        tabBackgroundColor: "#202020",
+        activeTabBackgroundColor: "#2e2e2e",
+        hoverTabBackgroundColor: "#342828",
+        toolbarBackgroundColor: "#4d2c2c",
+        contentBackgroundColor: "#3e3e3e",
+        footerBackgroundColor: "#4e4e4e"
+      };
+      break;
+
+    default:
+      colors = {
+        tabColor: "#b0b0b0",
+        tabIconColor: "#616161",
+        activeTabColor: "#ffffff",
+        tabTextShadow: "#000000",
+        activeTabTextShadow: "#7F7F7F",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "#a6a6a6",
+        iconColor: "#ffffff",
+        titleColor: "#ffffff",
+        buttonBackgroundColor: "#202020",
+        hoverButtonBackgroundColor: "#2a2a2a",
+        activeButtonBackgroundColor: "#4e4e4e",
+        buttonColor: "#eaeaea",
+        hoverButtonColor: "#ffffff",
+        activeButtonColor: "#ffffff",
+        buttonTextShadow: "#7F7F7F",
+        tabBackgroundColor: "#202020",
+        activeTabBackgroundColor: "#2e2e2e",
+        hoverTabBackgroundColor: "#2a2a2a",
+        toolbarBackgroundColor: "#4e4e4e",
+        contentBackgroundColor: "#3e3e3e",
+        footerBackgroundColor: "#4e4e4e"
+      };
+      break;
+  }
+
+  return {
+    PanelWrapper: {
+      config: {
+        autocompact: false
+      }
+    },
+    Panel: {
+      style: {
+        backgroundColor: "black",
+        padding: "1px 1px 0 0"
+      },
+      header: {
+        style: {
+          backgroundColor: "transparent",
+          display: "flex",
+          minWidth: "100%"
+        }
+      },
+      tabsStart: {
+        style: {
+          width: 0
+        }
+      },
+      tabsEnd: {
+        style: {
+          width: 0
+        }
+      },
+      tabs: {
+        style: {
+          float: "none",
+          flex: 1,
+          display: "flex",
+          overflow: "hidden"
+        }
+      },
+      icon: {
+        style: {
+          color: colors.iconColor,
+          textShadow: "2px 2px 2px " + colors.iconTextShadow,
+          float: "left"
+        }
+      },
+      box: {
+        style: {
+          float: "left"
+        }
+      },
+      title: {
+        style: {
+          color: colors.titleColor,
+          textShadow: "1px 1px 1px " + colors.titleTextShadow
+        }
+      },
+      group: {
+        style: {
+          padding: 0,
+          display: "inline-block",
+          height: "100%",
+          margin: 0
+        }
+      },
+      body: {
+        style: {
+          marginLeft: "1px"
+        }
+      }
+    },
+    TabButton: {
+      style: {
+        backgroundColor: colors.tabBackgroundColor,
+        height: opts.headerHeight - 1,
+        margin: "0 0 1px 1px",
+        position: "inherit",
+        float: "none",
+        overflow: "hidden",
+        flex: "1 0 0px"
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: colors.hoverTabBackgroundColor
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            backgroundColor: colors.activeTabBackgroundColor
+          },
+          state: {
+            hover: {
+              style: {
+                backgroundColor: colors.activeTabBackgroundColor
+              },
+              icon: {
+                style: {
+                  color: colors.activeTabColor,
+                  textShadow: "1px 1px 1px " + colors.tabTextShadow
+                }
+              },
+              title: {
+                style: {
+                  color: colors.activeTabColor,
+                  textShadow: "1px 1px 1px " + colors.activeTabTextShadow
+                }
+              }
+            }
+          },
+          icon: {
+            style: {
+              color: colors.activeTabColor,
+              textShadow: "1px 1px 1px " + colors.tabTextShadow
+            }
+          },
+          title: {
+            style: {
+              color: colors.activeTabColor,
+              textShadow: "1px 1px 1px " + colors.activeTabTextShadow
+            }
+          }
+        }
+      },
+      icon: {
+        style: {
+          color: colors.tabIconColor,
+          textShadow: "1px 1px 1px " + colors.tabTextShadow
+        }
+      },
+      title: {
+        style: {
+          color: colors.tabColor,
+          textShadow: "1px 1px 1px " + colors.tabTextShadow
+        }
+      },
+      box: {
+        style: {
+          marginRight: 0,
+          maxWidth: "calc(100% - " + Utils.pixelsOf(opts.headerHeight) + ")"
+        }
+      }
+    },
+    Tab: {
+      toolbar: {
+        style: {
+          minHeight: 0,
+          lineHeight: "inherit",
+          padding: "0",
+          display: "block",
+          position: "relative",
+          top: "-1px"
+        },
+        children: {
+          style: {
+            padding: "10px",
+            lineHeight: Utils.pixelsOf(opts.headerHeight),
+            position: "relative",
+            marginTop: "1px",
+            backgroundColor: colors.toolbarBackgroundColor
+          }
+        }
+      },
+      content: {
+        style: {
+          backgroundColor: colors.contentBackgroundColor,
+          marginBottom: "1px"
+        }
+      },
+      footer: {
+        style: {
+          backgroundColor: colors.footerBackgroundColor,
+          marginBottom: "1px"
+        }
+      }
+    },
+    Button: {
+      style: {
+        height: Utils.pixelsOf(opts.headerHeight - 1),
+        backgroundColor: colors.buttonBackgroundColor,
+        marginLeft: "1px"
+      },
+      children: {
+        style: {
+          color: colors.buttonColor,
+          textShadow: "1px 1px 1px " + colors.buttonTextShadow
+        }
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: colors.hoverButtonBackgroundColor
+          },
+          children: {
+            style: {
+              color: colors.hoverButtonColor
+            }
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            backgroundColor: colors.activeButtonBackgroundColor
+          },
+          children: {
+            style: {
+              color: colors.activeButtonColor
+            }
+          }
+        }
+      }
+    }
+  };
+};
+
+
 var chemicalStyle = function (opts, skin) {
   var colors;
   skin = skin || opts.skin;
 
   switch (skin) {
+    case "blueish":
+      colors = {
+        tabColor: "rgba(0, 0, 0, 0.8)",
+        activeTabColor: "rgba(0, 0, 0, 0.9)",
+        tabTextShadow: "#bbbbbb",
+        activeTabTextShadow: "#999999",
+        activeTabBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeTabBorderColor: "rgba(0, 0, 0, 0.5)",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "rgba(0, 0, 0, 0.9)",
+        iconColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "rgba(0, 0, 0, 0.8)",
+        toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
+        contentBackgroundColorWithToolbar: "rgba(102, 143, 182, 0.25)",
+        footerBackgroundColor: "rgba(165, 165, 165, 0.32)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        hoverButtonBackgroundColor: "rgba(102, 143, 182, 0.25)",
+        activeButtonBackgroundColor: "rgba(102, 143, 182, 0.25)"
+      };
+
+      break;
     default:
       colors = {
         tabColor: "#ffffff",
@@ -28,7 +326,11 @@ var chemicalStyle = function (opts, skin) {
         titleColor: "#ffffff",
         toolbarBoxShadow: "rgba(0, 0, 0, 0.1)",
         contentBackgroundColorWithToolbar: "rgba(255, 255, 255, 0.85)",
-        footerBackgroundColor: "rgba(224, 230, 240, 0.8)"
+        footerBackgroundColor: "rgba(224, 230, 240, 0.8)",
+        hoverTabBackgroundColor: "rgba(224, 230, 240, 0.65)",
+        buttonBackgroundColor: "rgba(255, 255, 255, 0.2)",
+        hoverButtonBackgroundColor: "rgba(255, 255, 255, 0.9)",
+        activeButtonBackgroundColor: "rgba(255, 255, 255, 0.9)"
       };
       break;
   }
@@ -91,7 +393,7 @@ var chemicalStyle = function (opts, skin) {
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(224, 230, 240, 0.65)"
+            backgroundColor: colors.hoverTabBackgroundColor
           },
           icon: {
             style: {
@@ -193,16 +495,16 @@ var chemicalStyle = function (opts, skin) {
         }
       }
     },
-    ToggleButton: {
+    Button: {
       style: {
         borderRadius: "2px 2px 0 0",
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        backgroundColor: colors.buttonBackgroundColor,
         marginLeft: "1px"
       },
       state: {
         hover: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.hoverButtonBackgroundColor
           },
           children: {
             style: {
@@ -215,7 +517,7 @@ var chemicalStyle = function (opts, skin) {
       mods: {
         active: {
           style: {
-            backgroundColor: "rgba(255, 255, 255, 0.9)"
+            backgroundColor: colors.activeButtonBackgroundColor
           }
         }
       },
@@ -238,13 +540,22 @@ var buildStyle = function (opts) {
     headerHeight: opts.headerHeight || 32,
     headerFontSize: opts.headerFontSize || 14,
     borderRadius: opts.borderRadius || 3,
-    maxTitleWidth: opts.maxTitleWidth || 130
+    maxTitleWidth: opts.maxTitleWidth || 130,
+    useAvailableHeight: opts.useAvailableHeight || false
   };
 
   var styles = {
     base: {
-      Panel: {
+      PanelWrapper: {
         style: {},
+        config: {
+          autocompact: true
+        }
+      },
+      Panel: {
+        style: {
+          height: (opts.useAvailableHeight) ? "100%" : "inherit"
+        },
         header: {
           style: {
             display: "block",
@@ -308,11 +619,13 @@ var buildStyle = function (opts) {
         group: {
           style: {
             padding: "0 5px",
-            backgroundColor: "#990000"
+            backgroundColor: "transparent"
           }
         },
         body: {
-          style: {}
+          style: {
+            height: (opts.useAvailableHeight) ? "calc(100% - " + opts.headerHeight + "px)" : "inherit"
+          }
         }
       },
       TabButton: {
@@ -323,7 +636,8 @@ var buildStyle = function (opts) {
           listStyle: "none",
           padding: "0 5px",
           height: opts.headerHeight,
-          fontSize: "0.95em"
+          fontSize: "0.95em",
+          cursor: "pointer"
         },
         mods: {
           untitled: {
@@ -331,6 +645,11 @@ var buildStyle = function (opts) {
               style: {
                 marginLeft: 0
               }
+            }
+          },
+          active: {
+            style: {
+              cursor: "default"
             }
           }
         },
@@ -378,13 +697,19 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: "block"
+              display: (opts.useAvailableHeight) ? "flex" : "block",
+              minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
+              height: "100%"
+            },
+            content: {
+              style: (opts.useAvailableHeight) ? { flex: 1 } : { }
             }
           },
           withToolbar: {
             toolbar: {
               style: {
-                display: "block"
+                //display: "block"
               }
             }
           }
@@ -393,13 +718,19 @@ var buildStyle = function (opts) {
           style: {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
-            padding: "10px",
-            display: "none"
+            padding: "10px"
+            //display: "none"
+          },
+          children: {
+            style: {}
           }
         },
         content: {
           style: {
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         },
         footer: {
@@ -407,16 +738,19 @@ var buildStyle = function (opts) {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         }
       },
-      ToggleButton: {
+      Button: {
         style: {
           float: "right",
-          height: 32,
-          minWidth: 32,
+          height: Utils.pixelsOf(opts.headerHeight),
+          minWidth: Utils.pixelsOf(opts.headerHeight),
           display: "inline-block",
-          lineHeight: "32px",
+          lineHeight: Utils.pixelsOf(opts.headerHeight),
           margin: 0,
           padding: 0,
           textAlign: "center",
@@ -446,7 +780,8 @@ var buildStyle = function (opts) {
       }
     },
     /* THEME: Chemical */
-    chemical: chemicalStyle
+    chemical: chemicalStyle,
+    flexbox: flexboxStyle
   };
 
   var theme = (opts.theme != "base") ? styles[opts.theme](opts) : {};
@@ -480,15 +815,6 @@ var createSheet = (function (opts) {
     return sheet;
   }
 });
-
-/*var alter = {
-  skin: 'light',
-  merge: {  //TODO
-    style: {
-      fontWeight: 'bold'
-    }
-  }
-};*/
 
 
 var Utils = {
@@ -538,6 +864,8 @@ var Utils = {
     return dst;
   }
 };
+
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 
 var Mixins = {
@@ -592,6 +920,42 @@ var Mixins = {
       }
 
       return this.__ssv;
+    }
+  },
+  Transitions: {
+    propTypes: {
+      transitionName: React.PropTypes.string,
+      transitionEnter: React.PropTypes.bool,
+      transitionLeave: React.PropTypes.bool,
+      transitionAppear: React.PropTypes.bool
+    },
+    getTransitionProps: function (pcType) {
+      pcType = pcType || this.props.panelComponentType;
+
+      var props = {},
+        globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
+          this.context.globals[pcType] : {},
+        transitionName = (typeof this.props.transitionName === "string") ?
+          this.props.transitionName : globals.transitionName || "";
+      if (transitionName.length) {
+        props = {
+          transitionName: transitionName,
+          transitionEnter: (typeof this.props.transitionEnter === "boolean") ?
+            this.props.transitionEnter : globals.transitionEnter || false,
+          transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
+            this.props.transitionLeave : globals.transitionLeave || false,
+          transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
+            this.props.transitionAppear : globals.transitionAppear || false
+        };
+      } else {
+        props = {
+          transitionName: "none",
+          transitionEnter: false,
+          transitionLeave: false,
+          transitionAppear: false
+        };
+      }
+      return props;
     }
   },
   Toolbar: {
@@ -658,6 +1022,14 @@ Mixins.StyleableWithEvents = {
 
 Mixins.PanelWrapper = {
 
+  propTypes: {
+    transitionName: React.PropTypes.string,
+    transitionEnter: React.PropTypes.bool,
+    transitionLeave: React.PropTypes.bool,
+    transitionAppear: React.PropTypes.bool,
+    globals: React.PropTypes.object
+  },
+
   getDefaultProps: function () {
     return {
       "icon": false,
@@ -667,7 +1039,8 @@ Mixins.PanelWrapper = {
        *  Optionally, return false to stop it.
        */
       "onTabChange": null,
-      "buttons": []
+      "buttons": [],
+      "globals": {}
     };
   },
 
@@ -678,10 +1051,12 @@ Mixins.PanelWrapper = {
       headerHeight: this.props.headerHeight,
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
+      maxTitleWidth: this.props.maxTitleWidth,
+      useAvailableHeight: this.props.useAvailableHeight
     };
     this._sheet = createSheet(opts);
-    this._pflag = true;
+    this.config = this._sheet("PanelWrapper").config;
+
     return {
       selectedIndex: parseInt(this.props.selectedIndex)
     };
@@ -690,14 +1065,16 @@ Mixins.PanelWrapper = {
   childContextTypes: {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
-    onTabChange: React.PropTypes.func
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
   },
 
   getChildContext: function () {
     return {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
-      onTabChange: this.handleTabChange
+      onTabChange: this.handleTabChange,
+      globals: this.props.globals
     };
   },
 
@@ -715,17 +1092,30 @@ Mixins.PanelWrapper = {
     return this.state.selectedIndex;
   },
 
-  setSelectedIndex: function (index) {
+  setSelectedIndex: function (index, callback) {
     this.setState({selectedIndex: parseInt(index)});
-    this._pflag = true;
-    this.forceUpdate();
+    this.forceUpdate(function () {
+      if (typeof callback === "function") {
+        callback();
+      }
+    });
   },
 
   componentWillReceiveProps: function (nextProps) {
-    if (typeof nextProps.selectedIndex !== "undefined") {
-      if (nextProps.selectedIndex != this.props.selectedIndex) {
-        this.setSelectedIndex(nextProps.selectedIndex);
-      }
+    var sIndex = this.state.selectedIndex,
+      resetIndex = false,
+      numTabs = React.Children.count(nextProps.children);
+
+    if (nextProps.selectedIndex != this.props.selectedIndex) {
+      sIndex = nextProps.selectedIndex;
+      resetIndex = true;
+    }
+    if (sIndex >= numTabs) {
+      sIndex = Math.max(numTabs - 1, 0);
+      resetIndex = true;
+    }
+    if (resetIndex) {
+      this.setState({selectedIndex: parseInt(sIndex)});
     }
   }
 
@@ -739,7 +1129,8 @@ Mixins.TabWrapper = {
       panelComponentType: "TabWrapper",
       icon: "",
       title: "",
-      pinned: false
+      pinned: false,
+      showToolbar: true
     };
   },
 
@@ -857,6 +1248,7 @@ var FloatingPanel = React.createClass({
   },
 
   getInitialState: function () {
+    this.skipUpdate = false;
     return {
       left: parseInt(this.props.left),
       top: parseInt(this.props.top),
@@ -893,6 +1285,7 @@ var FloatingPanel = React.createClass({
     if (this.panelBounds || false) {
       var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
         top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
+      this.skipUpdate = true;
       this.setState({ left: left, top: top });
     }
   },
@@ -908,21 +1301,28 @@ var FloatingPanel = React.createClass({
         position: "absolute"
       }, {$merge: this.props.style});
 
-    if (this._pflag) {
+    if (!this.skipUpdate) {
+      var props = React.addons.update({
+          onDragStart: this.dragStart,
+          onDragEnd: this.dragEnd,
+          floating: true
+        }, {$merge: this.config}),
+        keys = Object.keys(this.props);
+
+      for (var i = keys.length; --i >= 0;) {
+        if (["children", "left", "top", "width", "style"].indexOf(keys[i]) != -1) continue;
+        props[keys[i]] = this.props[keys[i]];
+      }
       this.inner = (
-        React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons, 
-          onDragStart: this.dragStart, onDragEnd: this.dragEnd, floating: true}, 
+        React.createElement(ReactPanel, props,
           this.props.children
         )
       );
-      this._pflag = false;
+    } else {
+      this.skipUpdate = false;
     }
 
-    return (
-      React.createElement("div", {style: wrapperStyle}, 
-        this.inner
-      )
-    );
+    return React.createElement("div", {style:wrapperStyle}, this.inner);
   }
 
 });
@@ -932,18 +1332,23 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return (
-      React.createElement(ReactPanel, {title: this.props.title, icon: this.props.icon, buttons: this.props.buttons}, 
+    var props = React.addons.update({}, {$merge: this.config}),
+      keys = Object.keys(this.props);
+
+    for (var i = keys.length; --i >= 0;) {
+      if (["children"].indexOf(keys[i]) != -1) continue;
+      props[keys[i]] = this.props[keys[i]];
+    }
+    return React.createElement(ReactPanel, props,
         this.props.children
-      )
     );
   }
 
 });
 
 var ReactPanel = React.createClass({
-  displayName: 'Panel',
-  mixins: [Mixins.Styleable],
+  displayName: 'ReactPanel',
+  mixins: [Mixins.Styleable, Mixins.Transitions],
 
   getDefaultProps: function () {
     return {
@@ -967,7 +1372,8 @@ var ReactPanel = React.createClass({
   contextTypes: {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
-    onTabChange: React.PropTypes.func
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
   },
 
   getSelectedIndex: function () {
@@ -979,32 +1385,36 @@ var ReactPanel = React.createClass({
   },
 
   componentDidMount: function () {
-    var tabsStart = this.refs['tabs-start'].getDOMNode(),
-      tabsEnd = this.refs['tabs-end'].getDOMNode(),
-      using = this.refs.tabs.getDOMNode().offsetWidth,
-      total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
+    if (this.props.autocompact) {
+      var tabsStart = this.refs['tabs-start'].getDOMNode(),
+        tabsEnd = this.refs['tabs-end'].getDOMNode(),
+        using = this.refs.tabs.getDOMNode().offsetWidth,
+        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
 
-    if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
-      this.setState({compacted: false});
+      if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
+        this.setState({compacted: false});
+      }
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var childs = React.Children.count(this.props.children),
-      next_childs = React.Children.count(nextProps.children);
+    if (this.props.autocompact) {
+      var childs = React.Children.count(this.props.children),
+        next_childs = React.Children.count(nextProps.children);
 
-    if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
-      var tabsStart = this.refs['tabs-start'].getDOMNode(),
-        tabsEnd = this.refs['tabs-end'].getDOMNode(),
-        using = this.refs.tabs.getDOMNode().offsetWidth,
-        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
-        maxTabWidth = this.props.maxTitleWidth + 35;
+      if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
+        var tabsStart = this.refs['tabs-start'].getDOMNode(),
+          tabsEnd = this.refs['tabs-end'].getDOMNode(),
+          using = this.refs.tabs.getDOMNode().offsetWidth,
+          total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
+          maxTabWidth = this.props.maxTitleWidth + 35;
 
-      if (using + maxTabWidth >= total) {
-        this.setState({compacted: true});
+        if (using + maxTabWidth >= total) {
+          this.setState({compacted: true});
+        }
+      } else {
+        // TODO
       }
-    } else {
-      // TODO
     }
   },
 
@@ -1053,15 +1463,20 @@ var ReactPanel = React.createClass({
   render: function() {
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
-      sheet = this.getSheet("Panel");
+      sheet = this.getSheet("Panel"),
+      tp = this.getTransitionProps("Panel");
 
     var icon = (this.props.icon) ? (
-        React.createElement("span", {style: sheet.icon.style}, 
-          React.createElement("i", {className: this.props.icon})
+        React.createElement("span", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
         )
       ) : null,
       title = (this.props.title.length) ? (
-        React.createElement("div", {style: sheet.box.style}, React.createElement("div", {style: sheet.title.style}, this.props.title))
+        React.createElement("div", {style:sheet.box.style},
+          React.createElement("div", {style:sheet.title.style},
+            this.props.title
+          )
+        )
       ) : null;
 
     var tabIndex = 0,
@@ -1072,7 +1487,7 @@ var ReactPanel = React.createClass({
 
     React.Children.forEach(self.props.children, function(child) {
       var ref = "tabb-" + tabIndex,
-        tabRef = "tab-" + tabIndex,
+        tabKey = (typeof child.key !== "undefined" && child.key != null) ? child.key : ref,
         showTitle = true,
         props = {
           "icon": child.props.icon,
@@ -1087,14 +1502,13 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        React.createElement(TabButton, {key: tabIndex, title: props.title, icon: props.icon, 
+        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
           index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
       );
 
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
-          ref: tabRef,  // TODO: Remove if not being used
           selectedIndex: selectedIndex,
           index: tabIndex
         })
@@ -1103,27 +1517,22 @@ var ReactPanel = React.createClass({
     });
 
     return (
-      React.createElement("div", {style: sheet.style}, 
-        React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd, 
-            onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style}, 
-          icon, 
-          title, 
-          React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}), 
-          React.createElement("ul", {style: sheet.tabs.style, ref: "tabs"}, 
+      React.createElement("div", {style: sheet.style},
+        React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd,
+            onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
+          icon, title,
+          React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
+          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+              transitionLeave: tp.transitionLeave},
             tabButtons
-          ), 
-          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}), 
+          ),
+          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
           this._getGroupedButtons().map(function (group) {
-            return (
-              React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, 
-                group
-              )
-            );
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           })
-        ), 
-        React.createElement("div", {style: sheet.body.style}, 
-          tabs
-        )
+        ),
+        React.createElement("div", {style: sheet.body.style}, tabs )
       )
     );
   }
@@ -1161,13 +1570,13 @@ var TabButton = React.createClass({displayName: "TabButton",
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (React.createElement("div", {style: sheet.title.style}, this.props.title));
+      title = React.createElement("div", {style:sheet.title.style},this.props.title);
     }
 
     if (this.props.icon) {
       icon = (
-        React.createElement("div", {style: sheet.icon.style}, 
-          React.createElement("i", {className: this.props.icon})
+        React.createElement("div", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
         )
       );
     }
@@ -1175,7 +1584,7 @@ var TabButton = React.createClass({displayName: "TabButton",
     return (
       React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
         React.createElement("div", {title: this.props.title},
-          icon, " ", React.createElement("div", {style: sheet.box.style}, title)
+          icon, React.createElement("div", {style: sheet.box.style}, title)
         )
       )
     );
@@ -1184,7 +1593,7 @@ var TabButton = React.createClass({displayName: "TabButton",
 
 var Tab = React.createClass({
   displayName: 'Tab',
-  mixins: [Mixins.Styleable],
+  mixins: [Mixins.Styleable, Mixins.Transitions],
 
   getDefaultProps: function () {
     return {
@@ -1198,7 +1607,8 @@ var Tab = React.createClass({
 
   contextTypes: {
     selectedIndex: React.PropTypes.number,
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    globals: React.PropTypes.object
   },
 
   isActive: function () {
@@ -1212,12 +1622,13 @@ var Tab = React.createClass({
   render: function() {
     var self = this,
       numChilds = React.Children.count(this.props.children),
-      vIndex = 0,
-      mods = (this.isActive()) ? ['active'] : [],
+      active = this.isActive(),
+      tp = this.getTransitionProps(),
+      mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child) {
-      var type = (vIndex == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
+    var innerContent = React.Children.map(self.props.children, function(child, i) {
+      var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
           case "Toolbar": type = 0; break;
@@ -1225,22 +1636,46 @@ var Tab = React.createClass({
           case "Footer": type = 2; break;
         }
       }
-      if (vIndex == 0) {
+      if (i == 0) {
         if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
-        case 0: return (React.createElement("div", {key: vIndex++, style: sheet.toolbar.style}, child));
-        case 1: return (React.createElement("div", {key: vIndex++, style: sheet.content.style}, child));
-        case 2: return (React.createElement("div", {key: vIndex++, style: sheet.footer.style}, child));
+        case 0:
+          return (self.props.showToolbar) ? (
+            React.createElement("div", {key: i, style: sheet.toolbar.style},
+              React.createElement("div", {className: "tab-toolbar", style: sheet.toolbar.children.style},
+                child
+              )
+            )
+          ) : null;
+        case 1:
+          return (
+            React.createElement("div", {key: i, style: sheet.content.style},
+              React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
+                child
+              )
+            )
+          );
+        case 2:
+          return (
+            React.createElement("div", {key: i, style: sheet.footer.style},
+              React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
+                child
+              )
+            )
+          );
       }
-    });
+    }.bind(this));
 
     return (
-      React.createElement("div", {style: sheet.style}, 
+      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
+          transitionLeave: tp.transitionLeave && active},
         innerContent
       )
     );
+
   }
 
 });
@@ -1262,9 +1697,36 @@ var ToggleButton = React.createClass({
   },
 
   render: function () {
-    var sheet = this.getSheet('ToggleButton');
+    var sheet = this.getSheet('Button');
 
     //JSX source: https://github.com/Theadd/react-panels/blob/v2/src/jsx/buttons.jsx#L21-L25
+    return (
+      React.createElement("li", React.__spread({style: sheet.style},  this.listeners, {title: this.props.title}),
+        React.createElement("span", {style: sheet.children.style},
+          this.props.children
+        )
+      )
+    );
+  }
+});
+
+var Button = React.createClass({
+  displayName: 'Button',
+  mixins: [Mixins.Button],
+
+  propTypes: {
+    onButtonClick: React.PropTypes.func
+  },
+
+  handleClick: function (ev) {
+    if (typeof this.props.onButtonClick === "function") {
+      this.props.onButtonClick(this, ev);
+    }
+  },
+
+  render: function () {
+    var sheet = this.getSheet('Button');
+
     return (
       React.createElement("li", React.__spread({style: sheet.style},  this.listeners, {title: this.props.title}),
         React.createElement("span", {style: sheet.children.style},
@@ -1281,11 +1743,7 @@ var Toolbar = React.createClass({
   mixins: [Mixins.Toolbar],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -1295,11 +1753,7 @@ var Content = React.createClass({
   mixins: [Mixins.Content],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
@@ -1309,16 +1763,26 @@ var Footer = React.createClass({
   mixins: [Mixins.Footer],
 
   render: function () {
-    return (
-      React.createElement("div", null, 
-        this.props.children
-      )
-    );
+    return React.createElement("div", {}, this.props.children );
   }
 
 });
 
 var PanelAddons = {};
+
+var ReactPanels = {
+  Panel: Panel,
+  FloatingPanel: FloatingPanel,
+  ReactPanel: ReactPanel,
+  Tab: Tab,
+  Mixins: Mixins,
+  Toolbar: Toolbar,
+  Content: Content,
+  Footer: Footer,
+  ToggleButton: ToggleButton,
+  Button: Button,
+  addons: PanelAddons
+};
 
 
 /**
@@ -1352,8 +1816,8 @@ var ScrollableTabContent = React.createClass({
       overflow: "scroll"
     };
     return (
-      React.createElement("div", {ref: "content", style: contentStyle}, 
-        React.createElement("div", {ref: "wrapper"}, 
+      React.createElement("div", {ref:"content", style:contentStyle},
+        React.createElement("div",{ref:"wrapper"},
           this.props.children
         )
       )
@@ -1365,16 +1829,6 @@ var ScrollableTabContent = React.createClass({
 PanelAddons.ScrollableTabContent = ScrollableTabContent;
 
 
-window.ReactPanels = {
-  Panel: Panel,
-  FloatingPanel: FloatingPanel,
-  Tab: Tab,
-  Mixins: Mixins,
-  Toolbar: Toolbar,
-  Content: Content,
-  Footer: Footer,
-  ToggleButton: ToggleButton,
-  addons: PanelAddons
-};
+window.ReactPanels = ReactPanels;
 
 }());

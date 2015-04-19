@@ -1,7 +1,7 @@
 {
   "name": "react-panels",
-  "version": "2.1.0",
-  "description": "React.js panel widget with tabs, toolbars, buttons, floating windows and customizable themes",
+  "version": "2.2.0",
+  "description": "React.js panel component with tabs, toolbars, buttons, floating windows and customizable themes",
   "repository": {
     "type": "git",
     "url": "https://github.com/Theadd/react-panels.git"
@@ -25,6 +25,12 @@
   },
   "homepage": "http://theadd.github.io/react-panels/",
   "license": "MIT",
+  "files": [
+    "README.md",
+    "addons.js",
+    "index.js",
+    "dist/"
+  ],
   "main": "index.js",
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -33,5 +39,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jsdoc": "^0.5.7",
     "grunt-react": "^0.10.0"
+  },
+  "dependencies": {
+    "react": "^0.13.1"
   }
 }

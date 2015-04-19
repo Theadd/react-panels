@@ -22,6 +22,22 @@ module.exports = function(grunt) {
           interrupt: true
         }
       },
+      reactdev: {
+        files: ['src/jsx/**', 'examples/floating/src/**'],
+        tasks: ['react'],
+        options: {
+          spawn: false,
+          interrupt: false
+        }
+      },
+      builddev: {
+        files: ['build/react-panels.js'],
+        tasks: ['concat:basic'],
+        options: {
+          spawn: false,
+          interrupt: false
+        }
+      },
       jsmin: {
         files: ['dist/react-panels.js', 'dist/react-panels-with-addons.js'],
         tasks: ['uglify'],
@@ -35,17 +51,18 @@ module.exports = function(grunt) {
       combined_file_output: {
         files: {
           'build/react-panels.js': [
-            'src/jsx/styles/themes/chemical.jsx',
-            'src/jsx/styles/base.jsx',
-            'src/jsx/utils.jsx',
-            'src/jsx/mixins.jsx',
-            'src/jsx/panel.jsx',
-            'src/jsx/tab.jsx',
-            'src/jsx/buttons.jsx',
-            'src/jsx/ext.jsx'
+            'src/jsx/styles/themes/flexbox.js',
+            'src/jsx/styles/themes/chemical.js',
+            'src/jsx/styles/base.js',
+            'src/jsx/utils.js',
+            'src/jsx/mixins.js',
+            'src/jsx/panel.js',
+            'src/jsx/tab.js',
+            'src/jsx/buttons.js',
+            'src/jsx/ext.js'
           ],
           'build/addons.js': [
-            'src/jsx/addons/scrollable-tab-content.jsx'
+            'src/jsx/addons/scrollable-tab-content.js'
           ],
           'examples/floating/floating.js': [
             'examples/floating/src/item-tab.jsx',
@@ -63,6 +80,14 @@ module.exports = function(grunt) {
       addons: {
         src: ['src/misc/HEADER', 'build/react-panels.js', 'build/addons.js', 'src/misc/FOOTER'],
         dest: 'dist/react-panels-with-addons.js'
+      },
+      basicC: {
+        src: ['src/misc/HEADER_C', 'build/react-panels.js', 'src/misc/FOOTER_C'],
+        dest: 'index.js'
+      },
+      addonsC: {
+        src: ['src/misc/HEADER_C', 'build/react-panels.js', 'build/addons.js', 'src/misc/FOOTER_C'],
+        dest: 'addons.js'
       }
     },
     uglify: {
@@ -84,6 +109,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('default', ['react', 'concat', 'uglify']);
+  grunt.registerTask('watch-dev', ['watch:reactdev', 'watch:builddev', 'react', 'concat:basic']);
   grunt.registerTask('live', ['watch', 'react', 'concat', 'uglify']);
   grunt.registerTask('live-dev', ['watch', 'react', 'concat']);
 

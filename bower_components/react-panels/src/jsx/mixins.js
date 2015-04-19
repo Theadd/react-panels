@@ -53,6 +53,42 @@ var Mixins = {
       return this.__ssv;
     }
   },
+  Transitions: {
+    propTypes: {
+      transitionName: React.PropTypes.string,
+      transitionEnter: React.PropTypes.bool,
+      transitionLeave: React.PropTypes.bool,
+      transitionAppear: React.PropTypes.bool
+    },
+    getTransitionProps: function (pcType) {
+      pcType = pcType || this.props.panelComponentType;
+
+      var props = {},
+        globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
+          this.context.globals[pcType] : {},
+        transitionName = (typeof this.props.transitionName === "string") ?
+          this.props.transitionName : globals.transitionName || "";
+      if (transitionName.length) {
+        props = {
+          transitionName: transitionName,
+          transitionEnter: (typeof this.props.transitionEnter === "boolean") ?
+            this.props.transitionEnter : globals.transitionEnter || false,
+          transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
+            this.props.transitionLeave : globals.transitionLeave || false,
+          transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
+            this.props.transitionAppear : globals.transitionAppear || false
+        };
+      } else {
+        props = {
+          transitionName: "none",
+          transitionEnter: false,
+          transitionLeave: false,
+          transitionAppear: false
+        };
+      }
+      return props;
+    }
+  },
   Toolbar: {
     getDefaultProps: function () {
       return {
@@ -117,6 +153,14 @@ Mixins.StyleableWithEvents = {
 
 Mixins.PanelWrapper = {
 
+  propTypes: {
+    transitionName: React.PropTypes.string,
+    transitionEnter: React.PropTypes.bool,
+    transitionLeave: React.PropTypes.bool,
+    transitionAppear: React.PropTypes.bool,
+    globals: React.PropTypes.object
+  },
+
   getDefaultProps: function () {
     return {
       "icon": false,
@@ -126,7 +170,8 @@ Mixins.PanelWrapper = {
        *  Optionally, return false to stop it.
        */
       "onTabChange": null,
-      "buttons": []
+      "buttons": [],
+      "globals": {}
     };
   },
 
@@ -137,10 +182,12 @@ Mixins.PanelWrapper = {
       headerHeight: this.props.headerHeight,
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
-      maxTitleWidth: this.props.maxTitleWidth
+      maxTitleWidth: this.props.maxTitleWidth,
+      useAvailableHeight: this.props.useAvailableHeight
     };
     this._sheet = createSheet(opts);
-    this._pflag = true;
+    this.config = this._sheet("PanelWrapper").config;
+
     return {
       selectedIndex: parseInt(this.props.selectedIndex)
     };
@@ -149,14 +196,16 @@ Mixins.PanelWrapper = {
   childContextTypes: {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
-    onTabChange: React.PropTypes.func
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
   },
 
   getChildContext: function () {
     return {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
-      onTabChange: this.handleTabChange
+      onTabChange: this.handleTabChange,
+      globals: this.props.globals
     };
   },
 
@@ -174,17 +223,30 @@ Mixins.PanelWrapper = {
     return this.state.selectedIndex;
   },
 
-  setSelectedIndex: function (index) {
+  setSelectedIndex: function (index, callback) {
     this.setState({selectedIndex: parseInt(index)});
-    this._pflag = true;
-    this.forceUpdate();
+    this.forceUpdate(function () {
+      if (typeof callback === "function") {
+        callback();
+      }
+    });
   },
 
   componentWillReceiveProps: function (nextProps) {
-    if (typeof nextProps.selectedIndex !== "undefined") {
-      if (nextProps.selectedIndex != this.props.selectedIndex) {
-        this.setSelectedIndex(nextProps.selectedIndex);
-      }
+    var sIndex = this.state.selectedIndex,
+      resetIndex = false,
+      numTabs = React.Children.count(nextProps.children);
+
+    if (nextProps.selectedIndex != this.props.selectedIndex) {
+      sIndex = nextProps.selectedIndex;
+      resetIndex = true;
+    }
+    if (sIndex >= numTabs) {
+      sIndex = Math.max(numTabs - 1, 0);
+      resetIndex = true;
+    }
+    if (resetIndex) {
+      this.setState({selectedIndex: parseInt(sIndex)});
     }
   }
 
@@ -198,7 +260,8 @@ Mixins.TabWrapper = {
       panelComponentType: "TabWrapper",
       icon: "",
       title: "",
-      pinned: false
+      pinned: false,
+      showToolbar: true
     };
   },
 

@@ -7,13 +7,22 @@ var buildStyle = function (opts) {
     headerHeight: opts.headerHeight || 32,
     headerFontSize: opts.headerFontSize || 14,
     borderRadius: opts.borderRadius || 3,
-    maxTitleWidth: opts.maxTitleWidth || 130
+    maxTitleWidth: opts.maxTitleWidth || 130,
+    useAvailableHeight: opts.useAvailableHeight || false
   };
 
   var styles = {
     base: {
-      Panel: {
+      PanelWrapper: {
         style: {},
+        config: {
+          autocompact: true
+        }
+      },
+      Panel: {
+        style: {
+          height: (opts.useAvailableHeight) ? "100%" : "inherit"
+        },
         header: {
           style: {
             display: "block",
@@ -77,11 +86,13 @@ var buildStyle = function (opts) {
         group: {
           style: {
             padding: "0 5px",
-            backgroundColor: "#990000"
+            backgroundColor: "transparent"
           }
         },
         body: {
-          style: {}
+          style: {
+            height: (opts.useAvailableHeight) ? "calc(100% - " + opts.headerHeight + "px)" : "inherit"
+          }
         }
       },
       TabButton: {
@@ -92,7 +103,8 @@ var buildStyle = function (opts) {
           listStyle: "none",
           padding: "0 5px",
           height: opts.headerHeight,
-          fontSize: "0.95em"
+          fontSize: "0.95em",
+          cursor: "pointer"
         },
         mods: {
           untitled: {
@@ -100,6 +112,11 @@ var buildStyle = function (opts) {
               style: {
                 marginLeft: 0
               }
+            }
+          },
+          active: {
+            style: {
+              cursor: "default"
             }
           }
         },
@@ -147,13 +164,19 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: "block"
+              display: (opts.useAvailableHeight) ? "flex" : "block",
+              minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
+              height: "100%"
+            },
+            content: {
+              style: (opts.useAvailableHeight) ? { flex: 1 } : { }
             }
           },
           withToolbar: {
             toolbar: {
               style: {
-                display: "block"
+                //display: "block"
               }
             }
           }
@@ -162,13 +185,19 @@ var buildStyle = function (opts) {
           style: {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
-            padding: "10px",
-            display: "none"
+            padding: "10px"
+            //display: "none"
+          },
+          children: {
+            style: {}
           }
         },
         content: {
           style: {
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         },
         footer: {
@@ -176,16 +205,19 @@ var buildStyle = function (opts) {
             minHeight: Utils.pixelsOf(opts.headerHeight),
             lineHeight: Utils.pixelsOf(opts.headerHeight),
             padding: "10px"
+          },
+          children: {
+            style: {}
           }
         }
       },
-      ToggleButton: {
+      Button: {
         style: {
           float: "right",
-          height: 32,
-          minWidth: 32,
+          height: Utils.pixelsOf(opts.headerHeight),
+          minWidth: Utils.pixelsOf(opts.headerHeight),
           display: "inline-block",
-          lineHeight: "32px",
+          lineHeight: Utils.pixelsOf(opts.headerHeight),
           margin: 0,
           padding: 0,
           textAlign: "center",
@@ -215,7 +247,8 @@ var buildStyle = function (opts) {
       }
     },
     /* THEME: Chemical */
-    chemical: chemicalStyle
+    chemical: chemicalStyle,
+    flexbox: flexboxStyle
   };
 
   var theme = (opts.theme != "base") ? styles[opts.theme](opts) : {};
@@ -249,12 +282,3 @@ var createSheet = (function (opts) {
     return sheet;
   }
 });
-
-/*var alter = {
-  skin: 'light',
-  merge: {  //TODO
-    style: {
-      fontWeight: 'bold'
-    }
-  }
-};*/

@@ -6,7 +6,7 @@
  * Licensed under the MIT license.
  */
 
-(function() {
+var React = require('react/addons');
 
 
 var flexboxStyle = function (opts, skin) {
@@ -1785,6 +1785,4 @@ var ReactPanels = {
 };
 
 
-window.ReactPanels = ReactPanels;
-
-}());
+module.exports = ReactPanels;

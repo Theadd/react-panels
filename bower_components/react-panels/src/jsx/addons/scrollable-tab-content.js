@@ -30,11 +30,11 @@ var ScrollableTabContent = React.createClass({
       overflow: "scroll"
     };
     return (
-      <div ref="content" style={contentStyle}>
-        <div ref="wrapper">
-          {this.props.children}
-        </div>
-      </div>
+      React.createElement("div", {ref:"content", style:contentStyle},
+        React.createElement("div",{ref:"wrapper"},
+          this.props.children
+        )
+      )
     );
   }
 

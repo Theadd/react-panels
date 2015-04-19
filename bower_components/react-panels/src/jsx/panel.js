@@ -13,6 +13,7 @@ var FloatingPanel = React.createClass({
   },
 
   getInitialState: function () {
+    this.skipUpdate = false;
     return {
       left: parseInt(this.props.left),
       top: parseInt(this.props.top),
@@ -49,6 +50,7 @@ var FloatingPanel = React.createClass({
     if (this.panelBounds || false) {
       var left = this.panelBounds.startLeft + (e.pageX - this.panelBounds.startPageX),
         top = this.panelBounds.startTop + (e.pageY - this.panelBounds.startPageY);
+      this.skipUpdate = true;
       this.setState({ left: left, top: top });
     }
   },
@@ -64,21 +66,28 @@ var FloatingPanel = React.createClass({
         position: "absolute"
       }, {$merge: this.props.style});
 
-    if (this._pflag) {
+    if (!this.skipUpdate) {
+      var props = React.addons.update({
+          onDragStart: this.dragStart,
+          onDragEnd: this.dragEnd,
+          floating: true
+        }, {$merge: this.config}),
+        keys = Object.keys(this.props);
+
+      for (var i = keys.length; --i >= 0;) {
+        if (["children", "left", "top", "width", "style"].indexOf(keys[i]) != -1) continue;
+        props[keys[i]] = this.props[keys[i]];
+      }
       this.inner = (
-        <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}
-          onDragStart={this.dragStart} onDragEnd={this.dragEnd} floating={true}>
-          {this.props.children}
-        </ReactPanel>
+        React.createElement(ReactPanel, props,
+          this.props.children
+        )
       );
-      this._pflag = false;
+    } else {
+      this.skipUpdate = false;
     }
 
-    return (
-      <div style={wrapperStyle}>
-        {this.inner}
-      </div>
-    );
+    return React.createElement("div", {style:wrapperStyle}, this.inner);
   }
 
 });
@@ -88,18 +97,23 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    return (
-      <ReactPanel title={this.props.title} icon={this.props.icon} buttons={this.props.buttons}>
-        {this.props.children}
-      </ReactPanel>
+    var props = React.addons.update({}, {$merge: this.config}),
+      keys = Object.keys(this.props);
+
+    for (var i = keys.length; --i >= 0;) {
+      if (["children"].indexOf(keys[i]) != -1) continue;
+      props[keys[i]] = this.props[keys[i]];
+    }
+    return React.createElement(ReactPanel, props,
+        this.props.children
     );
   }
 
 });
 
 var ReactPanel = React.createClass({
-  displayName: 'Panel',
-  mixins: [Mixins.Styleable],
+  displayName: 'ReactPanel',
+  mixins: [Mixins.Styleable, Mixins.Transitions],
 
   getDefaultProps: function () {
     return {
@@ -123,7 +137,8 @@ var ReactPanel = React.createClass({
   contextTypes: {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
-    onTabChange: React.PropTypes.func
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
   },
 
   getSelectedIndex: function () {
@@ -135,32 +150,36 @@ var ReactPanel = React.createClass({
   },
 
   componentDidMount: function () {
-    var tabsStart = this.refs['tabs-start'].getDOMNode(),
-      tabsEnd = this.refs['tabs-end'].getDOMNode(),
-      using = this.refs.tabs.getDOMNode().offsetWidth,
-      total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
+    if (this.props.autocompact) {
+      var tabsStart = this.refs['tabs-start'].getDOMNode(),
+        tabsEnd = this.refs['tabs-end'].getDOMNode(),
+        using = this.refs.tabs.getDOMNode().offsetWidth,
+        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
 
-    if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
-      this.setState({compacted: false});
+      if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
+        this.setState({compacted: false});
+      }
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var childs = React.Children.count(this.props.children),
-      next_childs = React.Children.count(nextProps.children);
+    if (this.props.autocompact) {
+      var childs = React.Children.count(this.props.children),
+        next_childs = React.Children.count(nextProps.children);
 
-    if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
-      var tabsStart = this.refs['tabs-start'].getDOMNode(),
-        tabsEnd = this.refs['tabs-end'].getDOMNode(),
-        using = this.refs.tabs.getDOMNode().offsetWidth,
-        total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
-        maxTabWidth = this.props.maxTitleWidth + 35;
+      if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
+        var tabsStart = this.refs['tabs-start'].getDOMNode(),
+          tabsEnd = this.refs['tabs-end'].getDOMNode(),
+          using = this.refs.tabs.getDOMNode().offsetWidth,
+          total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
+          maxTabWidth = this.props.maxTitleWidth + 35;
 
-      if (using + maxTabWidth >= total) {
-        this.setState({compacted: true});
+        if (using + maxTabWidth >= total) {
+          this.setState({compacted: true});
+        }
+      } else {
+        // TODO
       }
-    } else {
-      // TODO
     }
   },
 
@@ -209,15 +228,20 @@ var ReactPanel = React.createClass({
   render: function() {
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
-      sheet = this.getSheet("Panel");
+      sheet = this.getSheet("Panel"),
+      tp = this.getTransitionProps("Panel");
 
     var icon = (this.props.icon) ? (
-        <span style={sheet.icon.style}>
-          <i className={this.props.icon}></i>
-        </span>
+        React.createElement("span", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
+        )
       ) : null,
       title = (this.props.title.length) ? (
-        <div style={sheet.box.style}><div style={sheet.title.style}>{this.props.title}</div></div>
+        React.createElement("div", {style:sheet.box.style},
+          React.createElement("div", {style:sheet.title.style},
+            this.props.title
+          )
+        )
       ) : null;
 
     var tabIndex = 0,
@@ -228,7 +252,7 @@ var ReactPanel = React.createClass({
 
     React.Children.forEach(self.props.children, function(child) {
       var ref = "tabb-" + tabIndex,
-        tabRef = "tab-" + tabIndex,
+        tabKey = (typeof child.key !== "undefined" && child.key != null) ? child.key : ref,
         showTitle = true,
         props = {
           "icon": child.props.icon,
@@ -243,14 +267,13 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        <TabButton key={tabIndex} title={props.title} icon={props.icon}
-          index={tabIndex} ref={ref} showTitle={showTitle} onClick={self.handleClick} />
+        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
+          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
       );
 
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
-          ref: tabRef,  // TODO: Remove if not being used
           selectedIndex: selectedIndex,
           index: tabIndex
         })
@@ -259,28 +282,23 @@ var ReactPanel = React.createClass({
     });
 
     return (
-      <div style={sheet.style}>
-        <header draggable={draggable} onDragEnd={self.handleDragEnd}
-            onDragStart={self.handleDragStart} ref="header" style={sheet.header.style}>
-          {icon}
-          {title}
-          <div style={sheet.tabsStart.style} ref="tabs-start" />
-          <ul style={sheet.tabs.style} ref="tabs">
-            {tabButtons}
-          </ul>
-          <div style={sheet.tabsEnd.style} ref="tabs-end" />
-          {this._getGroupedButtons().map(function (group) {
-            return (
-              <ul style={sheet.group.style} key={groupIndex++}>
-                {group}
-              </ul>
-            );
-          })}
-        </header>
-        <div style={sheet.body.style}>
-          {tabs}
-        </div>
-      </div>
+      React.createElement("div", {style: sheet.style},
+        React.createElement("header", {draggable: draggable, onDragEnd: self.handleDragEnd,
+            onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
+          icon, title,
+          React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
+          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+              transitionLeave: tp.transitionLeave},
+            tabButtons
+          ),
+          React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
+          this._getGroupedButtons().map(function (group) {
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
+          })
+        ),
+        React.createElement("div", {style: sheet.body.style}, tabs )
+      )
     );
   }
 

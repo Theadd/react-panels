@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>react-panels v2: simple</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+
+  <link rel="stylesheet" href="../animated-tab.css" />
+  <link rel="stylesheet" href="../animated-flex-panel.css" />
+
+
+  <style>
+    html {
+      background: url(bg.png);
+      margin: 0;
+      padding: 0 84px;
+    }
+    body {
+      background-color: transparent;
+      font-family: Verdana, "Lucida Grande", sans-serif;
+      min-width: 550px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+    }
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    #flexbox-fiery {
+      width: 504px;
+      height: 336px;
+      float: left;
+    }
+    #flexbox {
+      width: 504px;
+      height: 336px;
+      margin-left: 588px;
+      margin-top: 84px;
+    }
+  </style>
+
+</head>
+<body>
+
+<div id="flexbox-fiery"></div>
+<div id="flexbox"></div>
+
+<script type="text/javascript" src="../../../react/react-with-addons.js"></script>
+<script type="text/javascript" src="../../../react/JSXTransformer.js"></script>
+<script type="text/javascript" src="../../dist/react-panels.js"></script>
+
+<script type="text/jsx">
+  var Panel = ReactPanels.Panel;
+  var Tab = ReactPanels.Tab;
+  var Toolbar = ReactPanels.Toolbar;
+  var Content = ReactPanels.Content;
+  var Footer = ReactPanels.Footer;
+  var ToggleButton = ReactPanels.ToggleButton;
+  var Button = ReactPanels.Button;
+
+  var MyPanel = React.createClass({
+
+    getInitialState: function () {
+      return {
+        tabs: ['wb6w', '9q1f', '5gfe'],
+        toolbars: true
+      };
+    },
+
+    handleToggleToolbars: function () {
+      this.setState({toolbars: !this.state.toolbars});
+    },
+
+    addTab: function () {
+      var newTabs = this.state.tabs.concat([("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4)])
+      this.setState({tabs: newTabs});
+    },
+
+    removeTab: function () {
+      var self = this,
+        newTabs = this.state.tabs,
+        selectedIndex = this.refs.panel.getSelectedIndex();
+      newTabs.splice(selectedIndex, 1);
+      self.setState({tabs: newTabs});
+    },
+
+    render: function () {
+      var skin = this.props.skin || "default",
+        globals = this.props.globals || {};
+
+      var tabs = this.state.tabs.map(function(item, i) {
+        var tabTitle = "Tab " + item;
+        return (
+          <Tab key={item} title={tabTitle} icon="fa fa-cube" showToolbar={this.state.toolbars}>
+            <Toolbar>Toolbar</Toolbar>
+            <Content>Content of {tabTitle}</Content>
+            <Footer>Footer</Footer>
+          </Tab>
+        );
+      }.bind(this));
+
+      return (
+        <Panel ref="panel" theme="flexbox" skin={skin} useAvailableHeight={true} globals={globals} buttons={[
+          <ToggleButton title="Toggle Toolbar" active={this.state.toolbars} onChange={this.handleToggleToolbars}>
+            <i className="fa fa-wrench"></i>
+          </ToggleButton>,
+          <Button title="Add another tab" onButtonClick={this.addTab}>
+            <i className="fa fa-plus"></i>
+          </Button>,
+          <Button title="Remove active tab" onButtonClick={this.removeTab}>
+            <i className="fa fa-times"></i>
+          </Button>
+        ]}>
+          {tabs}
+        </Panel>
+      );
+    }
+  });
+
+  var panelGlobals = {
+    "Panel": {
+      "transitionName": "animated-flex-panel",
+      "transitionEnter": true,
+      "transitionLeave": true,
+      "transitionAppear": true
+    },
+    "Tab": {
+      "transitionName": "animated-tab",
+      "transitionEnter": true,
+      "transitionLeave": true
+    }
+  }
+
+  React.render(<MyPanel skin="fiery" globals={panelGlobals} />, document.getElementById('flexbox-fiery'));
+  React.render(<MyPanel />, document.getElementById('flexbox'));
+</script>
+
+</body>
+</html>

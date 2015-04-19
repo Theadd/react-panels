@@ -1,0 +1,40 @@
+
+.animated-tab-enter {
+    overflow: hidden;
+    opacity: 0.2;
+    transition: opacity 0.3s linear;
+}
+
+.animated-tab-enter.animated-tab-enter-active {
+    overflow: hidden;
+    opacity: 1;
+}
+
+.animated-tab-enter > div.tab-toolbar {
+    margin-bottom: -150px;
+    transition: margin-bottom 0.3s linear;
+}
+
+.animated-tab-enter.animated-tab-enter-active > div.tab-toolbar {
+    margin-bottom: 0;
+}
+
+.animated-tab-leave {
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s linear;
+}
+
+.animated-tab-leave.animated-tab-leave-active {
+    overflow: hidden;
+    opacity: 0.2;
+}
+
+.animated-tab-leave > div.tab-toolbar {
+    margin-bottom: 0;
+    transition: margin-bottom 0.3s linear;
+}
+
+.animated-tab-leave.animated-tab-leave-active > div.tab-toolbar {
+    margin-bottom: -150px;
+}

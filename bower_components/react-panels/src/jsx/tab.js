@@ -29,21 +29,21 @@ var TabButton = React.createClass({
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
-      title = (<div style={sheet.title.style}>{this.props.title}</div>);
+      title = React.createElement("div", {style:sheet.title.style},this.props.title);
     }
 
     if (this.props.icon) {
       icon = (
-        <div style={sheet.icon.style}>
-          <i className={this.props.icon}></i>
-        </div>
+        React.createElement("div", {style:sheet.icon.style},
+          React.createElement("i", {className:this.props.icon})
+        )
       );
     }
 
     return (
       React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
         React.createElement("div", {title: this.props.title},
-          icon, " ", React.createElement("div", {style: sheet.box.style}, title)
+          icon, React.createElement("div", {style: sheet.box.style}, title)
         )
       )
     );
@@ -52,7 +52,7 @@ var TabButton = React.createClass({
 
 var Tab = React.createClass({
   displayName: 'Tab',
-  mixins: [Mixins.Styleable],
+  mixins: [Mixins.Styleable, Mixins.Transitions],
 
   getDefaultProps: function () {
     return {
@@ -66,7 +66,8 @@ var Tab = React.createClass({
 
   contextTypes: {
     selectedIndex: React.PropTypes.number,
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    globals: React.PropTypes.object
   },
 
   isActive: function () {
@@ -80,12 +81,13 @@ var Tab = React.createClass({
   render: function() {
     var self = this,
       numChilds = React.Children.count(this.props.children),
-      vIndex = 0,
-      mods = (this.isActive()) ? ['active'] : [],
+      active = this.isActive(),
+      tp = this.getTransitionProps(),
+      mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child) {
-      var type = (vIndex == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
+    var innerContent = React.Children.map(self.props.children, function(child, i) {
+      var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
           case "Toolbar": type = 0; break;
@@ -93,22 +95,46 @@ var Tab = React.createClass({
           case "Footer": type = 2; break;
         }
       }
-      if (vIndex == 0) {
+      if (i == 0) {
         if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
-        case 0: return (<div key={vIndex++} style={sheet.toolbar.style}>{child}</div>);
-        case 1: return (<div key={vIndex++} style={sheet.content.style}>{child}</div>);
-        case 2: return (<div key={vIndex++} style={sheet.footer.style}>{child}</div>);
+        case 0:
+          return (self.props.showToolbar) ? (
+            React.createElement("div", {key: i, style: sheet.toolbar.style},
+              React.createElement("div", {className: "tab-toolbar", style: sheet.toolbar.children.style},
+                child
+              )
+            )
+          ) : null;
+        case 1:
+          return (
+            React.createElement("div", {key: i, style: sheet.content.style},
+              React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
+                child
+              )
+            )
+          );
+        case 2:
+          return (
+            React.createElement("div", {key: i, style: sheet.footer.style},
+              React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
+                child
+              )
+            )
+          );
       }
-    });
+    }.bind(this));
 
     return (
-      <div style={sheet.style}>
-        {innerContent}
-      </div>
+      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
+          transitionLeave: tp.transitionLeave && active},
+        innerContent
+      )
     );
+
   }
 
 });
