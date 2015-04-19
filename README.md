@@ -9,11 +9,14 @@ Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.
 
 * No dependencies, single JS file with React inline styles.
 * Support for themes and skins.
+  * Available themes: *chemical* <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/floating/index.html)</sup>, *flexbox* <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/index.html)</sub>.
+  * *Wanna share one of your own? Open an issue or make a pull request.*
 * Fixed or as a draggable floating panel.
 * Optional footer, multi-content components and toggleable toolbars in tabs.
 * Auto-collapsible tab header buttons when don't fit in a single row.
 * Custom panel buttons.
 * Easily extensible by *mixins*.
+* **Animations** <sup><sub>*v2.2.0+*</sub></sup>
 
 
 ## Roadmap
