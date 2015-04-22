@@ -8,7 +8,9 @@ var buildStyle = function (opts) {
     headerFontSize: opts.headerFontSize || 14,
     borderRadius: opts.borderRadius || 3,
     maxTitleWidth: opts.maxTitleWidth || 130,
-    useAvailableHeight: opts.useAvailableHeight || false
+    useAvailableHeight: opts.useAvailableHeight || false,
+    renderPanelBorder: (typeof opts.renderPanelBorder === "boolean") ? opts.renderPanelBorder : true,
+    activeTabHeaderBorder: (typeof opts.activeTabHeaderBorder === "boolean") ? opts.activeTabHeaderBorder : true
   };
 
   var styles = {
@@ -170,34 +172,43 @@ var buildStyle = function (opts) {
               height: "100%"
             },
             content: {
-              style: (opts.useAvailableHeight) ? { flex: 1 } : { }
+              style: (opts.useAvailableHeight) ? {
+                flex: 1,
+                position: "relative"
+              } : {},
+              children: {
+                style: (opts.useAvailableHeight) ? {
+                  padding: "10px",
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%"
+                } : { }
+              }
             }
           },
           withToolbar: {
             toolbar: {
-              style: {
-                //display: "block"
-              }
+              style: { }
             }
           }
         },
         toolbar: {
           style: {
             minHeight: Utils.pixelsOf(opts.headerHeight),
-            lineHeight: Utils.pixelsOf(opts.headerHeight),
-            padding: "10px"
-            //display: "none"
+            lineHeight: Utils.pixelsOf(opts.headerHeight)
           },
           children: {
-            style: {}
+            style: {
+              padding: "10px"
+            }
           }
         },
         content: {
-          style: {
-            padding: "10px"
-          },
+          style: { },
           children: {
-            style: {}
+            style: {
+              padding: "10px"
+            }
           }
         },
         footer: {
@@ -248,7 +259,8 @@ var buildStyle = function (opts) {
     },
     /* THEME: Chemical */
     chemical: chemicalStyle,
-    flexbox: flexboxStyle
+    flexbox: flexboxStyle,
+    flexbox2: flexbox2Style
   };
 
   var theme = (opts.theme != "base") ? styles[opts.theme](opts) : {};
