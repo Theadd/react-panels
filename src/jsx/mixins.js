@@ -197,7 +197,8 @@ Mixins.PanelWrapper = {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
     onTabChange: React.PropTypes.func,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    numTabs: React.PropTypes.number
   },
 
   getChildContext: function () {
@@ -205,7 +206,8 @@ Mixins.PanelWrapper = {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
       onTabChange: this.handleTabChange,
-      globals: this.props.globals
+      globals: this.props.globals,
+      numTabs: React.Children.count(this.props.children)
     };
   },
 

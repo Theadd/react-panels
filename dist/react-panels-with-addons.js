@@ -1066,7 +1066,8 @@ Mixins.PanelWrapper = {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
     onTabChange: React.PropTypes.func,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    numTabs: React.PropTypes.number
   },
 
   getChildContext: function () {
@@ -1074,7 +1075,8 @@ Mixins.PanelWrapper = {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
       onTabChange: this.handleTabChange,
-      globals: this.props.globals
+      globals: this.props.globals,
+      numTabs: React.Children.count(this.props.children)
     };
   },
 
@@ -1553,7 +1555,8 @@ var TabButton = React.createClass({displayName: "TabButton",
   },
 
   contextTypes: {
-    selectedIndex: React.PropTypes.number
+    selectedIndex: React.PropTypes.number,
+    numTabs: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -1567,6 +1570,7 @@ var TabButton = React.createClass({displayName: "TabButton",
       mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
+    if (this.props.index == this.context.numTabs - 1) mods.push('last');
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
@@ -1601,7 +1605,8 @@ var Tab = React.createClass({
       "title": "",
       "pinned": false,
       "showToolbar": true,
-      "panelComponentType": "Tab"
+      "panelComponentType": "Tab",
+      "automount": false
     };
   },
 
@@ -1627,7 +1632,9 @@ var Tab = React.createClass({
       mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child, i) {
+    this.mounted = (this.mounted || false) || this.props.automount || active;
+
+    var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
@@ -1666,7 +1673,7 @@ var Tab = React.createClass({
             )
           );
       }
-    }.bind(this));
+    }.bind(this)) : null;
 
     return (
       React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
@@ -1827,6 +1834,122 @@ var ScrollableTabContent = React.createClass({
 });
 
 PanelAddons.ScrollableTabContent = ScrollableTabContent;
+
+
+/* Based in react-component-resizable by Nicholas Rakoto
+ The MIT License (MIT) https://github.com/nrako/react-component-resizable
+ Copyright (c) 2014 Nicholas Rakoto
+ */
+var ResizableContent = React.createClass({
+  displayName: 'ResizableContent',
+  mixins: [Mixins.Content],
+
+  lastDimensions: {
+    width: null,
+    height: null
+  },
+
+  propTypes: {
+    triggersClass: React.PropTypes.string,
+    expandClass: React.PropTypes.string,
+    contractClass: React.PropTypes.string,
+    onResize: React.PropTypes.func.isRequired
+  },
+
+  getDefaultProps: function () {
+    return {
+      triggersClass: 'resize-triggers',
+      expandClass: 'expand-trigger',
+      contractClass: 'contract-trigger'
+    };
+  },
+
+  requestFrame: function (fn) {
+    return (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn){ return window.setTimeout(fn, 20); })(fn);
+  },
+
+  cancelFrame: function (id) {
+    return (window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame || window.clearTimeout)(id);
+  },
+
+  componentDidMount: function () {
+    this.resetTriggers();
+    this.initialResetTriggersTimeout = setTimeout(this.resetTriggers, 1000);
+  },
+
+  componentWillUnmount: function () {
+    clearTimeout(this.initialResetTriggersTimeout);
+  },
+
+  componentDidUpdate: function () {
+    this.resetTriggers();
+  },
+
+  resetTriggers: function () {
+    var contract = this.refs.contract.getDOMNode();
+    var expandChild = this.refs.expandChild.getDOMNode();
+    var expand = this.refs.expand.getDOMNode();
+
+    contract.scrollLeft      = contract.scrollWidth;
+    contract.scrollTop       = contract.scrollHeight;
+    expandChild.style.width  = expand.offsetWidth + 1 + 'px';
+    expandChild.style.height = expand.offsetHeight + 1 + 'px';
+    expand.scrollLeft        = expand.scrollWidth;
+    expand.scrollTop         = expand.scrollHeight;
+  },
+
+  onScroll: function () {
+    if (this.r) this.cancelFrame(this.r);
+    this.r = this.requestFrame(function () {
+      var dimensions = this.getDimensions();
+
+      if (this.haveDimensionsChanged(dimensions)) {
+        this.lastDimensions = dimensions;
+        this.props.onResize(dimensions);
+      }
+    }.bind(this));
+  },
+
+  getDimensions: function () {
+    var el = this.refs.resizable.getDOMNode();
+
+    return {
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
+  },
+
+  haveDimensionsChanged: function (dimensions) {
+    return dimensions.width != this.lastDimensions.width || dimensions.height != this.lastDimensions.height;
+  },
+
+  render: function() {
+    var props = React.addons.update(this.props, {$merge: {
+      onScroll: this.onScroll,
+      ref: 'resizable'
+    }});
+    props.style = props.style || {};
+    props.style.width = props.style.height = "100%";
+    props.style.display = "block";
+
+    return (
+      React.createElement('div', props,
+        [
+          this.props.children,
+          React.createElement('div', {className: this.props.triggersClass, key: 'trigger'},
+            [
+              React.createElement('div', {className: this.props.expandClass, ref: 'expand', key: 'expand'}, React.createElement('div', {ref: 'expandChild'})),
+              React.createElement('div', {className: this.props.contractClass, ref: 'contract', key: 'contract'})
+            ]
+          )
+        ]
+      )
+    );
+  }
+
+});
+
+PanelAddons.ResizableContent = ResizableContent;
 
 
 window.ReactPanels = ReactPanels;

@@ -12,7 +12,8 @@ var TabButton = React.createClass({
   },
 
   contextTypes: {
-    selectedIndex: React.PropTypes.number
+    selectedIndex: React.PropTypes.number,
+    numTabs: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -26,6 +27,7 @@ var TabButton = React.createClass({
       mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
+    if (this.props.index == this.context.numTabs - 1) mods.push('last');
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
@@ -60,7 +62,8 @@ var Tab = React.createClass({
       "title": "",
       "pinned": false,
       "showToolbar": true,
-      "panelComponentType": "Tab"
+      "panelComponentType": "Tab",
+      "automount": false
     };
   },
 
@@ -86,7 +89,9 @@ var Tab = React.createClass({
       mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child, i) {
+    this.mounted = (this.mounted || false) || this.props.automount || active;
+
+    var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
@@ -125,7 +130,7 @@ var Tab = React.createClass({
             )
           );
       }
-    }.bind(this));
+    }.bind(this)) : null;
 
     return (
       React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
