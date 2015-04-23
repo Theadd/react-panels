@@ -250,6 +250,9 @@ var buildStyle = function (opts) {
             style: {
               display: "none"
             }
+          },
+          highlighted: {
+            style: {}
           }
         },
         children: {

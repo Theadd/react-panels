@@ -19,6 +19,7 @@ var flexbox2Skin = function (skin) {
         hoverButtonColor: "#ffffff",
         activeButtonColor: "#daaf64",
         buttonTextShadow: "#7F7F7F",
+        highlightedButtonBoxShadow: "rgba(255, 255, 255, 0.6)",
         tabBackgroundColor: "rgba(104, 226, 207, 0.15)",
         activeTabBackgroundColor: "rgba(131, 247, 220, 0.33)",
         hoverTabBackgroundColor: "rgba(104, 226, 207, 0.3)",
@@ -269,6 +270,17 @@ var flexbox2Style = function (_opts, skin) {
             style: {
               color: colors.activeButtonColor
             }
+          }
+        },
+        highlighted: {
+          style: {
+            boxShadow: "0 0 9px " + colors.highlightedButtonBoxShadow + " inset"
+          }
+        },
+        disabled: {
+          style: {
+            pointerEvents: "none",
+            opacity: 0.5
           }
         }
       }

@@ -29,6 +29,7 @@ var flexbox2Skin = function (skin) {
         hoverButtonColor: "#ffffff",
         activeButtonColor: "#daaf64",
         buttonTextShadow: "#7F7F7F",
+        highlightedButtonBoxShadow: "rgba(255, 255, 255, 0.6)",
         tabBackgroundColor: "rgba(104, 226, 207, 0.15)",
         activeTabBackgroundColor: "rgba(131, 247, 220, 0.33)",
         hoverTabBackgroundColor: "rgba(104, 226, 207, 0.3)",
@@ -279,6 +280,17 @@ var flexbox2Style = function (_opts, skin) {
             style: {
               color: colors.activeButtonColor
             }
+          }
+        },
+        highlighted: {
+          style: {
+            boxShadow: "0 0 9px " + colors.highlightedButtonBoxShadow + " inset"
+          }
+        },
+        disabled: {
+          style: {
+            pointerEvents: "none",
+            opacity: 0.5
           }
         }
       }
@@ -1061,6 +1073,9 @@ var buildStyle = function (opts) {
             style: {
               display: "none"
             }
+          },
+          highlighted: {
+            style: {}
           }
         },
         children: {
@@ -1418,6 +1433,10 @@ Mixins.PanelWrapper = {
 Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
+  propTypes: {
+    tabKey: React.PropTypes.any.isRequired
+  },
+
   getDefaultProps: function () {
     return {
       panelComponentType: "TabWrapper",
@@ -1429,12 +1448,14 @@ Mixins.TabWrapper = {
   },
 
   childContextTypes: {
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    tabKey: React.PropTypes.any
   },
 
   getChildContext: function () {
     return {
-      index: this.props.index
+      index: this.props.index,
+      tabKey: this.props.tabKey
     };
   },
 
@@ -1454,6 +1475,7 @@ Mixins.Button = {
       visible: true,
       enabled: true,
       active: false,
+      highlighted: false,
       onClick: false,
       onDoubleClick: false,
       onContextMenu: false,
@@ -1468,7 +1490,8 @@ Mixins.Button = {
     return {
       visible: this.props.visible,
       enabled: this.props.enabled,
-      active: this.props.active
+      active: this.props.active,
+      highlighted: this.props.highlighted
     };
   },
 
@@ -1497,6 +1520,7 @@ Mixins.Button = {
     if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
     if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
     if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+    if (this.state.highlighted && mods.indexOf('highlighted') == -1) mods.push('highlighted');
 
     return mods;
   },
@@ -1803,6 +1827,7 @@ var ReactPanel = React.createClass({
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
+          tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
         })
@@ -1891,6 +1916,10 @@ var Tab = React.createClass({
   displayName: 'Tab',
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
+  propTypes: {
+    onActiveChanged: React.PropTypes.func
+  },
+
   getDefaultProps: function () {
     return {
       "icon": "",
@@ -1906,6 +1935,48 @@ var Tab = React.createClass({
     selectedIndex: React.PropTypes.number,
     index: React.PropTypes.number,
     globals: React.PropTypes.object
+  },
+
+  componentDidMount: function () {
+    this._doEvents();
+  },
+
+  componentDidUpdate: function () {
+    this._doEvents();
+  },
+
+  _doEvents: function () {
+    if (typeof this.props.onActiveChanged === "function") {
+      this.wasActive = this.wasActive || false;
+      var active = this.isActive();
+      if (this.wasActive != active) {
+        this.props.onActiveChanged(this, active);
+        this.wasActive = active;
+      }
+    }
+  },
+
+  getValue: function (name) {
+    switch (name) {
+      case "index":
+        return (typeof this.props.index !== "undefined") ? this.props.index : this.context.index;
+      case "selectedIndex":
+        return this.context.selectedIndex;
+      case "showToolbar":
+        return this.props.showToolbar;
+      case "active":
+        return this.isActive();
+      case "hasToolbar":
+        return this.hasToolbar || false;
+      case "mounted":
+        return this.mounted || false;
+      case "automount":
+        return this.props.automount;
+      case "numChilds":
+        return React.Children.count(this.props.children);
+      case "tabKey":
+        return (typeof this.props.tabKey !== "undefined") ? this.props.tabKey : this.context.tabKey;
+    }
   },
 
   isActive: function () {
@@ -1936,7 +2007,10 @@ var Tab = React.createClass({
         }
       }
       if (i == 0) {
-        if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
+        if (type == 0) {
+          this.hasToolbar = true;
+          if (self.props.showToolbar) mods.push('withToolbar');
+        }
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {

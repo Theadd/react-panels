@@ -259,6 +259,10 @@ Mixins.PanelWrapper = {
 Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
+  propTypes: {
+    tabKey: React.PropTypes.any.isRequired
+  },
+
   getDefaultProps: function () {
     return {
       panelComponentType: "TabWrapper",
@@ -270,12 +274,14 @@ Mixins.TabWrapper = {
   },
 
   childContextTypes: {
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    tabKey: React.PropTypes.any
   },
 
   getChildContext: function () {
     return {
-      index: this.props.index
+      index: this.props.index,
+      tabKey: this.props.tabKey
     };
   },
 
@@ -295,6 +301,7 @@ Mixins.Button = {
       visible: true,
       enabled: true,
       active: false,
+      highlighted: false,
       onClick: false,
       onDoubleClick: false,
       onContextMenu: false,
@@ -309,7 +316,8 @@ Mixins.Button = {
     return {
       visible: this.props.visible,
       enabled: this.props.enabled,
-      active: this.props.active
+      active: this.props.active,
+      highlighted: this.props.highlighted
     };
   },
 
@@ -338,6 +346,7 @@ Mixins.Button = {
     if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
     if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
     if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+    if (this.state.highlighted && mods.indexOf('highlighted') == -1) mods.push('highlighted');
 
     return mods;
   },

@@ -64,7 +64,8 @@ module.exports = function(grunt) {
           ],
           'build/addons.js': [
             'src/jsx/addons/scrollable-tab-content.js',
-            'src/jsx/addons/resizable-content.js'
+            'src/jsx/addons/resizable-content.js',
+            'src/jsx/addons/sticky-button.js'
           ],
           'examples/floating/floating.js': [
             'examples/floating/src/item-tab.jsx',

@@ -56,6 +56,10 @@ var Tab = React.createClass({
   displayName: 'Tab',
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
+  propTypes: {
+    onActiveChanged: React.PropTypes.func
+  },
+
   getDefaultProps: function () {
     return {
       "icon": "",
@@ -71,6 +75,48 @@ var Tab = React.createClass({
     selectedIndex: React.PropTypes.number,
     index: React.PropTypes.number,
     globals: React.PropTypes.object
+  },
+
+  componentDidMount: function () {
+    this._doEvents();
+  },
+
+  componentDidUpdate: function () {
+    this._doEvents();
+  },
+
+  _doEvents: function () {
+    if (typeof this.props.onActiveChanged === "function") {
+      this.wasActive = this.wasActive || false;
+      var active = this.isActive();
+      if (this.wasActive != active) {
+        this.props.onActiveChanged(this, active);
+        this.wasActive = active;
+      }
+    }
+  },
+
+  getValue: function (name) {
+    switch (name) {
+      case "index":
+        return (typeof this.props.index !== "undefined") ? this.props.index : this.context.index;
+      case "selectedIndex":
+        return this.context.selectedIndex;
+      case "showToolbar":
+        return this.props.showToolbar;
+      case "active":
+        return this.isActive();
+      case "hasToolbar":
+        return this.hasToolbar || false;
+      case "mounted":
+        return this.mounted || false;
+      case "automount":
+        return this.props.automount;
+      case "numChilds":
+        return React.Children.count(this.props.children);
+      case "tabKey":
+        return (typeof this.props.tabKey !== "undefined") ? this.props.tabKey : this.context.tabKey;
+    }
   },
 
   isActive: function () {
@@ -101,7 +147,10 @@ var Tab = React.createClass({
         }
       }
       if (i == 0) {
-        if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
+        if (type == 0) {
+          this.hasToolbar = true;
+          if (self.props.showToolbar) mods.push('withToolbar');
+        }
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
