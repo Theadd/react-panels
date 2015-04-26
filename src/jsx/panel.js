@@ -274,6 +274,7 @@ var ReactPanel = React.createClass({
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
+          tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
         })

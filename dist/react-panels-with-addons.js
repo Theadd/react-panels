@@ -9,6 +9,296 @@
 (function() {
 
 
+var flexbox2Skin = function (skin) {
+  switch (skin || "") {
+    default:
+      return {
+        tabColor: "#b0b0b0",
+        tabIconColor: "#b0b0b0",
+        activeTabColor: "#daaf64",
+        tabTextShadow: "#000000",
+        activeTabTextShadow: "#000000",
+        titleTextShadow: "#a6a6a6",
+        iconTextShadow: "#000000",
+        iconColor: "#daaf64",
+        titleColor: "#daaf64",
+        buttonBackgroundColor: "rgba(104, 226, 207, 0.15)",
+        hoverButtonBackgroundColor: "rgba(104, 226, 207, 0.3)",
+        activeButtonBackgroundColor: "rgba(131, 247, 220, 0.33)",
+        buttonColor: "#eaeaea",
+        hoverButtonColor: "#ffffff",
+        activeButtonColor: "#daaf64",
+        buttonTextShadow: "#7F7F7F",
+        highlightedButtonBoxShadow: "rgba(255, 255, 255, 0.6)",
+        tabBackgroundColor: "rgba(104, 226, 207, 0.15)",
+        activeTabBackgroundColor: "rgba(131, 247, 220, 0.33)",
+        hoverTabBackgroundColor: "rgba(104, 226, 207, 0.3)",
+        toolbarBackgroundColor: "rgba(171, 255, 220, 0.2)",
+        contentBackgroundColor: "rgba(171, 255, 220, 0.34)",
+        footerBackgroundColor: "rgba(171, 255, 220, 0.2)",
+        borderColor: "#000000"
+      };
+  }
+}
+
+var flexbox2Style = function (_opts, skin) {
+  var colors,
+    opts = React.addons.update({
+      skin: "default",
+      renderPanelBorder: true,
+      activeTabHeaderBorder: true
+    }, {$merge: _opts});
+
+  skin = skin || opts.skin;
+
+  if (typeof skin === "object") {
+    colors = React.addons.update(flexbox2Skin(), {$merge: skin});
+  } else {
+    colors = flexbox2Skin(skin);
+  }
+
+  return {
+    PanelWrapper: {
+      config: {
+        autocompact: false
+      }
+    },
+    Panel: {
+      style: {
+        borderTop: (opts.renderPanelBorder) ? "1px solid " + colors.borderColor : "0 none",
+        borderRight: (opts.renderPanelBorder) ? "1px solid " + colors.borderColor : "0 none"
+      },
+      header: {
+        style: {
+          backgroundColor: "transparent",
+          display: "flex",
+          minWidth: "100%",
+          marginBottom: "-2px"
+        }
+      },
+      tabsStart: {
+        style: {
+          width: 0
+        }
+      },
+      tabsEnd: {
+        style: {
+          width: 0
+        }
+      },
+      tabs: {
+        style: {
+          float: "none",
+          flex: 1,
+          display: "flex",
+          overflow: "hidden"
+        }
+      },
+      icon: {
+        style: {
+          color: colors.iconColor,
+          textShadow: "2px 2px 2px " + colors.iconTextShadow,
+          float: "left"
+        }
+      },
+      box: {
+        style: {
+          float: "left"
+        }
+      },
+      title: {
+        style: {
+          color: colors.titleColor,
+          textShadow: "1px 1px 1px " + colors.titleTextShadow
+        }
+      },
+      group: {
+        style: {
+          padding: 0,
+          display: "inline-block",
+          height: "100%",
+          margin: 0
+        }
+      },
+      body: {
+        style: {
+          borderLeft: (opts.renderPanelBorder) ? "1px solid " + colors.borderColor : "0 none",
+          height: "calc(100% - " + Utils.pixelsOf(opts.headerHeight - 2) + ")"
+        }
+      }
+    },
+    TabButton: {
+      style: {
+        borderBottom: "1px solid " +  colors.borderColor,
+        borderRight: "1px solid " + colors.borderColor,
+        backgroundColor: colors.tabBackgroundColor,
+        height: opts.headerHeight - 1,
+        margin: "0",
+        position: "inherit",
+        float: "none",
+        overflow: "hidden",
+        flex: "1 0 0px",
+        opacity: 1
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: colors.hoverTabBackgroundColor
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            borderBottom: "1px solid " + (opts.activeTabHeaderBorder ? colors.borderColor : colors.activeTabBackgroundColor),
+            backgroundColor: colors.activeTabBackgroundColor
+          },
+          state: {
+            hover: {
+              style: {
+                borderBottom: "1px solid " + (opts.activeTabHeaderBorder ? colors.borderColor : colors.activeTabBackgroundColor),
+                backgroundColor: colors.activeTabBackgroundColor
+              },
+              icon: {
+                style: {
+                  color: colors.activeTabColor,
+                  textShadow: "1px 1px 1px " + colors.tabTextShadow
+                }
+              },
+              title: {
+                style: {
+                  color: colors.activeTabColor,
+                  textShadow: "1px 1px 1px " + colors.activeTabTextShadow
+                }
+              }
+            }
+          },
+          icon: {
+            style: {
+              color: colors.activeTabColor,
+              textShadow: "1px 1px 1px " + colors.tabTextShadow
+            }
+          },
+          title: {
+            style: {
+              color: colors.activeTabColor,
+              textShadow: "1px 1px 1px " + colors.activeTabTextShadow
+            }
+          }
+        },
+        last: {
+          style: {
+            borderRight: "0 none"
+          }
+        }
+      },
+      icon: {
+        style: {
+          color: colors.tabIconColor,
+          textShadow: "1px 1px 1px " + colors.tabTextShadow,
+          opacity: 1
+        }
+      },
+      title: {
+        style: {
+          color: colors.tabColor,
+          textShadow: "1px 1px 1px " + colors.tabTextShadow
+        }
+      },
+      box: {
+        style: {
+          marginRight: 0,
+          maxWidth: "calc(100% - " + Utils.pixelsOf(opts.headerHeight) + ")",
+          opacity: 1
+        }
+      }
+    },
+    Tab: {
+      toolbar: {
+        style: {
+          minHeight: 0,
+          lineHeight: "inherit",
+          padding: "0",
+          display: "block",
+          position: "relative",
+          marginTop: "1px"
+        },
+        children: {
+          style: {
+            padding: "10px",
+            lineHeight: Utils.pixelsOf(opts.headerHeight),
+            position: "relative",
+            backgroundColor: colors.toolbarBackgroundColor
+          }
+        }
+      },
+      content: {
+        style: {
+          backgroundColor: colors.contentBackgroundColor,
+          boxShadow: "0px 0px 29px rgba(0, 0, 0, 0.7) inset",
+          borderTop: "1px solid " +  colors.borderColor
+        }
+      },
+      footer: {
+        style: {
+          backgroundColor: colors.footerBackgroundColor,
+          borderTop: "1px solid " +  colors.borderColor
+        }
+      }
+    },
+    Button: {
+      style: {
+        height: Utils.pixelsOf(opts.headerHeight - 1),
+        backgroundColor: colors.buttonBackgroundColor,
+        borderBottom: "1px solid " +  colors.borderColor,
+        borderLeft: "1px solid " +  colors.borderColor
+      },
+      children: {
+        style: {
+          color: colors.buttonColor,
+          textShadow: "1px 1px 1px " + colors.buttonTextShadow
+        }
+      },
+      state: {
+        hover: {
+          style: {
+            backgroundColor: colors.hoverButtonBackgroundColor
+          },
+          children: {
+            style: {
+              color: colors.hoverButtonColor
+            }
+          }
+        }
+      },
+      mods: {
+        active: {
+          style: {
+            backgroundColor: colors.activeButtonBackgroundColor
+          },
+          children: {
+            style: {
+              color: colors.activeButtonColor
+            }
+          }
+        },
+        highlighted: {
+          style: {
+            boxShadow: "0 0 9px " + colors.highlightedButtonBoxShadow + " inset"
+          }
+        },
+        disabled: {
+          style: {
+            pointerEvents: "none",
+            opacity: 0.5
+          }
+        }
+      }
+    }
+  };
+};
+
+
 var flexboxStyle = function (opts, skin) {
   var colors;
   skin = skin || opts.skin;
@@ -541,7 +831,9 @@ var buildStyle = function (opts) {
     headerFontSize: opts.headerFontSize || 14,
     borderRadius: opts.borderRadius || 3,
     maxTitleWidth: opts.maxTitleWidth || 130,
-    useAvailableHeight: opts.useAvailableHeight || false
+    useAvailableHeight: opts.useAvailableHeight || false,
+    renderPanelBorder: (typeof opts.renderPanelBorder === "boolean") ? opts.renderPanelBorder : true,
+    activeTabHeaderBorder: (typeof opts.activeTabHeaderBorder === "boolean") ? opts.activeTabHeaderBorder : true
   };
 
   var styles = {
@@ -703,34 +995,43 @@ var buildStyle = function (opts) {
               height: "100%"
             },
             content: {
-              style: (opts.useAvailableHeight) ? { flex: 1 } : { }
+              style: (opts.useAvailableHeight) ? {
+                flex: 1,
+                position: "relative"
+              } : {},
+              children: {
+                style: (opts.useAvailableHeight) ? {
+                  padding: "10px",
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%"
+                } : { }
+              }
             }
           },
           withToolbar: {
             toolbar: {
-              style: {
-                //display: "block"
-              }
+              style: { }
             }
           }
         },
         toolbar: {
           style: {
             minHeight: Utils.pixelsOf(opts.headerHeight),
-            lineHeight: Utils.pixelsOf(opts.headerHeight),
-            padding: "10px"
-            //display: "none"
+            lineHeight: Utils.pixelsOf(opts.headerHeight)
           },
           children: {
-            style: {}
+            style: {
+              padding: "10px"
+            }
           }
         },
         content: {
-          style: {
-            padding: "10px"
-          },
+          style: { },
           children: {
-            style: {}
+            style: {
+              padding: "10px"
+            }
           }
         },
         footer: {
@@ -772,6 +1073,9 @@ var buildStyle = function (opts) {
             style: {
               display: "none"
             }
+          },
+          highlighted: {
+            style: {}
           }
         },
         children: {
@@ -781,7 +1085,8 @@ var buildStyle = function (opts) {
     },
     /* THEME: Chemical */
     chemical: chemicalStyle,
-    flexbox: flexboxStyle
+    flexbox: flexboxStyle,
+    flexbox2: flexbox2Style
   };
 
   var theme = (opts.theme != "base") ? styles[opts.theme](opts) : {};
@@ -1052,7 +1357,9 @@ Mixins.PanelWrapper = {
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
       maxTitleWidth: this.props.maxTitleWidth,
-      useAvailableHeight: this.props.useAvailableHeight
+      useAvailableHeight: this.props.useAvailableHeight,
+      renderPanelBorder: this.props.renderPanelBorder,
+      activeTabHeaderBorder: this.props.activeTabHeaderBorder
     };
     this._sheet = createSheet(opts);
     this.config = this._sheet("PanelWrapper").config;
@@ -1066,7 +1373,8 @@ Mixins.PanelWrapper = {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
     onTabChange: React.PropTypes.func,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    numTabs: React.PropTypes.number
   },
 
   getChildContext: function () {
@@ -1074,7 +1382,8 @@ Mixins.PanelWrapper = {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
       onTabChange: this.handleTabChange,
-      globals: this.props.globals
+      globals: this.props.globals,
+      numTabs: React.Children.count(this.props.children)
     };
   },
 
@@ -1124,6 +1433,10 @@ Mixins.PanelWrapper = {
 Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
+  propTypes: {
+    tabKey: React.PropTypes.any.isRequired
+  },
+
   getDefaultProps: function () {
     return {
       panelComponentType: "TabWrapper",
@@ -1135,12 +1448,14 @@ Mixins.TabWrapper = {
   },
 
   childContextTypes: {
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    tabKey: React.PropTypes.any
   },
 
   getChildContext: function () {
     return {
-      index: this.props.index
+      index: this.props.index,
+      tabKey: this.props.tabKey
     };
   },
 
@@ -1160,6 +1475,7 @@ Mixins.Button = {
       visible: true,
       enabled: true,
       active: false,
+      highlighted: false,
       onClick: false,
       onDoubleClick: false,
       onContextMenu: false,
@@ -1174,7 +1490,8 @@ Mixins.Button = {
     return {
       visible: this.props.visible,
       enabled: this.props.enabled,
-      active: this.props.active
+      active: this.props.active,
+      highlighted: this.props.highlighted
     };
   },
 
@@ -1203,6 +1520,7 @@ Mixins.Button = {
     if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
     if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
     if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+    if (this.state.highlighted && mods.indexOf('highlighted') == -1) mods.push('highlighted');
 
     return mods;
   },
@@ -1509,6 +1827,7 @@ var ReactPanel = React.createClass({
       tabs.push(
         React.addons.cloneWithProps(child, {
           key: tabIndex,
+          tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
         })
@@ -1553,7 +1872,8 @@ var TabButton = React.createClass({displayName: "TabButton",
   },
 
   contextTypes: {
-    selectedIndex: React.PropTypes.number
+    selectedIndex: React.PropTypes.number,
+    numTabs: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -1567,6 +1887,7 @@ var TabButton = React.createClass({displayName: "TabButton",
       mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
+    if (this.props.index == this.context.numTabs - 1) mods.push('last');
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
@@ -1595,13 +1916,18 @@ var Tab = React.createClass({
   displayName: 'Tab',
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
+  propTypes: {
+    onActiveChanged: React.PropTypes.func
+  },
+
   getDefaultProps: function () {
     return {
       "icon": "",
       "title": "",
       "pinned": false,
       "showToolbar": true,
-      "panelComponentType": "Tab"
+      "panelComponentType": "Tab",
+      "automount": false
     };
   },
 
@@ -1609,6 +1935,48 @@ var Tab = React.createClass({
     selectedIndex: React.PropTypes.number,
     index: React.PropTypes.number,
     globals: React.PropTypes.object
+  },
+
+  componentDidMount: function () {
+    this._doEvents();
+  },
+
+  componentDidUpdate: function () {
+    this._doEvents();
+  },
+
+  _doEvents: function () {
+    if (typeof this.props.onActiveChanged === "function") {
+      this.wasActive = this.wasActive || false;
+      var active = this.isActive();
+      if (this.wasActive != active) {
+        this.props.onActiveChanged(this, active);
+        this.wasActive = active;
+      }
+    }
+  },
+
+  getValue: function (name) {
+    switch (name) {
+      case "index":
+        return (typeof this.props.index !== "undefined") ? this.props.index : this.context.index;
+      case "selectedIndex":
+        return this.context.selectedIndex;
+      case "showToolbar":
+        return this.props.showToolbar;
+      case "active":
+        return this.isActive();
+      case "hasToolbar":
+        return this.hasToolbar || false;
+      case "mounted":
+        return this.mounted || false;
+      case "automount":
+        return this.props.automount;
+      case "numChilds":
+        return React.Children.count(this.props.children);
+      case "tabKey":
+        return (typeof this.props.tabKey !== "undefined") ? this.props.tabKey : this.context.tabKey;
+    }
   },
 
   isActive: function () {
@@ -1627,7 +1995,9 @@ var Tab = React.createClass({
       mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child, i) {
+    this.mounted = (this.mounted || false) || this.props.automount || active;
+
+    var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
@@ -1637,7 +2007,10 @@ var Tab = React.createClass({
         }
       }
       if (i == 0) {
-        if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
+        if (type == 0) {
+          this.hasToolbar = true;
+          if (self.props.showToolbar) mods.push('withToolbar');
+        }
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
@@ -1666,7 +2039,7 @@ var Tab = React.createClass({
             )
           );
       }
-    }.bind(this));
+    }.bind(this)) : null;
 
     return (
       React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
@@ -1827,6 +2200,165 @@ var ScrollableTabContent = React.createClass({
 });
 
 PanelAddons.ScrollableTabContent = ScrollableTabContent;
+
+
+/* Based in react-component-resizable by Nicholas Rakoto
+ The MIT License (MIT) https://github.com/nrako/react-component-resizable
+ Copyright (c) 2014 Nicholas Rakoto
+ */
+var ResizableContent = React.createClass({
+  displayName: 'ResizableContent',
+  mixins: [Mixins.Content],
+
+  lastDimensions: {
+    width: null,
+    height: null
+  },
+
+  propTypes: {
+    triggersClass: React.PropTypes.string,
+    expandClass: React.PropTypes.string,
+    contractClass: React.PropTypes.string,
+    onResize: React.PropTypes.func.isRequired
+  },
+
+  getDefaultProps: function () {
+    return {
+      triggersClass: 'resize-triggers',
+      expandClass: 'expand-trigger',
+      contractClass: 'contract-trigger'
+    };
+  },
+
+  requestFrame: function (fn) {
+    return (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || function(fn){ return window.setTimeout(fn, 20); })(fn);
+  },
+
+  cancelFrame: function (id) {
+    return (window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame || window.clearTimeout)(id);
+  },
+
+  componentDidMount: function () {
+    this.resetTriggers();
+    this.initialResetTriggersTimeout = setTimeout(this.resetTriggers, 1000);
+  },
+
+  componentWillUnmount: function () {
+    clearTimeout(this.initialResetTriggersTimeout);
+  },
+
+  componentDidUpdate: function () {
+    this.resetTriggers();
+  },
+
+  resetTriggers: function () {
+    var contract = this.refs.contract.getDOMNode();
+    var expandChild = this.refs.expandChild.getDOMNode();
+    var expand = this.refs.expand.getDOMNode();
+
+    contract.scrollLeft      = contract.scrollWidth;
+    contract.scrollTop       = contract.scrollHeight;
+    expandChild.style.width  = expand.offsetWidth + 1 + 'px';
+    expandChild.style.height = expand.offsetHeight + 1 + 'px';
+    expand.scrollLeft        = expand.scrollWidth;
+    expand.scrollTop         = expand.scrollHeight;
+  },
+
+  onScroll: function () {
+    if (this.r) this.cancelFrame(this.r);
+    this.r = this.requestFrame(function () {
+      var dimensions = this.getDimensions();
+
+      if (this.haveDimensionsChanged(dimensions)) {
+        this.lastDimensions = dimensions;
+        this.props.onResize(dimensions);
+      }
+    }.bind(this));
+  },
+
+  getDimensions: function () {
+    var el = this.refs.resizable.getDOMNode();
+
+    return {
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
+  },
+
+  haveDimensionsChanged: function (dimensions) {
+    return dimensions.width != this.lastDimensions.width || dimensions.height != this.lastDimensions.height;
+  },
+
+  render: function() {
+    var props = React.addons.update(this.props, {$merge: {
+      onScroll: this.onScroll,
+      ref: 'resizable'
+    }});
+    props.style = props.style || {};
+    props.style.width = props.style.height = "100%";
+    props.style.display = "block";
+
+    return (
+      React.createElement('div', props,
+        [
+          this.props.children,
+          React.createElement('div', {className: this.props.triggersClass, key: 'trigger'},
+            [
+              React.createElement('div', {className: this.props.expandClass, ref: 'expand', key: 'expand'}, React.createElement('div', {ref: 'expandChild'})),
+              React.createElement('div', {className: this.props.contractClass, ref: 'contract', key: 'contract'})
+            ]
+          )
+        ]
+      )
+    );
+  }
+
+});
+
+PanelAddons.ResizableContent = ResizableContent;
+
+
+var StickyButton = React.createClass({
+  displayName: 'StickyButton',
+  mixins: [Mixins.Button],
+
+  handleClick: function () {
+    this.setState({active: !this.state.active});
+    this._trigger();
+  },
+
+  handleDoubleClick: function () {
+    this.setState({highlighted: !this.state.highlighted});
+    this._trigger();
+  },
+
+  handleContextMenu: function () {
+    this.setState({highlighted: !this.state.highlighted});
+    this._trigger();
+  },
+
+  _trigger: function () {
+    this.forceUpdate(function () {
+      if (typeof this.props.onChange === "function") {
+        this.props.onChange(this);
+      }
+    }.bind(this));
+  },
+
+  render: function () {
+    var sheet = this.getSheet('Button');
+
+    return (
+      React.createElement("li", React.__spread({style: sheet.style},  this.listeners, {title: this.props.title}),
+        React.createElement("span", {style: sheet.children.style},
+          this.props.children
+        )
+      )
+    );
+  }
+});
+
+PanelAddons.StickyButton = StickyButton;
 
 
 window.ReactPanels = ReactPanels;

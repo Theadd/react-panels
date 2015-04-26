@@ -183,7 +183,9 @@ Mixins.PanelWrapper = {
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
       maxTitleWidth: this.props.maxTitleWidth,
-      useAvailableHeight: this.props.useAvailableHeight
+      useAvailableHeight: this.props.useAvailableHeight,
+      renderPanelBorder: this.props.renderPanelBorder,
+      activeTabHeaderBorder: this.props.activeTabHeaderBorder
     };
     this._sheet = createSheet(opts);
     this.config = this._sheet("PanelWrapper").config;
@@ -197,7 +199,8 @@ Mixins.PanelWrapper = {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
     onTabChange: React.PropTypes.func,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    numTabs: React.PropTypes.number
   },
 
   getChildContext: function () {
@@ -205,7 +208,8 @@ Mixins.PanelWrapper = {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
       onTabChange: this.handleTabChange,
-      globals: this.props.globals
+      globals: this.props.globals,
+      numTabs: React.Children.count(this.props.children)
     };
   },
 
@@ -255,6 +259,10 @@ Mixins.PanelWrapper = {
 Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
+  propTypes: {
+    tabKey: React.PropTypes.any
+  },
+
   getDefaultProps: function () {
     return {
       panelComponentType: "TabWrapper",
@@ -266,12 +274,14 @@ Mixins.TabWrapper = {
   },
 
   childContextTypes: {
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    tabKey: React.PropTypes.any
   },
 
   getChildContext: function () {
     return {
-      index: this.props.index
+      index: this.props.index,
+      tabKey: this.props.tabKey
     };
   },
 
@@ -291,6 +301,7 @@ Mixins.Button = {
       visible: true,
       enabled: true,
       active: false,
+      highlighted: false,
       onClick: false,
       onDoubleClick: false,
       onContextMenu: false,
@@ -305,7 +316,8 @@ Mixins.Button = {
     return {
       visible: this.props.visible,
       enabled: this.props.enabled,
-      active: this.props.active
+      active: this.props.active,
+      highlighted: this.props.highlighted
     };
   },
 
@@ -334,6 +346,7 @@ Mixins.Button = {
     if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
     if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
     if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+    if (this.state.highlighted && mods.indexOf('highlighted') == -1) mods.push('highlighted');
 
     return mods;
   },

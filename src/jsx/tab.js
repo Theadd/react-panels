@@ -12,7 +12,8 @@ var TabButton = React.createClass({
   },
 
   contextTypes: {
-    selectedIndex: React.PropTypes.number
+    selectedIndex: React.PropTypes.number,
+    numTabs: React.PropTypes.number
   },
 
   handleClick: function (event) {
@@ -26,6 +27,7 @@ var TabButton = React.createClass({
       mods = (this.context.selectedIndex == this.props.index) ? ['active'] : [];
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
+    if (this.props.index == this.context.numTabs - 1) mods.push('last');
     var sheet = this.getSheet("TabButton", mods, {});
 
     if (this.props.showTitle && this.props.title.length) {
@@ -54,13 +56,18 @@ var Tab = React.createClass({
   displayName: 'Tab',
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
+  propTypes: {
+    onActiveChanged: React.PropTypes.func
+  },
+
   getDefaultProps: function () {
     return {
       "icon": "",
       "title": "",
       "pinned": false,
       "showToolbar": true,
-      "panelComponentType": "Tab"
+      "panelComponentType": "Tab",
+      "automount": false
     };
   },
 
@@ -68,6 +75,48 @@ var Tab = React.createClass({
     selectedIndex: React.PropTypes.number,
     index: React.PropTypes.number,
     globals: React.PropTypes.object
+  },
+
+  componentDidMount: function () {
+    this._doEvents();
+  },
+
+  componentDidUpdate: function () {
+    this._doEvents();
+  },
+
+  _doEvents: function () {
+    if (typeof this.props.onActiveChanged === "function") {
+      this.wasActive = this.wasActive || false;
+      var active = this.isActive();
+      if (this.wasActive != active) {
+        this.props.onActiveChanged(this, active);
+        this.wasActive = active;
+      }
+    }
+  },
+
+  getValue: function (name) {
+    switch (name) {
+      case "index":
+        return (typeof this.props.index !== "undefined") ? this.props.index : this.context.index;
+      case "selectedIndex":
+        return this.context.selectedIndex;
+      case "showToolbar":
+        return this.props.showToolbar;
+      case "active":
+        return this.isActive();
+      case "hasToolbar":
+        return this.hasToolbar || false;
+      case "mounted":
+        return this.mounted || false;
+      case "automount":
+        return this.props.automount;
+      case "numChilds":
+        return React.Children.count(this.props.children);
+      case "tabKey":
+        return (typeof this.props.tabKey !== "undefined") ? this.props.tabKey : this.context.tabKey;
+    }
   },
 
   isActive: function () {
@@ -86,7 +135,9 @@ var Tab = React.createClass({
       mods = (active) ? ['active'] : [],
       sheet = {};
 
-    var innerContent = React.Children.map(self.props.children, function(child, i) {
+    this.mounted = (this.mounted || false) || this.props.automount || active;
+
+    var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
         switch (String(child.props.panelComponentType)) {
@@ -96,7 +147,10 @@ var Tab = React.createClass({
         }
       }
       if (i == 0) {
-        if (type == 0 && self.props.showToolbar) mods.push('withToolbar');
+        if (type == 0) {
+          this.hasToolbar = true;
+          if (self.props.showToolbar) mods.push('withToolbar');
+        }
         sheet = self.getSheet("Tab", mods);
       }
       switch (type) {
@@ -125,7 +179,7 @@ var Tab = React.createClass({
             )
           );
       }
-    }.bind(this));
+    }.bind(this)) : null;
 
     return (
       React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
