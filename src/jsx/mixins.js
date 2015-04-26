@@ -260,7 +260,7 @@ Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
   propTypes: {
-    tabKey: React.PropTypes.any.isRequired
+    tabKey: React.PropTypes.any
   },
 
   getDefaultProps: function () {
