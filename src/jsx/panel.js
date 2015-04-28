@@ -21,7 +21,10 @@ var FloatingPanel = React.createClass({
     };
   },
 
-
+  componentWillReceiveProps:function(nextProps) {
+    this.setState({width:nextProps.width});
+  },
+  
   dragStart: function (e) {
     this.panelBounds = {
       startLeft: this.state.left,
