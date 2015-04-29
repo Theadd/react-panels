@@ -57,7 +57,8 @@ var Tab = React.createClass({
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
   propTypes: {
-    onActiveChanged: React.PropTypes.func
+    onActiveChanged: React.PropTypes.func,
+    maxContentHeight: React.PropTypes.number
   },
 
   getDefaultProps: function () {
@@ -67,7 +68,8 @@ var Tab = React.createClass({
       "pinned": false,
       "showToolbar": true,
       "panelComponentType": "Tab",
-      "automount": false
+      "automount": false,
+      "maxContentHeight": 0
     };
   },
 
@@ -163,8 +165,13 @@ var Tab = React.createClass({
             )
           ) : null;
         case 1:
+          var contentStyle = React.addons.update({
+            maxHeight : this.props.maxContentHeight || "none",
+            overflowY : this.props.maxContentHeight?"auto":"none"
+          }, {$merge: sheet.content.style});
+
           return (
-            React.createElement("div", {key: i, style: sheet.content.style},
+            React.createElement("div", {key: i, style: contentStyle},
               React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
                 child
               )
