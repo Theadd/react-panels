@@ -113,6 +113,8 @@ var Tab = React.createClass({
         return this.isActive();
       case "hasToolbar":
         return this.hasToolbar || false;
+      case "hasFooter":
+        return this.hasFooter || false;
       case "mounted":
         return this.mounted || false;
       case "automount":
