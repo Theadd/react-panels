@@ -143,7 +143,8 @@ var Tab = React.createClass({
       sheet = {};
 
     this.mounted = (this.mounted || false) || this.props.automount || active;
-
+    this.hasToolbar=this.hasFooter=false;
+    
     var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
@@ -157,11 +158,12 @@ var Tab = React.createClass({
         if (type == 0) {
           this.hasToolbar = true;
           if (self.props.showToolbar) mods.push('withToolbar');
-        } else if (type == 2) {
-          this.hasFooter = true;
-          if (self.props.showFooter) mods.push('withFooter');
         }
         sheet = self.getSheet("Tab", mods);
+      }
+      if (i == self.props.children.length-1 && type == 2) {
+        this.hasFooter = true;
+        if (self.props.showFooter) mods.push('withFooter');
       }
       switch (type) {
         case 0:
