@@ -163,7 +163,10 @@ var Tab = React.createClass({
       }
       if (i == self.props.children.length-1 && type == 2) {
         this.hasFooter = true;
-        if (self.props.showFooter) mods.push('withFooter');
+        if (self.props.showFooter) {
+          mods.push('withFooter');
+          sheet = self.getSheet("Tab", mods);
+        }
       }
       switch (type) {
         case 0:
