@@ -67,6 +67,7 @@ var Tab = React.createClass({
       "title": "",
       "pinned": false,
       "showToolbar": true,
+      "showFooter": true,
       "panelComponentType": "Tab",
       "automount": false,
       "maxContentHeight": 0
@@ -106,6 +107,8 @@ var Tab = React.createClass({
         return this.context.selectedIndex;
       case "showToolbar":
         return this.props.showToolbar;
+      case "showFooter":
+        return this.props.showFooter;
       case "active":
         return this.isActive();
       case "hasToolbar":
@@ -152,6 +155,9 @@ var Tab = React.createClass({
         if (type == 0) {
           this.hasToolbar = true;
           if (self.props.showToolbar) mods.push('withToolbar');
+        } else if (type == 2) {
+          this.hasFooter = true;
+          if (self.props.showFooter) mods.push('withFooter');
         }
         sheet = self.getSheet("Tab", mods);
       }
@@ -178,13 +184,13 @@ var Tab = React.createClass({
             )
           );
         case 2:
-          return (
+          return (self.props.showFooter) ? (
             React.createElement("div", {key: i, style: sheet.footer.style},
               React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
                 child
               )
             )
-          );
+          ) : null;
       }
     }.bind(this)) : null;
 
