@@ -269,7 +269,8 @@ Mixins.TabWrapper = {
       icon: "",
       title: "",
       pinned: false,
-      showToolbar: true
+      showToolbar: true,
+      showFooter: true
     };
   },
 
