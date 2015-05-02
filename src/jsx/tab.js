@@ -180,7 +180,8 @@ var Tab = React.createClass({
         case 1:
           var contentStyle = React.addons.update({
             maxHeight : this.props.maxContentHeight || "none",
-            overflowY : this.props.maxContentHeight?"auto":"none"
+            overflowX :"hidden",
+            overflowY : this.props.maxContentHeight?"auto":"hidden"
           }, {$merge: sheet.content.style});
 
           return (
