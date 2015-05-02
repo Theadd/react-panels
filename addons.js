@@ -1443,7 +1443,8 @@ Mixins.TabWrapper = {
       icon: "",
       title: "",
       pinned: false,
-      showToolbar: true
+      showToolbar: true,
+      showFooter: true
     };
   },
 
@@ -1574,7 +1575,10 @@ var FloatingPanel = React.createClass({
     };
   },
 
-
+  componentWillReceiveProps:function(nextProps) {
+    this.setState({width:nextProps.width});
+  },
+  
   dragStart: function (e) {
     this.panelBounds = {
       startLeft: this.state.left,
@@ -1826,7 +1830,7 @@ var ReactPanel = React.createClass({
 
       tabs.push(
         React.addons.cloneWithProps(child, {
-          key: tabIndex,
+          key: tabKey,
           tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
@@ -1917,7 +1921,8 @@ var Tab = React.createClass({
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
   propTypes: {
-    onActiveChanged: React.PropTypes.func
+    onActiveChanged: React.PropTypes.func,
+    maxContentHeight: React.PropTypes.number
   },
 
   getDefaultProps: function () {
@@ -1926,8 +1931,10 @@ var Tab = React.createClass({
       "title": "",
       "pinned": false,
       "showToolbar": true,
+      "showFooter": true,
       "panelComponentType": "Tab",
-      "automount": false
+      "automount": false,
+      "maxContentHeight": 0
     };
   },
 
@@ -1964,10 +1971,14 @@ var Tab = React.createClass({
         return this.context.selectedIndex;
       case "showToolbar":
         return this.props.showToolbar;
+      case "showFooter":
+        return this.props.showFooter;
       case "active":
         return this.isActive();
       case "hasToolbar":
         return this.hasToolbar || false;
+      case "hasFooter":
+        return this.hasFooter || false;
       case "mounted":
         return this.mounted || false;
       case "automount":
@@ -1996,7 +2007,8 @@ var Tab = React.createClass({
       sheet = {};
 
     this.mounted = (this.mounted || false) || this.props.automount || active;
-
+    this.hasToolbar=this.hasFooter=false;
+    
     var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
@@ -2013,6 +2025,13 @@ var Tab = React.createClass({
         }
         sheet = self.getSheet("Tab", mods);
       }
+      if (i == self.props.children.length-1 && type == 2) {
+        this.hasFooter = true;
+        if (self.props.showFooter) {
+          mods.push('withFooter');
+          sheet = self.getSheet("Tab", mods);
+        }
+      }
       switch (type) {
         case 0:
           return (self.props.showToolbar) ? (
@@ -2023,21 +2042,27 @@ var Tab = React.createClass({
             )
           ) : null;
         case 1:
+          var contentStyle = React.addons.update({
+            maxHeight : this.props.maxContentHeight || "none",
+            overflowX :"hidden",
+            overflowY : this.props.maxContentHeight?"auto":"hidden"
+          }, {$merge: sheet.content.style});
+
           return (
-            React.createElement("div", {key: i, style: sheet.content.style},
+            React.createElement("div", {key: i, style: contentStyle},
               React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
                 child
               )
             )
           );
         case 2:
-          return (
+          return (self.props.showFooter) ? (
             React.createElement("div", {key: i, style: sheet.footer.style},
               React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
                 child
               )
             )
-          );
+          ) : null;
       }
     }.bind(this)) : null;
 
