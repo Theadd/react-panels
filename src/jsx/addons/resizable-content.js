@@ -74,11 +74,14 @@ var ResizableContent = React.createClass({
   },
 
   getDimensions: function () {
-    var el = this.refs.resizable.getDOMNode();
+    var el = {};
+    if ((this.refs.resizable || false) && typeof this.refs.resizable.getDOMNode === "function") {
+      el = this.refs.resizable.getDOMNode();
+    }
 
     return {
-      width: el.offsetWidth,
-      height: el.offsetHeight
+      width: el.offsetWidth || 0,
+      height: el.offsetHeight || 0
     };
   },
 
