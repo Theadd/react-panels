@@ -47,6 +47,10 @@ var FloatingPanel = React.createClass({
   dragEnd: function() {
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
+    if (this.props.onBoundsChange) {
+      var height=this.getDOMNode().offsetHeight;
+      this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
+    }
   },
 
   dragOver: function(e) {
