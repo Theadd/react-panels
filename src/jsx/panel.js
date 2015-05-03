@@ -274,7 +274,6 @@ var ReactPanel = React.createClass({
         }
       }
 
-      console.debug("sp.tabButtons: %O", sp.tabButtons);
       tabButtons.push(
         React.createElement(TabButton, React.__spread({key: tabKey, title: props.title, icon: props.icon,
           index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick,

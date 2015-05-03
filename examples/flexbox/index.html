@@ -40,13 +40,39 @@
       margin-left: 588px;
       margin-top: 84px;
     }
+    #left-overlay {
+      width: 504px;
+      text-align: center;
+      font-size: 38px;
+      position: absolute;
+      top: 230px;
+      font-weight: bold;
+      text-transform: uppercase;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    #info {
+      padding: 40px;
+      font-size: 21px;
+      text-transform: uppercase;
+      font-weight: bold;
+      opacity: 0.8;
+      max-width: 1100px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .placeholder {
+      background-color: rgba(186, 190, 30, 0.46);
+      width: 3px;
+      height: 32px;
+    }
   </style>
 
 </head>
 <body>
 
-<div id="flexbox-fiery"></div>
-<div id="flexbox"></div>
+<div id="root"></div>
 
 <script type="text/javascript" src="../../bower_components/react/react-with-addons.js"></script>
 <script type="text/javascript" src="../../bower_components/react/JSXTransformer.js"></script>
@@ -65,7 +91,7 @@
 
     getInitialState: function () {
       return {
-        tabs: ['wb6w', '9q1f', '5gfe'],
+        tabs: this.props.tabs,
         toolbars: true
       };
     },
@@ -74,8 +100,8 @@
       this.setState({toolbars: !this.state.toolbars});
     },
 
-    addTab: function () {
-      var newTabs = this.state.tabs.concat([("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4)])
+    addTab: function () {                   //produces a 4 digit random string to use as tab's name and key
+      var newTabs = this.state.tabs.concat([("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4).toUpperCase()])
       this.setState({tabs: newTabs});
     },
 
@@ -92,7 +118,7 @@
         globals = this.props.globals || {};
 
       var tabs = this.state.tabs.map(function(item, i) {
-        var tabTitle = "Tab " + item;
+        var tabTitle = "TAB " + item;
         return (
           <Tab key={item} title={tabTitle} icon="fa fa-cube" showToolbar={this.state.toolbars}>
             <Toolbar>Toolbar</Toolbar>
@@ -120,7 +146,9 @@
     }
   });
 
-  var panelGlobals = {
+  var sharedContext = {};
+
+  var leftPanelGlobals = {
     "Panel": {
       "transitionName": "animated-flex-panel",
       "transitionEnter": true,
@@ -128,6 +156,8 @@
       "transitionAppear": true,
       //sortable tab buttons ready
       "sortable": true,
+      "sharedContext": sharedContext,
+      //"onDragAndDropTab" is specified in App.render()
       "placeholderClass": "placeholder" //"placeholder" it's also the default value but you might want to change it.
     },
     "Tab": {
@@ -135,10 +165,54 @@
       "transitionEnter": true,
       "transitionLeave": true
     }
-  }
+  };
 
-  React.render(<MyPanel skin="fiery" globals={panelGlobals} />, document.getElementById('flexbox-fiery'));
-  React.render(<MyPanel />, document.getElementById('flexbox'));
+  var rightPanelGlobals = {
+    "Panel": {
+      "sortable": true,
+      "sharedContext": sharedContext,
+      "placeholderClass": "placeholder" //don't set different values as both panels access the same placeholder element
+    }
+  };
+
+  var App = React.createClass({
+
+    getInitialState: function () {
+      leftPanelGlobals.Panel.onDragAndDropTab = this.handleDragAndDropTab;
+      rightPanelGlobals.Panel.onDragAndDropTab = this.handleDragAndDropTab;
+
+      return {
+        msg: "Try to drag&drop a tab. It won't work but you'll get the necessary information " +
+             "to swap them at \"owner\" level."
+      };
+    },
+
+    handleDragAndDropTab: function (element, target, placement) {
+      this.setState({msg: "Drag { key: " + element.dataset.key + ", index: " + element.dataset.index +
+      " } and drop " + placement + " { key: " + target.dataset.key + ", index: " +
+      target.dataset.index + " }"});
+    },
+
+    render: function () {
+
+      return (
+        <div>
+          <div id="flexbox-fiery">
+            <MyPanel skin="fiery" globals={ leftPanelGlobals } tabs={['WB6W', '9QLF', '5GFE']} />
+          </div>
+          <div id="flexbox">
+            <MyPanel globals={ rightPanelGlobals } tabs={['D9HJ', 'R2D2', 'C3PO']} />
+          </div>
+          <p id="left-overlay">Animated panel</p>
+          <div id="info">
+            {this.state.msg || ""}
+          </div>
+        </div>
+      );
+    }
+  });
+
+  React.render(<App />, document.getElementById('root'));
 </script>
 
 </body>

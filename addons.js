@@ -1277,7 +1277,9 @@ var Mixins = {
   SortableTabs: {
     propTypes: {
       sortable: React.PropTypes.bool,
-      placeholderClass: React.PropTypes.bool
+      placeholderClass: React.PropTypes.bool,
+      onDragAndDropTab: React.PropTypes.func,
+      sharedContext: React.PropTypes.any
     },
     getSortableProps: function (pcType) {
       pcType = pcType || this.props.panelComponentType;
@@ -1285,14 +1287,14 @@ var Mixins = {
       var globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
           this.context.globals[pcType] : {};
       if (this.props.sortable || globals.sortable || false) {
-        if (typeof this.placeholder === "undefined") {
-          this.placeholder = document.createElement("li");  //TODO: styles
-          this.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
+        this.sharedContext = this.props.sharedContext || globals.sharedContext || this;
+        this.onDragAndDropTab = this.props.onDragAndDropTab || globals.onDragAndDropTab;
+        if (typeof this.sharedContext.placeholder === "undefined") {
+          this.sharedContext.placeholder = document.createElement("li");  //TODO: styles
+          this.sharedContext.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
         }
         return {
-          tabs: {
-
-          },
+          tabs: {},
           tabButtons: {
             draggable: true,
             onDragEnd: this.handleDragEndOnTab,
@@ -1307,32 +1309,31 @@ var Mixins = {
         }
       }
     },
-    //==============================================================
     handleDragStartOnTab: function(e) {
-      this.dragged = e.currentTarget;
+      this.sharedContext.dragged = e.currentTarget;
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData("text/html", e.currentTarget);
     },
     handleDragEndOnTab: function() {
-      this.dragged.style.display = "block";
-      this.dragged.parentNode.removeChild(this.placeholder);
+      console.dir(this.sharedContext);
+      this.sharedContext.dragged.style.display = "block";
+      this.sharedContext.over.parentNode.removeChild(this.sharedContext.placeholder);
 
-      console.debug("Drag %o and drop " + this.placement + " %o", this.dragged, this.over);
-      console.debug("Drag { key: " + this.dragged.dataset.key + ", index: " + this.dragged.dataset.index +
-        " } and drop " + this.placement + " { key: " + this.over.dataset.key + ", index: " +
-        this.over.dataset.index + " }");
+      if (typeof this.onDragAndDropTab === "function") {
+        this.onDragAndDropTab(this.sharedContext.dragged, this.sharedContext.over, this.sharedContext.placement);
+      }
     },
     handleDragOverOfTab: function(e) {
       e.preventDefault();
-      this.dragged.style.display = "none";
+      this.sharedContext.dragged.style.display = "none";
       if (e.currentTarget.className == "placeholder") return;
-      this.over = e.currentTarget;
-      this.placement = (e.clientX - this.over.offsetLeft > (this.over.offsetWidth / 2)) ? "after" : "before";
+      this.sharedContext.over = e.currentTarget;
+      this.sharedContext.placement = (e.clientX - this.sharedContext.over.offsetLeft >
+        (this.sharedContext.over.offsetWidth / 2)) ? "after" : "before";
 
-      e.currentTarget.parentNode.insertBefore(this.placeholder,
-        (this.placement == "after") ? this.over.nextElementSibling : this.over);
+      e.currentTarget.parentNode.insertBefore(this.sharedContext.placeholder,
+        (this.sharedContext.placement == "after") ? this.sharedContext.over.nextElementSibling : this.sharedContext.over);
     }
-    //==============================================================
   },
   Toolbar: {
     getDefaultProps: function () {
@@ -1680,6 +1681,10 @@ var FloatingPanel = React.createClass({
   dragEnd: function() {
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
+    if (this.props.onBoundsChange) {
+      var height=this.getDOMNode().offsetHeight;
+      this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
+    }
   },
 
   dragOver: function(e) {
@@ -1903,7 +1908,6 @@ var ReactPanel = React.createClass({
         }
       }
 
-      console.debug("sp.tabButtons: %O", sp.tabButtons);
       tabButtons.push(
         React.createElement(TabButton, React.__spread({key: tabKey, title: props.title, icon: props.icon,
           index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick,
