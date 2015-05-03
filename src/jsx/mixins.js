@@ -102,6 +102,63 @@ var Mixins = {
       return props;
     }
   },
+  SortableTabs: {
+    propTypes: {
+      sortable: React.PropTypes.bool,
+      placeholderClass: React.PropTypes.bool
+    },
+    getSortableProps: function (pcType) {
+      pcType = pcType || this.props.panelComponentType;
+
+      var globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
+          this.context.globals[pcType] : {};
+      if (this.props.sortable || globals.sortable || false) {
+        if (typeof this.placeholder === "undefined") {
+          this.placeholder = document.createElement("li");  //TODO: styles
+          this.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
+        }
+        return {
+          tabs: {},
+          tabButtons: {
+            draggable: true,
+            onDragEnd: this.handleDragEndOnTab,
+            onDragStart: this.handleDragStartOnTab,
+            onDragOver: this.handleDragOverOfTab
+          }
+        }
+      } else {
+        return {
+          tabs: {},
+          tabButtons: {}
+        }
+      }
+    },
+    //==============================================================
+    handleDragStartOnTab: function(e) {
+      this.dragged = e.currentTarget;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData("text/html", e.currentTarget);
+    },
+    handleDragEndOnTab: function() {
+      this.dragged.style.display = "block";
+      this.dragged.parentNode.removeChild(this.placeholder);
+
+      console.debug("Drag { key: " + this.dragged.dataset.key + ", index: " + this.dragged.dataset.index +
+        " } and drop " + this.placement + " { key: " + this.over.dataset.key + ", index: " +
+        this.over.dataset.index + " }");
+    },
+    handleDragOverOfTab: function(e) {
+      e.preventDefault();
+      this.dragged.style.display = "none";
+      if (e.currentTarget.className == "placeholder") return;
+      this.over = e.currentTarget;
+      this.placement = (e.clientX - this.over.offsetLeft > (this.over.offsetWidth / 2)) ? "after" : "before";
+
+      e.currentTarget.parentNode.insertBefore(this.placeholder,
+        (this.placement == "after") ? this.over.nextElementSibling : this.over);
+    }
+    //==============================================================
+  },
   Toolbar: {
     getDefaultProps: function () {
       return {

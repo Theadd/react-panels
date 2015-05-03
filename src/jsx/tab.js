@@ -2,6 +2,15 @@
 var TabButton = React.createClass({
   mixins: [Mixins.StyleableWithEvents],
 
+  propTypes: {
+    draggable: React.PropTypes.bool,
+    onDragEnd: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragOver: React.PropTypes.func,
+    "data-index": React.PropTypes.number.isRequired,
+    "data-key": React.PropTypes.string.isRequired
+  },
+
   getDefaultProps: function () {
     return {
       "icon": "",
@@ -21,6 +30,24 @@ var TabButton = React.createClass({
     this.props.onClick(event, this.props.index);
   },
 
+  dragEnd: function(e) {
+    if (typeof this.props.onDragEnd === "function") {
+      this.props.onDragEnd(e)
+    }
+  },
+
+  dragStart: function(e) {
+    if (typeof this.props.onDragStart === "function") {
+      this.props.onDragStart(e)
+    }
+  },
+
+  dragOver: function(e) {
+    if (typeof this.props.onDragOver === "function") {
+      this.props.onDragOver(e)
+    }
+  },
+
   render: function() {
     var icon = null,
       title = "",
@@ -28,7 +55,15 @@ var TabButton = React.createClass({
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
     if (this.props.index == this.context.numTabs - 1) mods.push('last');
-    var sheet = this.getSheet("TabButton", mods, {});
+    var sheet = this.getSheet("TabButton", mods, {}),
+      sortProps = (this.props.draggable || false) ? {
+        draggable: true,
+        onDragEnd: this.dragEnd,
+        onDragStart: this.dragStart,
+        onDragOver: this.dragOver,
+        "data-index": this.props["data-index"],
+        "data-key": this.props["data-key"]
+      } : {};
 
     if (this.props.showTitle && this.props.title.length) {
       title = React.createElement("div", {style:sheet.title.style},this.props.title);
@@ -43,7 +78,8 @@ var TabButton = React.createClass({
     }
 
     return (
-      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},
+          this.listeners, sortProps),
         React.createElement("div", {title: this.props.title},
           icon, React.createElement("div", {style: sheet.box.style}, title)
         )

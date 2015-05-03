@@ -1274,6 +1274,66 @@ var Mixins = {
       return props;
     }
   },
+  SortableTabs: {
+    propTypes: {
+      sortable: React.PropTypes.bool,
+      placeholderClass: React.PropTypes.bool
+    },
+    getSortableProps: function (pcType) {
+      pcType = pcType || this.props.panelComponentType;
+
+      var globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
+          this.context.globals[pcType] : {};
+      if (this.props.sortable || globals.sortable || false) {
+        if (typeof this.placeholder === "undefined") {
+          this.placeholder = document.createElement("li");  //TODO: styles
+          this.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
+        }
+        return {
+          tabs: {
+
+          },
+          tabButtons: {
+            draggable: true,
+            onDragEnd: this.handleDragEndOnTab,
+            onDragStart: this.handleDragStartOnTab,
+            onDragOver: this.handleDragOverOfTab
+          }
+        }
+      } else {
+        return {
+          tabs: {},
+          tabButtons: {}
+        }
+      }
+    },
+    //==============================================================
+    handleDragStartOnTab: function(e) {
+      this.dragged = e.currentTarget;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData("text/html", e.currentTarget);
+    },
+    handleDragEndOnTab: function() {
+      this.dragged.style.display = "block";
+      this.dragged.parentNode.removeChild(this.placeholder);
+
+      console.debug("Drag %o and drop " + this.placement + " %o", this.dragged, this.over);
+      console.debug("Drag { key: " + this.dragged.dataset.key + ", index: " + this.dragged.dataset.index +
+        " } and drop " + this.placement + " { key: " + this.over.dataset.key + ", index: " +
+        this.over.dataset.index + " }");
+    },
+    handleDragOverOfTab: function(e) {
+      e.preventDefault();
+      this.dragged.style.display = "none";
+      if (e.currentTarget.className == "placeholder") return;
+      this.over = e.currentTarget;
+      this.placement = (e.clientX - this.over.offsetLeft > (this.over.offsetWidth / 2)) ? "after" : "before";
+
+      e.currentTarget.parentNode.insertBefore(this.placeholder,
+        (this.placement == "after") ? this.over.nextElementSibling : this.over);
+    }
+    //==============================================================
+  },
   Toolbar: {
     getDefaultProps: function () {
       return {
@@ -1689,7 +1749,7 @@ var Panel = React.createClass({
 
 var ReactPanel = React.createClass({
   displayName: 'ReactPanel',
-  mixins: [Mixins.Styleable, Mixins.Transitions],
+  mixins: [Mixins.Styleable, Mixins.Transitions, Mixins.SortableTabs],
 
   getDefaultProps: function () {
     return {
@@ -1805,7 +1865,8 @@ var ReactPanel = React.createClass({
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
       sheet = this.getSheet("Panel"),
-      tp = this.getTransitionProps("Panel");
+      tp = this.getTransitionProps("Panel"),
+      sp = this.getSortableProps("Panel");
 
     var icon = (this.props.icon) ? (
         React.createElement("span", {style:sheet.icon.style},
@@ -1842,9 +1903,11 @@ var ReactPanel = React.createClass({
         }
       }
 
+      console.debug("sp.tabButtons: %O", sp.tabButtons);
       tabButtons.push(
-        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
-          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
+        React.createElement(TabButton, React.__spread({key: tabKey, title: props.title, icon: props.icon,
+          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick,
+          "data-index": tabIndex, "data-key": tabKey}, sp.tabButtons))
       );
 
       tabs.push(
@@ -1864,9 +1927,10 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(tp.transitionComponent, React.__spread({component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+          React.createElement(tp.transitionComponent, React.__spread({component: "ul", ref: "tabs",
+              style: sheet.tabs.style, transitionName: tp.transitionName,
               transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
-              transitionLeave: tp.transitionLeave}, tp.transitionCustomProps),
+              transitionLeave: tp.transitionLeave}, tp.transitionCustomProps, sp.tabs),
             tabButtons
           ),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
@@ -1884,6 +1948,15 @@ var ReactPanel = React.createClass({
 
 var TabButton = React.createClass({displayName: "TabButton",
   mixins: [Mixins.StyleableWithEvents],
+
+  propTypes: {
+    draggable: React.PropTypes.bool,
+    onDragEnd: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragOver: React.PropTypes.func,
+    "data-index": React.PropTypes.number.isRequired,
+    "data-key": React.PropTypes.string.isRequired
+  },
 
   getDefaultProps: function () {
     return {
@@ -1904,6 +1977,24 @@ var TabButton = React.createClass({displayName: "TabButton",
     this.props.onClick(event, this.props.index);
   },
 
+  dragEnd: function(e) {
+    if (typeof this.props.onDragEnd === "function") {
+      this.props.onDragEnd(e)
+    }
+  },
+
+  dragStart: function(e) {
+    if (typeof this.props.onDragStart === "function") {
+      this.props.onDragStart(e)
+    }
+  },
+
+  dragOver: function(e) {
+    if (typeof this.props.onDragOver === "function") {
+      this.props.onDragOver(e)
+    }
+  },
+
   render: function() {
     var icon = null,
       title = "",
@@ -1911,7 +2002,15 @@ var TabButton = React.createClass({displayName: "TabButton",
 
     if (!(this.props.showTitle && this.props.title.length)) mods.push('untitled');
     if (this.props.index == this.context.numTabs - 1) mods.push('last');
-    var sheet = this.getSheet("TabButton", mods, {});
+    var sheet = this.getSheet("TabButton", mods, {}),
+      sortProps = (this.props.draggable || false) ? {
+        draggable: true,
+        onDragEnd: this.dragEnd,
+        onDragStart: this.dragStart,
+        onDragOver: this.dragOver,
+        "data-index": this.props["data-index"],
+        "data-key": this.props["data-key"]
+      } : {};
 
     if (this.props.showTitle && this.props.title.length) {
       title = React.createElement("div", {style:sheet.title.style},this.props.title);
@@ -1926,7 +2025,8 @@ var TabButton = React.createClass({displayName: "TabButton",
     }
 
     return (
-      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},
+          this.listeners, sortProps),
         React.createElement("div", {title: this.props.title},
           icon, React.createElement("div", {style: sheet.box.style}, title)
         )
