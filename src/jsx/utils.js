@@ -46,5 +46,3 @@ var Utils = {
     return dst;
   }
 };
-
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;

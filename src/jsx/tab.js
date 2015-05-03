@@ -203,9 +203,10 @@ var Tab = React.createClass({
     }.bind(this)) : null;
 
     return (
-      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
-          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
-          transitionLeave: tp.transitionLeave && active},
+      React.createElement(tp.transitionComponent, React.__spread({component: "div", style: sheet.style,
+            transitionName: tp.transitionName, transitionAppear: tp.transitionAppear && active,
+            transitionEnter: tp.transitionEnter && active, transitionLeave: tp.transitionLeave && active},
+          tp.transitionCustomProps),
         innerContent
       )
     );

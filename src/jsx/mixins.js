@@ -58,7 +58,15 @@ var Mixins = {
       transitionName: React.PropTypes.string,
       transitionEnter: React.PropTypes.bool,
       transitionLeave: React.PropTypes.bool,
-      transitionAppear: React.PropTypes.bool
+      transitionAppear: React.PropTypes.bool,
+      /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+       * use this to specify another component.
+       *
+       * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+       * */
+      transitionComponent: React.PropTypes.any,
+      /** Additional props specific to transitionComponent. */
+      transitionCustomProps: React.PropTypes.object
     },
     getTransitionProps: function (pcType) {
       pcType = pcType || this.props.panelComponentType;
@@ -76,14 +84,19 @@ var Mixins = {
           transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
             this.props.transitionLeave : globals.transitionLeave || false,
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
-            this.props.transitionAppear : globals.transitionAppear || false
+            this.props.transitionAppear : globals.transitionAppear || false,
+          transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
+            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+          transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
         props = {
           transitionName: "none",
           transitionEnter: false,
           transitionLeave: false,
-          transitionAppear: false
+          transitionAppear: false,
+          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionCustomProps: {}
         };
       }
       return props;
@@ -158,7 +171,15 @@ Mixins.PanelWrapper = {
     transitionEnter: React.PropTypes.bool,
     transitionLeave: React.PropTypes.bool,
     transitionAppear: React.PropTypes.bool,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+     * use this to specify another component.
+     *
+     * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+     * */
+    transitionComponent: React.PropTypes.any,
+    /** Additional props specific to transitionComponent. */
+    transitionCustomProps: React.PropTypes.object
   },
 
   getDefaultProps: function () {

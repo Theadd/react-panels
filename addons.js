@@ -1170,8 +1170,6 @@ var Utils = {
   }
 };
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
 
 var Mixins = {
   Styleable: {
@@ -1232,7 +1230,15 @@ var Mixins = {
       transitionName: React.PropTypes.string,
       transitionEnter: React.PropTypes.bool,
       transitionLeave: React.PropTypes.bool,
-      transitionAppear: React.PropTypes.bool
+      transitionAppear: React.PropTypes.bool,
+      /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+       * use this to specify another component.
+       *
+       * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+       * */
+      transitionComponent: React.PropTypes.any,
+      /** Additional props specific to transitionComponent. */
+      transitionCustomProps: React.PropTypes.object
     },
     getTransitionProps: function (pcType) {
       pcType = pcType || this.props.panelComponentType;
@@ -1250,14 +1256,19 @@ var Mixins = {
           transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
             this.props.transitionLeave : globals.transitionLeave || false,
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
-            this.props.transitionAppear : globals.transitionAppear || false
+            this.props.transitionAppear : globals.transitionAppear || false,
+          transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
+            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+          transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
         props = {
           transitionName: "none",
           transitionEnter: false,
           transitionLeave: false,
-          transitionAppear: false
+          transitionAppear: false,
+          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionCustomProps: {}
         };
       }
       return props;
@@ -1332,7 +1343,15 @@ Mixins.PanelWrapper = {
     transitionEnter: React.PropTypes.bool,
     transitionLeave: React.PropTypes.bool,
     transitionAppear: React.PropTypes.bool,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+     * use this to specify another component.
+     *
+     * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+     * */
+    transitionComponent: React.PropTypes.any,
+    /** Additional props specific to transitionComponent. */
+    transitionCustomProps: React.PropTypes.object
   },
 
   getDefaultProps: function () {
@@ -1845,9 +1864,9 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+          React.createElement(tp.transitionComponent, React.__spread({component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
               transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
-              transitionLeave: tp.transitionLeave},
+              transitionLeave: tp.transitionLeave}, tp.transitionCustomProps),
             tabButtons
           ),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
@@ -2067,9 +2086,10 @@ var Tab = React.createClass({
     }.bind(this)) : null;
 
     return (
-      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
-          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
-          transitionLeave: tp.transitionLeave && active},
+      React.createElement(tp.transitionComponent, React.__spread({component: "div", style: sheet.style,
+            transitionName: tp.transitionName, transitionAppear: tp.transitionAppear && active,
+            transitionEnter: tp.transitionEnter && active, transitionLeave: tp.transitionLeave && active},
+          tp.transitionCustomProps),
         innerContent
       )
     );
@@ -2302,11 +2322,14 @@ var ResizableContent = React.createClass({
   },
 
   getDimensions: function () {
-    var el = this.refs.resizable.getDOMNode();
+    var el = {};
+    if ((this.refs.resizable || false) && typeof this.refs.resizable.getDOMNode === "function") {
+      el = this.refs.resizable.getDOMNode();
+    }
 
     return {
-      width: el.offsetWidth,
-      height: el.offsetHeight
+      width: el.offsetWidth || 0,
+      height: el.offsetHeight || 0
     };
   },
 
