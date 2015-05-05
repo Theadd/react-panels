@@ -1,6 +1,6 @@
 react-panels
 ===========
-### [Website](http://theadd.github.io/react-panels/) &nbsp; [Features](#features) &nbsp; [Roadmap](#roadmap) &nbsp; [Install](#install)
+### [Demo examples](http://theadd.github.io/react-panels/) &nbsp; [Features](#features) &nbsp; [Roadmap](#roadmap) &nbsp; [Install](#install) &nbsp; [Usage](#usage)
 
 Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.13.1** (with **addons**).
 
@@ -48,7 +48,9 @@ var ReactPanels = require('react-panels/addons')
 ```
 
 
-## Example usage
+## Usage
+
+*Example usage:*
 
 ```jsx
 var Panel = ReactPanels.Panel;
@@ -75,7 +77,7 @@ var MyPanel = React.createClass({
 });
 ```
 
-* More examples [here](http://theadd.github.io/react-panels/).
+Documentation for **react-panels v2** is not available yet but you can take a look at the [working examples](http://theadd.github.io/react-panels/) for easy usages of almost all its features.
 
 
 ## Contributing
