@@ -21,7 +21,10 @@ var FloatingPanel = React.createClass({
     };
   },
 
-
+  componentWillReceiveProps:function(nextProps) {
+    this.setState({width:nextProps.width});
+  },
+  
   dragStart: function (e) {
     this.panelBounds = {
       startLeft: this.state.left,
@@ -44,6 +47,10 @@ var FloatingPanel = React.createClass({
   dragEnd: function() {
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
+    if (this.props.onBoundsChange) {
+      var height=this.getDOMNode().offsetHeight;
+      this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
+    }
   },
 
   dragOver: function(e) {
@@ -113,7 +120,7 @@ var Panel = React.createClass({
 
 var ReactPanel = React.createClass({
   displayName: 'ReactPanel',
-  mixins: [Mixins.Styleable, Mixins.Transitions],
+  mixins: [Mixins.Styleable, Mixins.Transitions, Mixins.SortableTabs],
 
   getDefaultProps: function () {
     return {
@@ -229,7 +236,8 @@ var ReactPanel = React.createClass({
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
       sheet = this.getSheet("Panel"),
-      tp = this.getTransitionProps("Panel");
+      tp = this.getTransitionProps("Panel"),
+      sp = this.getSortableProps("Panel");
 
     var icon = (this.props.icon) ? (
         React.createElement("span", {style:sheet.icon.style},
@@ -267,13 +275,15 @@ var ReactPanel = React.createClass({
       }
 
       tabButtons.push(
-        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
-          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
+        React.createElement(TabButton, React.__spread({key: tabKey, title: props.title, icon: props.icon,
+          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick,
+          "data-index": tabIndex, "data-key": tabKey}, sp.tabButtons))
       );
 
       tabs.push(
         React.addons.cloneWithProps(child, {
-          key: tabIndex,
+          key: tabKey,
+          tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
         })
@@ -287,9 +297,10 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
+          React.createElement(tp.transitionComponent, React.__spread({component: "ul", ref: "tabs",
+              style: sheet.tabs.style, transitionName: tp.transitionName,
               transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
-              transitionLeave: tp.transitionLeave},
+              transitionLeave: tp.transitionLeave}, tp.transitionCustomProps, sp.tabs),
             tabButtons
           ),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),

@@ -51,6 +51,7 @@ module.exports = function(grunt) {
       combined_file_output: {
         files: {
           'build/react-panels.js': [
+            'src/jsx/styles/themes/flexbox2.js',
             'src/jsx/styles/themes/flexbox.js',
             'src/jsx/styles/themes/chemical.js',
             'src/jsx/styles/base.js',
@@ -62,7 +63,9 @@ module.exports = function(grunt) {
             'src/jsx/ext.js'
           ],
           'build/addons.js': [
-            'src/jsx/addons/scrollable-tab-content.js'
+            'src/jsx/addons/scrollable-tab-content.js',
+            'src/jsx/addons/resizable-content.js',
+            'src/jsx/addons/sticky-button.js'
           ],
           'examples/floating/floating.js': [
             'examples/floating/src/item-tab.jsx',

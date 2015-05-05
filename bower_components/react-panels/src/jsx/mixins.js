@@ -58,7 +58,15 @@ var Mixins = {
       transitionName: React.PropTypes.string,
       transitionEnter: React.PropTypes.bool,
       transitionLeave: React.PropTypes.bool,
-      transitionAppear: React.PropTypes.bool
+      transitionAppear: React.PropTypes.bool,
+      /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+       * use this to specify another component.
+       *
+       * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+       * */
+      transitionComponent: React.PropTypes.any,
+      /** Additional props specific to transitionComponent. */
+      transitionCustomProps: React.PropTypes.object
     },
     getTransitionProps: function (pcType) {
       pcType = pcType || this.props.panelComponentType;
@@ -76,17 +84,83 @@ var Mixins = {
           transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
             this.props.transitionLeave : globals.transitionLeave || false,
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
-            this.props.transitionAppear : globals.transitionAppear || false
+            this.props.transitionAppear : globals.transitionAppear || false,
+          transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
+            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+          transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
         props = {
           transitionName: "none",
           transitionEnter: false,
           transitionLeave: false,
-          transitionAppear: false
+          transitionAppear: false,
+          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionCustomProps: {}
         };
       }
       return props;
+    }
+  },
+  SortableTabs: {
+    propTypes: {
+      sortable: React.PropTypes.bool,
+      placeholderClass: React.PropTypes.bool,
+      onDragAndDropTab: React.PropTypes.func,
+      sharedContext: React.PropTypes.any
+    },
+    getSortableProps: function (pcType) {
+      pcType = pcType || this.props.panelComponentType;
+
+      var globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
+          this.context.globals[pcType] : {};
+      if (this.props.sortable || globals.sortable || false) {
+        this.sharedContext = this.props.sharedContext || globals.sharedContext || this;
+        this.onDragAndDropTab = this.props.onDragAndDropTab || globals.onDragAndDropTab;
+        if (typeof this.sharedContext.placeholder === "undefined") {
+          this.sharedContext.placeholder = document.createElement("li");  //TODO: styles
+          this.sharedContext.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
+        }
+        return {
+          tabs: {},
+          tabButtons: {
+            draggable: true,
+            onDragEnd: this.handleDragEndOnTab,
+            onDragStart: this.handleDragStartOnTab,
+            onDragOver: this.handleDragOverOfTab
+          }
+        }
+      } else {
+        return {
+          tabs: {},
+          tabButtons: {}
+        }
+      }
+    },
+    handleDragStartOnTab: function(e) {
+      this.sharedContext.dragged = e.currentTarget;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData("text/html", e.currentTarget);
+    },
+    handleDragEndOnTab: function() {
+      console.dir(this.sharedContext);
+      this.sharedContext.dragged.style.display = "block";
+      this.sharedContext.over.parentNode.removeChild(this.sharedContext.placeholder);
+
+      if (typeof this.onDragAndDropTab === "function") {
+        this.onDragAndDropTab(this.sharedContext.dragged, this.sharedContext.over, this.sharedContext.placement);
+      }
+    },
+    handleDragOverOfTab: function(e) {
+      e.preventDefault();
+      this.sharedContext.dragged.style.display = "none";
+      if (e.currentTarget.className == "placeholder") return;
+      this.sharedContext.over = e.currentTarget;
+      this.sharedContext.placement = (e.clientX - this.sharedContext.over.offsetLeft >
+        (this.sharedContext.over.offsetWidth / 2)) ? "after" : "before";
+
+      e.currentTarget.parentNode.insertBefore(this.sharedContext.placeholder,
+        (this.sharedContext.placement == "after") ? this.sharedContext.over.nextElementSibling : this.sharedContext.over);
     }
   },
   Toolbar: {
@@ -158,7 +232,15 @@ Mixins.PanelWrapper = {
     transitionEnter: React.PropTypes.bool,
     transitionLeave: React.PropTypes.bool,
     transitionAppear: React.PropTypes.bool,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+     * use this to specify another component.
+     *
+     * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+     * */
+    transitionComponent: React.PropTypes.any,
+    /** Additional props specific to transitionComponent. */
+    transitionCustomProps: React.PropTypes.object
   },
 
   getDefaultProps: function () {
@@ -183,7 +265,9 @@ Mixins.PanelWrapper = {
       headerFontSize: this.props.headerFontSize,
       borderRadius: this.props.borderRadius,
       maxTitleWidth: this.props.maxTitleWidth,
-      useAvailableHeight: this.props.useAvailableHeight
+      useAvailableHeight: this.props.useAvailableHeight,
+      renderPanelBorder: this.props.renderPanelBorder,
+      activeTabHeaderBorder: this.props.activeTabHeaderBorder
     };
     this._sheet = createSheet(opts);
     this.config = this._sheet("PanelWrapper").config;
@@ -197,7 +281,8 @@ Mixins.PanelWrapper = {
     selectedIndex: React.PropTypes.number,
     sheet: React.PropTypes.func,
     onTabChange: React.PropTypes.func,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    numTabs: React.PropTypes.number
   },
 
   getChildContext: function () {
@@ -205,7 +290,8 @@ Mixins.PanelWrapper = {
       selectedIndex: this.state.selectedIndex,
       sheet: this._sheet,
       onTabChange: this.handleTabChange,
-      globals: this.props.globals
+      globals: this.props.globals,
+      numTabs: React.Children.count(this.props.children)
     };
   },
 
@@ -255,23 +341,30 @@ Mixins.PanelWrapper = {
 Mixins.TabWrapper = {
   observedProps: ['selectedIndex', 'index'],
 
+  propTypes: {
+    tabKey: React.PropTypes.any
+  },
+
   getDefaultProps: function () {
     return {
       panelComponentType: "TabWrapper",
       icon: "",
       title: "",
       pinned: false,
-      showToolbar: true
+      showToolbar: true,
+      showFooter: true
     };
   },
 
   childContextTypes: {
-    index: React.PropTypes.number
+    index: React.PropTypes.number,
+    tabKey: React.PropTypes.any
   },
 
   getChildContext: function () {
     return {
-      index: this.props.index
+      index: this.props.index,
+      tabKey: this.props.tabKey
     };
   },
 
@@ -291,6 +384,7 @@ Mixins.Button = {
       visible: true,
       enabled: true,
       active: false,
+      highlighted: false,
       onClick: false,
       onDoubleClick: false,
       onContextMenu: false,
@@ -305,7 +399,8 @@ Mixins.Button = {
     return {
       visible: this.props.visible,
       enabled: this.props.enabled,
-      active: this.props.active
+      active: this.props.active,
+      highlighted: this.props.highlighted
     };
   },
 
@@ -334,6 +429,7 @@ Mixins.Button = {
     if (this.state.active && mods.indexOf('active') == -1) mods.push('active');
     if (!this.state.visible && mods.indexOf('hidden') == -1) mods.push('hidden');
     if (!this.state.enabled && mods.indexOf('disabled') == -1) mods.push('disabled');
+    if (this.state.highlighted && mods.indexOf('highlighted') == -1) mods.push('highlighted');
 
     return mods;
   },
