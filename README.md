@@ -18,7 +18,7 @@ Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.
 * Custom panel buttons.
 * Easily extensible by *mixins*. <sup>*Not documented yet*</sup>
 * **Animations** <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations/index.html)</sup>
-* **Drag&drop** tabs <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations-dnd/index.html)</sup>
+* **Drag&drop** tabs <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations-dnd/index.html)</sup> **Warning**: In development, subject to change.
 
 
 ## Roadmap
