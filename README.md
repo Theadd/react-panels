@@ -1,6 +1,6 @@
 react-panels
 ===========
-### [Demo examples](http://theadd.github.io/react-panels/) &nbsp; [Features](#features) &nbsp; [Roadmap](#roadmap) &nbsp; [Install](#install) &nbsp; [Usage](#usage)
+### [Demo/examples](http://theadd.github.io/react-panels/) &nbsp; [Features](#features) &nbsp; [Playground](http://theadd.github.io/react-panels/playground/) &nbsp; [Install](#install) &nbsp; [Usage](#usage)
 
 Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.13.1** (with **addons**).
 
@@ -8,7 +8,7 @@ Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.
 ## Features
 
 * No dependencies, single JS file with React inline styles.
-  * Written to be **browser first** from the start so our browser build is a simple es5 javascript file instead of a *webpack/browserify* bundle like in other react components. Nevertheless, this doesn't mean that *react-panels* is not suited for other kind of projects since a CommonJS build [is also provided](#install).
+  * Written to be **browser first** from the start so our browser build is a simple javascript file instead of a *webpack/browserify* bundle like in other react components. Nevertheless, this doesn't mean that *react-panels* is not suited for other kind of projects since a CommonJS build [is also provided](#install).
 * Support for themes and skins.
   * Available themes: *chemical* <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/floating/index.html)</sup>, *flexbox* <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/basic/index.html)</sup>, *flexbox2* <sup>*No demo yet*</sup>.
   * *Wanna share one of your own? Open an issue or make a pull request.*
@@ -18,7 +18,7 @@ Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.
 * Custom panel buttons.
 * Easily extensible by *mixins*. <sup>*Not documented yet*</sup>
 * **Animations** <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations/index.html)</sup>
-* **Drag&drop** tabs <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations-dnd/index.html)</sup>
+* **Drag&drop** tabs <sup>[demo](http://theadd.github.io/react-panels/bower_components/react-panels/examples/flexbox/animations-dnd/index.html)</sup> **Warning**: In development, subject to change.
 
 
 ## Roadmap
