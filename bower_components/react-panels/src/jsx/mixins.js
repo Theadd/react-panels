@@ -102,67 +102,6 @@ var Mixins = {
       return props;
     }
   },
-  SortableTabs: {
-    propTypes: {
-      sortable: React.PropTypes.bool,
-      placeholderClass: React.PropTypes.bool,
-      onDragAndDropTab: React.PropTypes.func,
-      sharedContext: React.PropTypes.any
-    },
-    getSortableProps: function (pcType) {
-      pcType = pcType || this.props.panelComponentType;
-
-      var globals = (this.context && this.context.globals && this.context.globals[pcType]) ?
-          this.context.globals[pcType] : {};
-      if (this.props.sortable || globals.sortable || false) {
-        this.sharedContext = this.props.sharedContext || globals.sharedContext || this;
-        this.onDragAndDropTab = this.props.onDragAndDropTab || globals.onDragAndDropTab;
-        if (typeof this.sharedContext.placeholder === "undefined") {
-          this.sharedContext.placeholder = document.createElement("li");  //TODO: styles
-          this.sharedContext.placeholder.className = this.props.placeholderClass || globals.placeholderClass || 'placeholder';
-        }
-        return {
-          tabs: {},
-          tabButtons: {
-            draggable: true,
-            onDragEnd: this.handleDragEndOnTab,
-            onDragStart: this.handleDragStartOnTab,
-            onDragOver: this.handleDragOverOfTab
-          }
-        }
-      } else {
-        return {
-          tabs: {},
-          tabButtons: {}
-        }
-      }
-    },
-    handleDragStartOnTab: function(e) {
-      this.sharedContext.dragged = e.currentTarget;
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData("text/html", e.currentTarget);
-    },
-    handleDragEndOnTab: function() {
-      console.dir(this.sharedContext);
-      this.sharedContext.dragged.style.display = "block";
-      this.sharedContext.over.parentNode.removeChild(this.sharedContext.placeholder);
-
-      if (typeof this.onDragAndDropTab === "function") {
-        this.onDragAndDropTab(this.sharedContext.dragged, this.sharedContext.over, this.sharedContext.placement);
-      }
-    },
-    handleDragOverOfTab: function(e) {
-      e.preventDefault();
-      this.sharedContext.dragged.style.display = "none";
-      if (e.currentTarget.className == "placeholder") return;
-      this.sharedContext.over = e.currentTarget;
-      this.sharedContext.placement = (e.clientX - this.sharedContext.over.offsetLeft >
-        (this.sharedContext.over.offsetWidth / 2)) ? "after" : "before";
-
-      e.currentTarget.parentNode.insertBefore(this.sharedContext.placeholder,
-        (this.sharedContext.placement == "after") ? this.sharedContext.over.nextElementSibling : this.sharedContext.over);
-    }
-  },
   Toolbar: {
     getDefaultProps: function () {
       return {
@@ -240,7 +179,11 @@ Mixins.PanelWrapper = {
      * */
     transitionComponent: React.PropTypes.any,
     /** Additional props specific to transitionComponent. */
-    transitionCustomProps: React.PropTypes.object
+    transitionCustomProps: React.PropTypes.object,
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
   },
 
   getDefaultProps: function () {

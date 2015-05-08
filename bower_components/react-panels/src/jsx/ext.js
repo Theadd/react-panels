@@ -42,5 +42,6 @@ var ReactPanels = {
   Footer: Footer,
   ToggleButton: ToggleButton,
   Button: Button,
-  addons: PanelAddons
+  addons: PanelAddons,
+  DragAndDropHandler: DragAndDropHandler
 };

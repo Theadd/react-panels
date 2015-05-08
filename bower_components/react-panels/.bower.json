@@ -1,6 +1,6 @@
 {
   "name": "react-panels",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "homepage": "https://github.com/Theadd/react-panels",
   "authors": [
     "Theadd <pantallazo@gmail.com>"
@@ -30,14 +30,14 @@
   "devDependencies": {
     "react": "~0.13.1"
   },
-  "_release": "2.4.1",
+  "_release": "2.5.0",
   "_resolution": {
     "type": "version",
-    "tag": "v2.4.1",
-    "commit": "4b75782f4b053f1f8029cc8f65326ad34b20b25d"
+    "tag": "v2.5.0",
+    "commit": "70a3600e19d3ba43f52223ad791b84dee78d3cc7"
   },
   "_source": "git://github.com/Theadd/react-panels.git",
-  "_target": "~2.4.1",
+  "_target": "~2.5.0",
   "_originalSource": "react-panels",
   "_direct": true
 }

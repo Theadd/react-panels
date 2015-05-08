@@ -54,18 +54,11 @@
     #info {
       padding: 40px;
       font-size: 21px;
-      text-transform: uppercase;
       font-weight: bold;
       opacity: 0.8;
       max-width: 1100px;
       width: 100%;
       text-align: center;
-    }
-
-    .placeholder {
-      background-color: rgba(186, 190, 30, 0.46);
-      width: 3px;
-      height: 32px;
     }
   </style>
 
@@ -86,12 +79,19 @@
   var Footer = ReactPanels.Footer;
   var ToggleButton = ReactPanels.ToggleButton;
   var Button = ReactPanels.Button;
+  var DragAndDropHandler = ReactPanels.DragAndDropHandler;
 
   var MyPanel = React.createClass({
 
+    propTypes: {
+      theme: React.PropTypes.string,
+      extendedProps: React.PropTypes.object.isRequired,
+      initialTabs: React.PropTypes.array.isRequired
+    },
+
     getInitialState: function () {
       return {
-        tabs: this.props.tabs,
+        tabs: this.props.initialTabs,
         toolbars: true
       };
     },
@@ -114,13 +114,11 @@
     },
 
     render: function () {
-      var skin = this.props.skin || "default",
-        globals = this.props.globals || {};
-
       var tabs = this.state.tabs.map(function(item, i) {
         var tabTitle = "TAB " + item;
         return (
-          <Tab key={item} title={tabTitle} icon="fa fa-cube" showToolbar={this.state.toolbars}>
+          <Tab key={item} title={tabTitle} icon="fa fa-cube"
+               showToolbar={this.state.toolbars} {...this.props.extendedProps.tab}>
             <Toolbar>Toolbar</Toolbar>
             <Content>Content of {tabTitle}</Content>
             <Footer>Footer</Footer>
@@ -129,7 +127,8 @@
       }.bind(this));
 
       return (
-        <Panel ref="panel" theme="flexbox" skin={skin} useAvailableHeight={true} globals={globals} buttons={[
+        <Panel ref="panel" theme={this.props.theme || "flexbox"} skin={this.props.skin || "default"} useAvailableHeight={true}
+          {...this.props.extendedProps.panel} buttons={[
           <ToggleButton title="Toggle Toolbar" active={this.state.toolbars} onChange={this.handleToggleToolbars}>
             <i className="fa fa-wrench"></i>
           </ToggleButton>,
@@ -146,51 +145,33 @@
     }
   });
 
-  var sharedContext = {};
-
-  var leftPanelGlobals = {
-    "Panel": {
-      "transitionName": "animated-flex-panel",
-      "transitionEnter": true,
-      "transitionLeave": true,
-      "transitionAppear": true,
-      //sortable tab buttons ready
-      "sortable": true,
-      "sharedContext": sharedContext,
-      //"onDragAndDropTab" is specified in App.render()
-      "placeholderClass": "placeholder" //"placeholder" it's also the default value but you might want to change it.
-    },
-    "Tab": {
-      "transitionName": "animated-tab",
-      "transitionEnter": true,
-      "transitionLeave": true
-    }
-  };
-
-  var rightPanelGlobals = {
-    "Panel": {
-      "sortable": true,
-      "sharedContext": sharedContext,
-      "placeholderClass": "placeholder" //don't set different values as both panels access the same placeholder element
-    }
-  };
-
   var App = React.createClass({
 
     getInitialState: function () {
-      leftPanelGlobals.Panel.onDragAndDropTab = this.handleDragAndDropTab;
-      rightPanelGlobals.Panel.onDragAndDropTab = this.handleDragAndDropTab;
+      this.extendedProps = {
+        tab: {
+          transitionName: "animated-tab",
+          transitionEnter: true,
+          transitionLeave: true
+        },
+        panel: {
+          transitionName: "animated-flex-panel",
+          transitionEnter: true,
+          transitionLeave: true,
+          transitionAppear: true,
+          dragAndDropHandler: new DragAndDropHandler({}, this.handleDragAndDropTab)
+        }
+      };
 
       return {
-        msg: "Try to drag&drop a tab. It won't work but you'll get the necessary information " +
-        "to swap them at \"owner\" level."
+        msg: "Try to drag&drop a tab. It won't preserve the final state but you'll get the necessary information " +
+        "to do it at \"owner\" level."
       };
     },
 
-    handleDragAndDropTab: function (element, target, placement) {
-      this.setState({msg: "Drag { key: " + element.dataset.key + ", index: " + element.dataset.index +
-      " } and drop " + placement + " { key: " + target.dataset.key + ", index: " +
-      target.dataset.index + " }"});
+    handleDragAndDropTab: function (args) {
+      this.setState({msg: JSON.stringify(args, null, '  ')});
+      this.forceUpdate();
     },
 
     render: function () {
@@ -198,10 +179,10 @@
       return (
         <div>
           <div id="flexbox-fiery">
-            <MyPanel skin="fiery" globals={ leftPanelGlobals } tabs={['WB6W', '9QLF', '5GFE']} />
+            <MyPanel theme="flexbox" skin="fiery" extendedProps={this.extendedProps} initialTabs={['WB6W', '9QLF', '5GFE']} />
           </div>
           <div id="flexbox">
-            <MyPanel globals={ rightPanelGlobals } tabs={['D9HJ', 'R2D2', 'C3PO']} />
+            <MyPanel theme="flexbox2" extendedProps={this.extendedProps} initialTabs={['D9HJ', 'R2D2', 'C3PO']} />
           </div>
           <p id="left-overlay">Animated panel</p>
           <div id="info">
