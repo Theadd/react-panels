@@ -2017,7 +2017,7 @@ var TabGroup = React.createClass({
 
       var node = this.getDOMNode(),
         tabWidth = node.offsetWidth / this.tabKeys.length,
-        distance = e.pageX - node.offsetLeft,
+        distance = e.pageX - node.getBoundingClientRect().left,
         index = parseInt(distance / tabWidth),
         targetKey = this.tabKeys[index] || false;
 
@@ -2049,7 +2049,7 @@ var TabGroup = React.createClass({
         this._index = false;
         this.handler.setParentOfToken(this.memberId);
       } else {
-        var distance = e.pageX - this.getDOMNode().offsetLeft;
+        var distance = e.pageX - this.getDOMNode().getBoundingClientRect().left;
         nextIndex = parseInt(distance / this.tabWidth);
       }
 
@@ -2085,7 +2085,7 @@ var TabGroup = React.createClass({
     var node = this.getDOMNode(),
       numTabsMod = this.ctx.ownerId == this.memberId ? 0 : 1,
       tabWidth = node.offsetWidth / (this.tabKeys.length + numTabsMod),
-      distance = e.pageX - node.offsetLeft,
+      distance = e.pageX - node.getBoundingClientRect().left,
       index = parseInt(distance / tabWidth);
 
     this.tabWidth = tabWidth;
