@@ -2,7 +2,9 @@ react-panels
 ===========
 ### [Demo/examples](http://theadd.github.io/react-panels/) &nbsp; [Features](#features) &nbsp; [Playground](http://theadd.github.io/react-panels/playground/) &nbsp; [Install](#install) &nbsp; [Usage](#usage)
 
-Tabbed panel component made with [React](http://facebook.github.io/react/) **v0.13.1** (with **addons**).
+A multipurpose tabbed panel component with many features. Using [React](http://facebook.github.io/react/) **v0.13.1** with addons.
+
+[![NPM](https://nodei.co/npm/react-panels.png?downloads=true&stars=true)](https://nodei.co/npm/react-panels/)
 
 
 ## Features
