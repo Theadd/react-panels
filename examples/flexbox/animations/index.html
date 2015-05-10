@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>react-panels v2: simple</title>
+  <title>Animations - Flexbox :: react-panels v2</title>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
 
-  <link rel="stylesheet" href="../animated-tab.css" />
-  <link rel="stylesheet" href="../animated-flex-panel.css" />
+  <link rel="stylesheet" href="../../animated-tab.css" />
+  <link rel="stylesheet" href="../../animated-flex-panel.css" />
 
 
   <style>
     html {
-      background: url(bg.png);
+      background: url(../bg.png);
       margin: 0;
       padding: 0 84px;
     }
@@ -23,6 +23,13 @@
       font-size: 13px;
       color: rgba(255, 255, 255, 0.8);
       margin: 0;
+    }
+    a, a:visited {
+      color: #f72121;
+      text-decoration: none;
+    }
+    a:hover, a:active, a:focus {
+      color: white;
     }
     * {
       -webkit-box-sizing: border-box;
@@ -40,6 +47,23 @@
       margin-left: 588px;
       margin-top: 84px;
     }
+    #left-overlay {
+      width: 504px;
+      text-align: center;
+      font-size: 38px;
+      position: absolute;
+      top: 230px;
+      font-weight: bold;
+      text-transform: uppercase;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    #usage-info {
+      font-size: 18px;
+      max-width: 1100px;
+      opacity: 0.8;
+      width: 100%;
+    }
   </style>
 
 </head>
@@ -47,10 +71,18 @@
 
 <div id="flexbox-fiery"></div>
 <div id="flexbox"></div>
+<p id="left-overlay">Animated panel</p>
+<p id="usage-info">Animations rely on CSS classes to work as described in <a href="https://facebook.github.io/react/docs/animation.html">react animation</a> docs. We've used
+  <a href="https://github.com/Theadd/react-panels/blob/master/examples/animated-flex-panel.css">animated-flex-panel</a>
+  for tab buttons in panel's header and <a href="https://github.com/Theadd/react-panels/blob/master/examples/animated-tab.css">animated tab</a> for tab contents.
+  <br /><br />
+  By default, animations in <strong>react-panels</strong> makes use of <em>React.addons.ReactTransitionGroup</em>. To use another component take a look
+  <a href="https://github.com/Theadd/react-panels/blob/7ab8e040da47738666a5fb9ef7ca83000ce55b1e/src/jsx/mixins.js#L62-L69">here</a>.
+</p>
 
-<script type="text/javascript" src="../../bower_components/react/react-with-addons.js"></script>
-<script type="text/javascript" src="../../bower_components/react/JSXTransformer.js"></script>
-<script type="text/javascript" src="../../dist/react-panels.js"></script>
+<script type="text/javascript" src="../../../bower_components/react/react-with-addons.js"></script>
+<script type="text/javascript" src="../../../bower_components/react/JSXTransformer.js"></script>
+<script type="text/javascript" src="../../../dist/react-panels.js"></script>
 
 <script type="text/jsx">
   var Panel = ReactPanels.Panel;

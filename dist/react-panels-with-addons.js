@@ -47,7 +47,8 @@ var flexbox2Style = function (_opts, skin) {
       skin: "default",
       renderPanelBorder: true,
       activeTabHeaderBorder: true
-    }, {$merge: _opts});
+    }, {$merge: _opts}),
+    isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
 
   skin = skin || opts.skin;
 
@@ -71,7 +72,7 @@ var flexbox2Style = function (_opts, skin) {
       header: {
         style: {
           backgroundColor: "transparent",
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           minWidth: "100%",
           marginBottom: "-2px"
         }
@@ -89,8 +90,9 @@ var flexbox2Style = function (_opts, skin) {
       tabs: {
         style: {
           float: "none",
+          WebkitFlex: "1",
           flex: 1,
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           overflow: "hidden"
         }
       },
@@ -137,6 +139,7 @@ var flexbox2Style = function (_opts, skin) {
         position: "inherit",
         float: "none",
         overflow: "hidden",
+        WebkitFlex: "1",
         flex: "1 0 0px",
         opacity: 1
       },
@@ -236,13 +239,25 @@ var flexbox2Style = function (_opts, skin) {
         style: {
           backgroundColor: colors.contentBackgroundColor,
           boxShadow: "0px 0px 29px rgba(0, 0, 0, 0.7) inset",
-          borderTop: "1px solid " +  colors.borderColor
+          borderTop: "1px solid " +  colors.borderColor,
+          position: "relative"
+        },
+        children: {
+          style: {
+            position: "relative"
+          }
         }
       },
       footer: {
         style: {
           backgroundColor: colors.footerBackgroundColor,
-          borderTop: "1px solid " +  colors.borderColor
+          borderTop: "1px solid " +  colors.borderColor,
+          position: "relative"
+        },
+        children: {
+          style: {
+            position: "relative"
+          }
         }
       }
     },
@@ -300,7 +315,8 @@ var flexbox2Style = function (_opts, skin) {
 
 
 var flexboxStyle = function (opts, skin) {
-  var colors;
+  var colors,
+    isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
   skin = skin || opts.skin;
 
   switch (skin) {
@@ -373,7 +389,7 @@ var flexboxStyle = function (opts, skin) {
       header: {
         style: {
           backgroundColor: "transparent",
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           minWidth: "100%"
         }
       },
@@ -390,8 +406,9 @@ var flexboxStyle = function (opts, skin) {
       tabs: {
         style: {
           float: "none",
+          WebkitFlex: "1",
           flex: 1,
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           overflow: "hidden"
         }
       },
@@ -435,6 +452,7 @@ var flexboxStyle = function (opts, skin) {
         position: "inherit",
         float: "none",
         overflow: "hidden",
+        WebkitFlex: "1",
         flex: "1 0 0px"
       },
       state: {
@@ -835,6 +853,7 @@ var buildStyle = function (opts) {
     renderPanelBorder: (typeof opts.renderPanelBorder === "boolean") ? opts.renderPanelBorder : true,
     activeTabHeaderBorder: (typeof opts.activeTabHeaderBorder === "boolean") ? opts.activeTabHeaderBorder : true
   };
+  var isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
 
   var styles = {
     base: {
@@ -989,13 +1008,15 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: (opts.useAvailableHeight) ? "flex" : "block",
+              display: (opts.useAvailableHeight) ? (isSafari ? "-webkit-flex" : "flex") : "block",
               minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              WebkitFlexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               height: "100%"
             },
             content: {
               style: (opts.useAvailableHeight) ? {
+                WebkitFlex: 1,
                 flex: 1,
                 position: "relative"
               } : {},
@@ -1170,7 +1191,51 @@ var Utils = {
   }
 };
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+var DragAndDropHandler = function (opts, callback) {
+  var self = this;
+  if (!(self instanceof DragAndDropHandler)) return new DragAndDropHandler(opts, callback);
+
+  /** Not yet implemented. */
+  this.opt = Utils.merge({
+    detachOnLeave: true,
+    /** If true, the tab button being dragged will be rendered by
+     *  cloning an existing tab of the target panel. */
+    cloakInGroup: false,
+    onDragStart: false,
+    onDragEnd: false
+  }, opts || {});
+
+  this.ctx = {
+    sortable: true,
+    dragging: false,
+    parentId: false
+  };
+
+  this._member = [];
+  this._callback = callback || function () {};
+};
+
+DragAndDropHandler.prototype.trigger = function (event, data) {
+  switch (event) {
+    case 'onDragEnd':
+      return this._callback(data);
+    default:
+      throw new Error("Not implemented");
+  }
+};
+
+DragAndDropHandler.prototype.addMember = function (component) {
+  return this._member.push(component) - 1;
+};
+
+DragAndDropHandler.prototype.setParentOfToken = function (memberId) {
+  if (this.ctx.parentId !== false) {
+    this._member[this.ctx.parentId].releaseToken();
+  }
+
+  this.ctx.parentId = memberId;
+};
 
 
 var Mixins = {
@@ -1232,7 +1297,15 @@ var Mixins = {
       transitionName: React.PropTypes.string,
       transitionEnter: React.PropTypes.bool,
       transitionLeave: React.PropTypes.bool,
-      transitionAppear: React.PropTypes.bool
+      transitionAppear: React.PropTypes.bool,
+      /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+       * use this to specify another component.
+       *
+       * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+       * */
+      transitionComponent: React.PropTypes.any,
+      /** Additional props specific to transitionComponent. */
+      transitionCustomProps: React.PropTypes.object
     },
     getTransitionProps: function (pcType) {
       pcType = pcType || this.props.panelComponentType;
@@ -1250,14 +1323,19 @@ var Mixins = {
           transitionLeave: (typeof this.props.transitionLeave === "boolean") ?
             this.props.transitionLeave : globals.transitionLeave || false,
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
-            this.props.transitionAppear : globals.transitionAppear || false
+            this.props.transitionAppear : globals.transitionAppear || false,
+          transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
+            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+          transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
         props = {
           transitionName: "none",
           transitionEnter: false,
           transitionLeave: false,
-          transitionAppear: false
+          transitionAppear: false,
+          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionCustomProps: {}
         };
       }
       return props;
@@ -1332,7 +1410,19 @@ Mixins.PanelWrapper = {
     transitionEnter: React.PropTypes.bool,
     transitionLeave: React.PropTypes.bool,
     transitionAppear: React.PropTypes.bool,
-    globals: React.PropTypes.object
+    globals: React.PropTypes.object,
+    /** React.addons.CSSTransitionGroup might not work well in some scenarios,
+     * use this to specify another component.
+     *
+     * @see https://github.com/Khan/react-components/blob/master/js/timeout-transition-group.jsx
+     * */
+    transitionComponent: React.PropTypes.any,
+    /** Additional props specific to transitionComponent. */
+    transitionCustomProps: React.PropTypes.object,
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
   },
 
   getDefaultProps: function () {
@@ -1443,7 +1533,8 @@ Mixins.TabWrapper = {
       icon: "",
       title: "",
       pinned: false,
-      showToolbar: true
+      showToolbar: true,
+      showFooter: true
     };
   },
 
@@ -1574,7 +1665,10 @@ var FloatingPanel = React.createClass({
     };
   },
 
-
+  componentWillReceiveProps:function(nextProps) {
+    this.setState({width:nextProps.width});
+  },
+  
   dragStart: function (e) {
     this.panelBounds = {
       startLeft: this.state.left,
@@ -1597,6 +1691,10 @@ var FloatingPanel = React.createClass({
   dragEnd: function() {
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
+    if (this.props.onBoundsChange) {
+      var height=this.getDOMNode().offsetHeight;
+      this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
+    }
   },
 
   dragOver: function(e) {
@@ -1679,6 +1777,13 @@ var ReactPanel = React.createClass({
       "maxTitleWidth": 130,
       "buttons": []
     };
+  },
+
+  propTypes: {
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
   },
 
   getInitialState: function () {
@@ -1782,7 +1887,7 @@ var ReactPanel = React.createClass({
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
       sheet = this.getSheet("Panel"),
-      tp = this.getTransitionProps("Panel");
+      transitionProps = this.getTransitionProps("Panel");
 
     var icon = (this.props.icon) ? (
         React.createElement("span", {style:sheet.icon.style},
@@ -1819,14 +1924,14 @@ var ReactPanel = React.createClass({
         }
       }
 
-      tabButtons.push(
-        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
-          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
-      );
+      tabButtons.push({
+        key: tabKey, title: props.title, icon: props.icon, index: tabIndex, ref: ref, showTitle: showTitle,
+        onClick: self.handleClick, "data-index": tabIndex, "data-key": tabKey
+      });
 
       tabs.push(
         React.addons.cloneWithProps(child, {
-          key: tabIndex,
+          key: tabKey,
           tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
@@ -1841,11 +1946,11 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
-              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
-              transitionLeave: tp.transitionLeave},
-            tabButtons
-          ),
+          React.createElement(TabGroup, {
+            style: sheet.tabs.style, ref: "tabs", data: tabButtons,
+            dragAndDropHandler: this.props.dragAndDropHandler || false,
+            transitionProps: transitionProps
+          }),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
           this._getGroupedButtons().map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
@@ -1859,8 +1964,229 @@ var ReactPanel = React.createClass({
 });
 
 
+var TabGroup = React.createClass({
+  displayName: 'TabGroup',
+
+  propTypes: {
+    style: React.PropTypes.object.isRequired,
+    data: React.PropTypes.array.isRequired,
+    transitionProps: React.PropTypes.object.isRequired,
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number,
+    sheet: React.PropTypes.func,
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
+  },
+
+  componentWillMount: function () {
+    this.tabKeys = [];
+    this._index = false;
+
+    var globals = (this.context && this.context.globals) ? this.context.globals.Panel || {} : {};
+    this.handler = this.props.dragAndDropHandler || globals.dragAndDropHandler || false;
+    this.ctx = this.handler ? this.handler.ctx : {
+      sortable: false,
+      dragging: false
+    };
+
+    for (var i = 0; i < this.props.data.length; ++i) {
+      this.tabKeys.push(this.props.data[i]["data-key"]);
+    }
+    this.keyMap = this.tabKeys.slice(0);
+    this.constKeyMap = this.tabKeys.slice(0); //req. don't try to merge
+  },
+
+  componentDidMount: function () {
+    if (this.ctx.sortable && this.handler) {
+      this.memberId = this.handler.addMember(this);
+    }
+  },
+
+  componentWillUpdate: function (nextProps) {
+    if (!this.ctx.dragging) {
+      this.tabKeys = [];
+
+      for (var i = 0; i < nextProps.data.length; ++i) {
+        this.tabKeys.push(nextProps.data[i]["data-key"]);
+      }
+      this.keyMap = this.tabKeys.slice(0);
+      this.constKeyMap = this.tabKeys.slice(0);
+    }
+  },
+
+  handleDragStartOnTab: function(e, clone, target) {
+    this.ctx.draggedKey = target.dataset.key;
+    this.ctx.keySequence = 0;
+    this.ctx.dragging = false;  //
+    this.ctx.draggedElement = clone;
+    this.ctx.dragging = true;
+    this._index = this.tabKeys.indexOf(this.ctx.draggedKey);
+
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData("text/html", target);
+    e.dataTransfer.setDragImage(target, -15, -15);
+  },
+
+  handleDragStart: function(e) {
+    if (this.ctx.sortable) {
+
+      var node = this.getDOMNode(),
+        tabWidth = node.offsetWidth / this.tabKeys.length,
+        distance = e.pageX - node.getBoundingClientRect().left,
+        index = parseInt(distance / tabWidth),
+        targetKey = this.tabKeys[index] || false;
+
+      if (targetKey !== false) {
+        var tabComponent = this.refs[targetKey + "-tabbref"] || false;
+        if (tabComponent !== false) {
+          this.ctx.ownerId = this.ctx.parentId = this.memberId || false;
+          var clone = React.cloneElement(tabComponent.render(), {
+            key: "tabbph-clone",
+            onMouseEnter: false,
+            onMouseLeave: false
+          });
+          this.keyMap.splice(index, 1);
+          this.acquireToken(e); //
+          this.handleDragStartOnTab(e, clone, tabComponent.getDOMNode());
+        }
+      }
+    }
+  },
+
+  handleDragOver: function(e) {
+    if (this.ctx.dragging) {
+      e.preventDefault();
+      var nextIndex;
+
+      if (this.ctx.parentId != this.memberId) {
+        //tab not present in this panel
+        nextIndex = this.acquireToken(e);
+        this._index = false;
+        this.handler.setParentOfToken(this.memberId);
+      } else {
+        var distance = e.pageX - this.getDOMNode().getBoundingClientRect().left;
+        nextIndex = parseInt(distance / this.tabWidth);
+      }
+
+      if (this._index !== nextIndex) {
+        this.ctx.keySequence++;
+        if (this._index !== false) {
+          this.tabKeys.splice(this._index, 1);
+        }
+        this.tabKeys.splice(nextIndex, 0, this.ctx.draggedKey);
+        this._index = nextIndex;
+
+        this.ctx.targetKey = this.keyMap[Math.min(this._index, this.keyMap.length - 1)] || false;
+        this.ctx.placement = this._index >= this.keyMap.length ? "after" : "before";
+        this.forceUpdate();
+      }
+    }
+  },
+
+  handleDragEnd: function(e) {
+    if (this.ctx.dragging) {
+      this.ctx.dragging = false;
+      this._index = this._index || this.acquireToken(e);
+      this.handler.trigger('onDragEnd', {
+        element: this.ctx.draggedKey,
+        target: this.ctx.targetKey,
+        placement: this.ctx.placement
+      });
+    }
+  },
+
+  /* TODO: proper name. */
+  acquireToken: function (e) {
+    var node = this.getDOMNode(),
+      numTabsMod = this.ctx.ownerId == this.memberId ? 0 : 1,
+      tabWidth = node.offsetWidth / (this.tabKeys.length + numTabsMod),
+      distance = e.pageX - node.getBoundingClientRect().left,
+      index = parseInt(distance / tabWidth);
+
+    this.tabWidth = tabWidth;
+    return index;
+  },
+
+  releaseToken: function () {
+    this._index = false;
+    //TODO: Something is missing here.
+  },
+
+  /* Should be used by opts.cloakInGroup once implemented. */
+  cloneTabComponent: function (e) {
+    var tabComponent = this.refs[(this.tabKeys[index] || false) + "-tabbref"] || false;
+    if (tabComponent !== false) {
+      this.ctx.draggedElement = React.cloneElement(tabComponent.render(), {
+        key: "tabbph-clone",
+        onMouseEnter: false,
+        onMouseLeave: false
+      });
+    }
+  },
+
+  createTabElement: function (tabKey) {
+    if (this.ctx.dragging) {
+      if (this.ctx.draggedKey === tabKey) {
+        return React.cloneElement(this.ctx.draggedElement, {
+          key: tabKey + "-tabbph" + this.ctx.keySequence,
+          draggable: false
+        });
+      }
+    }
+    var tabProps = this.props.data[this.constKeyMap.indexOf(tabKey)] || false;
+
+    return (tabProps === false) ? null : React.createElement(
+      TabButton, React.__spread(tabProps, {ref: tabKey + "-tabbref"})
+    );
+  },
+
+  render: function () {
+    var tp = this.props.transitionProps,
+      sp = (this.ctx.sortable || false) ? {
+        draggable: true,
+        onDragEnd: this.handleDragEnd,
+        onDragStart: this.handleDragStart,
+        onDragOver: this.handleDragOver,
+        "data-key": "get-target-stop"
+      } : {};
+
+    if (!this.ctx.dragging) {
+      this.tabKeys = [];
+
+      for (var i = 0; i < this.props.data.length; ++i) {
+        this.tabKeys.push(this.props.data[i]["data-key"]);
+      }
+    }
+
+    var tabs = this.tabKeys.map(function (tabKey) {
+      return this.createTabElement(tabKey);
+    }.bind(this));
+
+    return (
+      React.createElement(tp.transitionComponent, React.__spread({component: "ul",
+          style: this.props.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+          transitionLeave: tp.transitionLeave}, tp.transitionCustomProps, sp),
+        tabs
+      )
+    );
+  }
+
+});
+
 var TabButton = React.createClass({displayName: "TabButton",
   mixins: [Mixins.StyleableWithEvents],
+
+  propTypes: {
+    "data-index": React.PropTypes.number.isRequired,
+    "data-key": React.PropTypes.string.isRequired
+  },
 
   getDefaultProps: function () {
     return {
@@ -1903,7 +2229,13 @@ var TabButton = React.createClass({displayName: "TabButton",
     }
 
     return (
-      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+      React.createElement("li", React.__spread({
+            onClick: this.handleClick,
+            style: sheet.style,
+            "data-index": this.props["data-index"],
+            "data-key": this.props["data-key"]
+          },
+          this.listeners),
         React.createElement("div", {title: this.props.title},
           icon, React.createElement("div", {style: sheet.box.style}, title)
         )
@@ -1917,7 +2249,8 @@ var Tab = React.createClass({
   mixins: [Mixins.Styleable, Mixins.Transitions],
 
   propTypes: {
-    onActiveChanged: React.PropTypes.func
+    onActiveChanged: React.PropTypes.func,
+    maxContentHeight: React.PropTypes.number
   },
 
   getDefaultProps: function () {
@@ -1926,8 +2259,10 @@ var Tab = React.createClass({
       "title": "",
       "pinned": false,
       "showToolbar": true,
+      "showFooter": true,
       "panelComponentType": "Tab",
-      "automount": false
+      "automount": false,
+      "maxContentHeight": 0
     };
   },
 
@@ -1964,10 +2299,14 @@ var Tab = React.createClass({
         return this.context.selectedIndex;
       case "showToolbar":
         return this.props.showToolbar;
+      case "showFooter":
+        return this.props.showFooter;
       case "active":
         return this.isActive();
       case "hasToolbar":
         return this.hasToolbar || false;
+      case "hasFooter":
+        return this.hasFooter || false;
       case "mounted":
         return this.mounted || false;
       case "automount":
@@ -1996,7 +2335,8 @@ var Tab = React.createClass({
       sheet = {};
 
     this.mounted = (this.mounted || false) || this.props.automount || active;
-
+    this.hasToolbar=this.hasFooter=false;
+    
     var innerContent = (this.mounted) ? React.Children.map(self.props.children, function(child, i) {
       var type = (i == 0 && numChilds >= 2) ? 0 : 1;   // 0: Toolbar, 1: Content, 2: Footer
       if (React.isValidElement(child) && (typeof child.props.panelComponentType !== "undefined")) {
@@ -2013,6 +2353,13 @@ var Tab = React.createClass({
         }
         sheet = self.getSheet("Tab", mods);
       }
+      if (i == self.props.children.length-1 && type == 2) {
+        this.hasFooter = true;
+        if (self.props.showFooter) {
+          mods.push('withFooter');
+          sheet = self.getSheet("Tab", mods);
+        }
+      }
       switch (type) {
         case 0:
           return (self.props.showToolbar) ? (
@@ -2023,28 +2370,35 @@ var Tab = React.createClass({
             )
           ) : null;
         case 1:
+          var contentStyle = React.addons.update({
+            maxHeight : this.props.maxContentHeight || "none",
+            overflowX :"hidden",
+            overflowY : this.props.maxContentHeight?"auto":"hidden"
+          }, {$merge: sheet.content.style});
+
           return (
-            React.createElement("div", {key: i, style: sheet.content.style},
+            React.createElement("div", {key: i, style: contentStyle},
               React.createElement("div", {className: "tab-content", style: sheet.content.children.style},
                 child
               )
             )
           );
         case 2:
-          return (
+          return (self.props.showFooter) ? (
             React.createElement("div", {key: i, style: sheet.footer.style},
               React.createElement("div", {className: "tab-footer", style: sheet.footer.children.style},
                 child
               )
             )
-          );
+          ) : null;
       }
     }.bind(this)) : null;
 
     return (
-      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
-          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
-          transitionLeave: tp.transitionLeave && active},
+      React.createElement(tp.transitionComponent, React.__spread({component: "div", style: sheet.style,
+            transitionName: tp.transitionName, transitionAppear: tp.transitionAppear && active,
+            transitionEnter: tp.transitionEnter && active, transitionLeave: tp.transitionLeave && active},
+          tp.transitionCustomProps),
         innerContent
       )
     );
@@ -2154,7 +2508,8 @@ var ReactPanels = {
   Footer: Footer,
   ToggleButton: ToggleButton,
   Button: Button,
-  addons: PanelAddons
+  addons: PanelAddons,
+  DragAndDropHandler: DragAndDropHandler
 };
 
 
@@ -2277,11 +2632,14 @@ var ResizableContent = React.createClass({
   },
 
   getDimensions: function () {
-    var el = this.refs.resizable.getDOMNode();
+    var el = {};
+    if ((this.refs.resizable || false) && typeof this.refs.resizable.getDOMNode === "function") {
+      el = this.refs.resizable.getDOMNode();
+    }
 
     return {
-      width: el.offsetWidth,
-      height: el.offsetHeight
+      width: el.offsetWidth || 0,
+      height: el.offsetHeight || 0
     };
   },
 

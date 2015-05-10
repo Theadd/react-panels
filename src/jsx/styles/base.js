@@ -12,6 +12,7 @@ var buildStyle = function (opts) {
     renderPanelBorder: (typeof opts.renderPanelBorder === "boolean") ? opts.renderPanelBorder : true,
     activeTabHeaderBorder: (typeof opts.activeTabHeaderBorder === "boolean") ? opts.activeTabHeaderBorder : true
   };
+  var isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
 
   var styles = {
     base: {
@@ -166,13 +167,15 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: (opts.useAvailableHeight) ? "flex" : "block",
+              display: (opts.useAvailableHeight) ? (isSafari ? "-webkit-flex" : "flex") : "block",
               minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              WebkitFlexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               height: "100%"
             },
             content: {
               style: (opts.useAvailableHeight) ? {
+                WebkitFlex: 1,
                 flex: 1,
                 position: "relative"
               } : {},

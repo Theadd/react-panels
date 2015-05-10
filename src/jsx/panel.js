@@ -135,6 +135,13 @@ var ReactPanel = React.createClass({
     };
   },
 
+  propTypes: {
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
+  },
+
   getInitialState: function () {
     return {
       compacted: (this.props.autocompact)
@@ -236,7 +243,7 @@ var ReactPanel = React.createClass({
     var self = this,
       draggable = (this.props.floating) ? "true" : "false",
       sheet = this.getSheet("Panel"),
-      tp = this.getTransitionProps("Panel");
+      transitionProps = this.getTransitionProps("Panel");
 
     var icon = (this.props.icon) ? (
         React.createElement("span", {style:sheet.icon.style},
@@ -273,14 +280,14 @@ var ReactPanel = React.createClass({
         }
       }
 
-      tabButtons.push(
-        React.createElement(TabButton, {key: tabKey, title: props.title, icon: props.icon,
-          index: tabIndex, ref: ref, showTitle: showTitle, onClick: self.handleClick})
-      );
+      tabButtons.push({
+        key: tabKey, title: props.title, icon: props.icon, index: tabIndex, ref: ref, showTitle: showTitle,
+        onClick: self.handleClick, "data-index": tabIndex, "data-key": tabKey
+      });
 
       tabs.push(
         React.addons.cloneWithProps(child, {
-          key: tabIndex,
+          key: tabKey,
           tabKey: tabKey,
           selectedIndex: selectedIndex,
           index: tabIndex
@@ -295,11 +302,11 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          React.createElement(ReactCSSTransitionGroup, {component: "ul", ref: "tabs", style: sheet.tabs.style, transitionName: tp.transitionName,
-              transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
-              transitionLeave: tp.transitionLeave},
-            tabButtons
-          ),
+          React.createElement(TabGroup, {
+            style: sheet.tabs.style, ref: "tabs", data: tabButtons,
+            dragAndDropHandler: this.props.dragAndDropHandler || false,
+            transitionProps: transitionProps
+          }),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
           this._getGroupedButtons().map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );

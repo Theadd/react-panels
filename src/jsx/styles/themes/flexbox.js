@@ -1,6 +1,7 @@
 
 var flexboxStyle = function (opts, skin) {
-  var colors;
+  var colors,
+    isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
   skin = skin || opts.skin;
 
   switch (skin) {
@@ -73,7 +74,7 @@ var flexboxStyle = function (opts, skin) {
       header: {
         style: {
           backgroundColor: "transparent",
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           minWidth: "100%"
         }
       },
@@ -90,8 +91,9 @@ var flexboxStyle = function (opts, skin) {
       tabs: {
         style: {
           float: "none",
+          WebkitFlex: "1",
           flex: 1,
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           overflow: "hidden"
         }
       },
@@ -135,6 +137,7 @@ var flexboxStyle = function (opts, skin) {
         position: "inherit",
         float: "none",
         overflow: "hidden",
+        WebkitFlex: "1",
         flex: "1 0 0px"
       },
       state: {

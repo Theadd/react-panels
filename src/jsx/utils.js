@@ -47,4 +47,48 @@ var Utils = {
   }
 };
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+var DragAndDropHandler = function (opts, callback) {
+  var self = this;
+  if (!(self instanceof DragAndDropHandler)) return new DragAndDropHandler(opts, callback);
+
+  /** Not yet implemented. */
+  this.opt = Utils.merge({
+    detachOnLeave: true,
+    /** If true, the tab button being dragged will be rendered by
+     *  cloning an existing tab of the target panel. */
+    cloakInGroup: false,
+    onDragStart: false,
+    onDragEnd: false
+  }, opts || {});
+
+  this.ctx = {
+    sortable: true,
+    dragging: false,
+    parentId: false
+  };
+
+  this._member = [];
+  this._callback = callback || function () {};
+};
+
+DragAndDropHandler.prototype.trigger = function (event, data) {
+  switch (event) {
+    case 'onDragEnd':
+      return this._callback(data);
+    default:
+      throw new Error("Not implemented");
+  }
+};
+
+DragAndDropHandler.prototype.addMember = function (component) {
+  return this._member.push(component) - 1;
+};
+
+DragAndDropHandler.prototype.setParentOfToken = function (memberId) {
+  if (this.ctx.parentId !== false) {
+    this._member[this.ctx.parentId].releaseToken();
+  }
+
+  this.ctx.parentId = memberId;
+};

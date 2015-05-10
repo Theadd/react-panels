@@ -1,6 +1,227 @@
 
+var TabGroup = React.createClass({
+  displayName: 'TabGroup',
+
+  propTypes: {
+    style: React.PropTypes.object.isRequired,
+    data: React.PropTypes.array.isRequired,
+    transitionProps: React.PropTypes.object.isRequired,
+    dragAndDropHandler: React.PropTypes.oneOfType([
+      React.PropTypes.object,
+      React.PropTypes.bool
+    ])
+  },
+
+  contextTypes: {
+    selectedIndex: React.PropTypes.number,
+    sheet: React.PropTypes.func,
+    onTabChange: React.PropTypes.func,
+    globals: React.PropTypes.object
+  },
+
+  componentWillMount: function () {
+    this.tabKeys = [];
+    this._index = false;
+
+    var globals = (this.context && this.context.globals) ? this.context.globals.Panel || {} : {};
+    this.handler = this.props.dragAndDropHandler || globals.dragAndDropHandler || false;
+    this.ctx = this.handler ? this.handler.ctx : {
+      sortable: false,
+      dragging: false
+    };
+
+    for (var i = 0; i < this.props.data.length; ++i) {
+      this.tabKeys.push(this.props.data[i]["data-key"]);
+    }
+    this.keyMap = this.tabKeys.slice(0);
+    this.constKeyMap = this.tabKeys.slice(0); //req. don't try to merge
+  },
+
+  componentDidMount: function () {
+    if (this.ctx.sortable && this.handler) {
+      this.memberId = this.handler.addMember(this);
+    }
+  },
+
+  componentWillUpdate: function (nextProps) {
+    if (!this.ctx.dragging) {
+      this.tabKeys = [];
+
+      for (var i = 0; i < nextProps.data.length; ++i) {
+        this.tabKeys.push(nextProps.data[i]["data-key"]);
+      }
+      this.keyMap = this.tabKeys.slice(0);
+      this.constKeyMap = this.tabKeys.slice(0);
+    }
+  },
+
+  handleDragStartOnTab: function(e, clone, target) {
+    this.ctx.draggedKey = target.dataset.key;
+    this.ctx.keySequence = 0;
+    this.ctx.dragging = false;  //
+    this.ctx.draggedElement = clone;
+    this.ctx.dragging = true;
+    this._index = this.tabKeys.indexOf(this.ctx.draggedKey);
+
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData("text/html", target);
+    e.dataTransfer.setDragImage(target, -15, -15);
+  },
+
+  handleDragStart: function(e) {
+    if (this.ctx.sortable) {
+
+      var node = this.getDOMNode(),
+        tabWidth = node.offsetWidth / this.tabKeys.length,
+        distance = e.pageX - node.getBoundingClientRect().left,
+        index = parseInt(distance / tabWidth),
+        targetKey = this.tabKeys[index] || false;
+
+      if (targetKey !== false) {
+        var tabComponent = this.refs[targetKey + "-tabbref"] || false;
+        if (tabComponent !== false) {
+          this.ctx.ownerId = this.ctx.parentId = this.memberId || false;
+          var clone = React.cloneElement(tabComponent.render(), {
+            key: "tabbph-clone",
+            onMouseEnter: false,
+            onMouseLeave: false
+          });
+          this.keyMap.splice(index, 1);
+          this.acquireToken(e); //
+          this.handleDragStartOnTab(e, clone, tabComponent.getDOMNode());
+        }
+      }
+    }
+  },
+
+  handleDragOver: function(e) {
+    if (this.ctx.dragging) {
+      e.preventDefault();
+      var nextIndex;
+
+      if (this.ctx.parentId != this.memberId) {
+        //tab not present in this panel
+        nextIndex = this.acquireToken(e);
+        this._index = false;
+        this.handler.setParentOfToken(this.memberId);
+      } else {
+        var distance = e.pageX - this.getDOMNode().getBoundingClientRect().left;
+        nextIndex = parseInt(distance / this.tabWidth);
+      }
+
+      if (this._index !== nextIndex) {
+        this.ctx.keySequence++;
+        if (this._index !== false) {
+          this.tabKeys.splice(this._index, 1);
+        }
+        this.tabKeys.splice(nextIndex, 0, this.ctx.draggedKey);
+        this._index = nextIndex;
+
+        this.ctx.targetKey = this.keyMap[Math.min(this._index, this.keyMap.length - 1)] || false;
+        this.ctx.placement = this._index >= this.keyMap.length ? "after" : "before";
+        this.forceUpdate();
+      }
+    }
+  },
+
+  handleDragEnd: function(e) {
+    if (this.ctx.dragging) {
+      this.ctx.dragging = false;
+      this._index = this._index || this.acquireToken(e);
+      this.handler.trigger('onDragEnd', {
+        element: this.ctx.draggedKey,
+        target: this.ctx.targetKey,
+        placement: this.ctx.placement
+      });
+    }
+  },
+
+  /* TODO: proper name. */
+  acquireToken: function (e) {
+    var node = this.getDOMNode(),
+      numTabsMod = this.ctx.ownerId == this.memberId ? 0 : 1,
+      tabWidth = node.offsetWidth / (this.tabKeys.length + numTabsMod),
+      distance = e.pageX - node.getBoundingClientRect().left,
+      index = parseInt(distance / tabWidth);
+
+    this.tabWidth = tabWidth;
+    return index;
+  },
+
+  releaseToken: function () {
+    this._index = false;
+    //TODO: Something is missing here.
+  },
+
+  /* Should be used by opts.cloakInGroup once implemented. */
+  cloneTabComponent: function (e) {
+    var tabComponent = this.refs[(this.tabKeys[index] || false) + "-tabbref"] || false;
+    if (tabComponent !== false) {
+      this.ctx.draggedElement = React.cloneElement(tabComponent.render(), {
+        key: "tabbph-clone",
+        onMouseEnter: false,
+        onMouseLeave: false
+      });
+    }
+  },
+
+  createTabElement: function (tabKey) {
+    if (this.ctx.dragging) {
+      if (this.ctx.draggedKey === tabKey) {
+        return React.cloneElement(this.ctx.draggedElement, {
+          key: tabKey + "-tabbph" + this.ctx.keySequence,
+          draggable: false
+        });
+      }
+    }
+    var tabProps = this.props.data[this.constKeyMap.indexOf(tabKey)] || false;
+
+    return (tabProps === false) ? null : React.createElement(
+      TabButton, React.__spread(tabProps, {ref: tabKey + "-tabbref"})
+    );
+  },
+
+  render: function () {
+    var tp = this.props.transitionProps,
+      sp = (this.ctx.sortable || false) ? {
+        draggable: true,
+        onDragEnd: this.handleDragEnd,
+        onDragStart: this.handleDragStart,
+        onDragOver: this.handleDragOver,
+        "data-key": "get-target-stop"
+      } : {};
+
+    if (!this.ctx.dragging) {
+      this.tabKeys = [];
+
+      for (var i = 0; i < this.props.data.length; ++i) {
+        this.tabKeys.push(this.props.data[i]["data-key"]);
+      }
+    }
+
+    var tabs = this.tabKeys.map(function (tabKey) {
+      return this.createTabElement(tabKey);
+    }.bind(this));
+
+    return (
+      React.createElement(tp.transitionComponent, React.__spread({component: "ul",
+          style: this.props.style, transitionName: tp.transitionName,
+          transitionAppear: tp.transitionAppear, transitionEnter: tp.transitionEnter,
+          transitionLeave: tp.transitionLeave}, tp.transitionCustomProps, sp),
+        tabs
+      )
+    );
+  }
+
+});
+
 var TabButton = React.createClass({
   mixins: [Mixins.StyleableWithEvents],
+
+  propTypes: {
+    "data-index": React.PropTypes.number.isRequired,
+    "data-key": React.PropTypes.string.isRequired
+  },
 
   getDefaultProps: function () {
     return {
@@ -43,7 +264,13 @@ var TabButton = React.createClass({
     }
 
     return (
-      React.createElement("li", React.__spread({onClick: this.handleClick, style: sheet.style},  this.listeners),
+      React.createElement("li", React.__spread({
+            onClick: this.handleClick,
+            style: sheet.style,
+            "data-index": this.props["data-index"],
+            "data-key": this.props["data-key"]
+          },
+          this.listeners),
         React.createElement("div", {title: this.props.title},
           icon, React.createElement("div", {style: sheet.box.style}, title)
         )
@@ -203,9 +430,10 @@ var Tab = React.createClass({
     }.bind(this)) : null;
 
     return (
-      React.createElement(ReactCSSTransitionGroup, {component: "div", style: sheet.style, transitionName: tp.transitionName,
-          transitionAppear: tp.transitionAppear && active, transitionEnter: tp.transitionEnter && active,
-          transitionLeave: tp.transitionLeave && active},
+      React.createElement(tp.transitionComponent, React.__spread({component: "div", style: sheet.style,
+            transitionName: tp.transitionName, transitionAppear: tp.transitionAppear && active,
+            transitionEnter: tp.transitionEnter && active, transitionLeave: tp.transitionLeave && active},
+          tp.transitionCustomProps),
         innerContent
       )
     );
