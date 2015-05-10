@@ -47,7 +47,8 @@ var flexbox2Style = function (_opts, skin) {
       skin: "default",
       renderPanelBorder: true,
       activeTabHeaderBorder: true
-    }, {$merge: _opts});
+    }, {$merge: _opts}),
+    isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
 
   skin = skin || opts.skin;
 
@@ -71,7 +72,7 @@ var flexbox2Style = function (_opts, skin) {
       header: {
         style: {
           backgroundColor: "transparent",
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           minWidth: "100%",
           marginBottom: "-2px"
         }
@@ -89,8 +90,9 @@ var flexbox2Style = function (_opts, skin) {
       tabs: {
         style: {
           float: "none",
+          WebkitFlex: "1",
           flex: 1,
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           overflow: "hidden"
         }
       },
@@ -137,6 +139,7 @@ var flexbox2Style = function (_opts, skin) {
         position: "inherit",
         float: "none",
         overflow: "hidden",
+        WebkitFlex: "1",
         flex: "1 0 0px",
         opacity: 1
       },
@@ -236,13 +239,25 @@ var flexbox2Style = function (_opts, skin) {
         style: {
           backgroundColor: colors.contentBackgroundColor,
           boxShadow: "0px 0px 29px rgba(0, 0, 0, 0.7) inset",
-          borderTop: "1px solid " +  colors.borderColor
+          borderTop: "1px solid " +  colors.borderColor,
+          position: "relative"
+        },
+        children: {
+          style: {
+            position: "relative"
+          }
         }
       },
       footer: {
         style: {
           backgroundColor: colors.footerBackgroundColor,
-          borderTop: "1px solid " +  colors.borderColor
+          borderTop: "1px solid " +  colors.borderColor,
+          position: "relative"
+        },
+        children: {
+          style: {
+            position: "relative"
+          }
         }
       }
     },
@@ -300,7 +315,8 @@ var flexbox2Style = function (_opts, skin) {
 
 
 var flexboxStyle = function (opts, skin) {
-  var colors;
+  var colors,
+    isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
   skin = skin || opts.skin;
 
   switch (skin) {
@@ -373,7 +389,7 @@ var flexboxStyle = function (opts, skin) {
       header: {
         style: {
           backgroundColor: "transparent",
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           minWidth: "100%"
         }
       },
@@ -390,8 +406,9 @@ var flexboxStyle = function (opts, skin) {
       tabs: {
         style: {
           float: "none",
+          WebkitFlex: "1",
           flex: 1,
-          display: "flex",
+          display: isSafari ? "-webkit-flex" : "flex",
           overflow: "hidden"
         }
       },
@@ -435,6 +452,7 @@ var flexboxStyle = function (opts, skin) {
         position: "inherit",
         float: "none",
         overflow: "hidden",
+        WebkitFlex: "1",
         flex: "1 0 0px"
       },
       state: {
@@ -835,6 +853,7 @@ var buildStyle = function (opts) {
     renderPanelBorder: (typeof opts.renderPanelBorder === "boolean") ? opts.renderPanelBorder : true,
     activeTabHeaderBorder: (typeof opts.activeTabHeaderBorder === "boolean") ? opts.activeTabHeaderBorder : true
   };
+  var isSafari = /Safari/.test(window.navigator.userAgent) && /Apple Computer/.test(window.navigator.vendor);
 
   var styles = {
     base: {
@@ -989,13 +1008,15 @@ var buildStyle = function (opts) {
         mods: {
           active: {
             style: {
-              display: (opts.useAvailableHeight) ? "flex" : "block",
+              display: (opts.useAvailableHeight) ? (isSafari ? "-webkit-flex" : "flex") : "block",
               minHeight: (opts.useAvailableHeight) ? "100%" : "inherit",
+              WebkitFlexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               flexDirection: (opts.useAvailableHeight) ? "column" : "inherit",
               height: "100%"
             },
             content: {
               style: (opts.useAvailableHeight) ? {
+                WebkitFlex: 1,
                 flex: 1,
                 position: "relative"
               } : {},
