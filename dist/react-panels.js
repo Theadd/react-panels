@@ -1646,7 +1646,14 @@ Mixins.Button = {
 var FloatingPanel = React.createClass({
   displayName: 'FloatingPanel',
   mixins: [Mixins.PanelWrapper],
-
+  propTypes: {
+    left:React.PropTypes.number,
+    top:React.PropTypes.number,
+    width:React.PropTypes.number,
+    style:React.PropTypes.object,
+    onClick:React.PropTypes.func,
+  },
+  
   getDefaultProps: function () {
     return {
       "left": 0,
@@ -1705,6 +1712,12 @@ var FloatingPanel = React.createClass({
       this.setState({ left: left, top: top });
     }
   },
+  
+  handleMouseClick: function (e) {
+    if (typeof this.props.onClick === "function") {
+      this.props.onClick(e);
+    }
+  },  
 
   render: function() {
     var transform = "translate3d(" + Utils.pixelsOf(this.state.left) + ", " + Utils.pixelsOf(this.state.top) + ", 0)",
@@ -1738,7 +1751,7 @@ var FloatingPanel = React.createClass({
       this.skipUpdate = false;
     }
 
-    return React.createElement("div", {style:wrapperStyle}, this.inner);
+    return React.createElement("div", {style:wrapperStyle, onClick:this.handleMouseClick}, this.inner);
   }
 
 });
