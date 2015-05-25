@@ -316,7 +316,7 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
-          this._getGroupedButtons(this.leftButtons).map(function (group) {
+          this._getGroupedButtons(this.props.leftButtons).map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           }),
           React.createElement(TabGroup, {
@@ -325,7 +325,7 @@ var ReactPanel = React.createClass({
             transitionProps: transitionProps
           }),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
-          this._getGroupedButtons(this.rightButtons||this.buttons).map(function (group) {
+          this._getGroupedButtons(this.props.rightButtons||this.props.buttons).map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           })
         ),
