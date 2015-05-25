@@ -196,6 +196,7 @@ Mixins.PanelWrapper = {
        */
       "onTabChange": null,
       "buttons": [],
+      "leftButtons": [],
       "globals": {}
     };
   },
