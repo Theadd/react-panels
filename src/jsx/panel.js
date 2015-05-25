@@ -144,7 +144,8 @@ var ReactPanel = React.createClass({
       "onDragStart": null,
       "onDragEnd": null,
       "maxTitleWidth": 130,
-      "buttons": []
+      "buttons": [],
+      "leftButtons": []
     };
   },
 
@@ -222,12 +223,12 @@ var ReactPanel = React.createClass({
     }
   },
 
-  _getGroupedButtons: function () {
-    var len = this.props.buttons.length,
+  _getGroupedButtons: function (buttons) {
+    var len = buttons.length,
       i, j, item, group = [], groups = [];
 
     for (i = 0; i < len; ++i) {
-      item = this.props.buttons[i];
+      item = buttons[i];
 
       if (typeof item === "object" && item instanceof Array) {
         if (group.length) {
@@ -315,13 +316,16 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
+          this._getGroupedButtons(this.leftButtons).map(function (group) {
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
+          }),
           React.createElement(TabGroup, {
             style: sheet.tabs.style, ref: "tabs", data: tabButtons,
             dragAndDropHandler: this.props.dragAndDropHandler || false,
             transitionProps: transitionProps
           }),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
-          this._getGroupedButtons().map(function (group) {
+          this._getGroupedButtons(this.rightButtons||this.buttons).map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           })
         ),
