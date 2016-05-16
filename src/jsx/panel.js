@@ -55,7 +55,7 @@ var FloatingPanel = React.createClass({
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
     if (this.props.onBoundsChange) {
-      var height=this.getDOMNode().offsetHeight;
+      var height = ReactDOM.findDOMNode(this).offsetHeight;
       this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
     }
   },
@@ -77,7 +77,7 @@ var FloatingPanel = React.createClass({
 
   render: function() {
     var transform = "translate3d(" + Utils.pixelsOf(this.state.left) + ", " + Utils.pixelsOf(this.state.top) + ", 0)",
-      wrapperStyle = React.addons.update({
+      wrapperStyle = update({
         WebkitTransform: transform,
         MozTransform: transform,
         msTransform: transform,
@@ -87,7 +87,7 @@ var FloatingPanel = React.createClass({
       }, {$merge: this.props.style});
 
     if (!this.skipUpdate) {
-      var props = React.addons.update({
+      var props = update({
           onDragStart: this.dragStart,
           onDragEnd: this.dragEnd,
           floating: true
@@ -117,7 +117,7 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    var props = React.addons.update({}, {$merge: this.config}),
+    var props = update({}, {$merge: this.config}),
       keys = Object.keys(this.props);
 
     for (var i = keys.length; --i >= 0;) {
@@ -179,9 +179,9 @@ var ReactPanel = React.createClass({
 
   componentDidMount: function () {
     if (this.props.autocompact) {
-      var tabsStart = this.refs['tabs-start'].getDOMNode(),
-        tabsEnd = this.refs['tabs-end'].getDOMNode(),
-        using = this.refs.tabs.getDOMNode().offsetWidth,
+      var tabsStart = this.refs['tabs-start'],
+        tabsEnd = this.refs['tabs-end'],
+        using = this.refs.tabs.offsetWidth,
         total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
 
       if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
@@ -196,9 +196,9 @@ var ReactPanel = React.createClass({
         next_childs = React.Children.count(nextProps.children);
 
       if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
-        var tabsStart = this.refs['tabs-start'].getDOMNode(),
-          tabsEnd = this.refs['tabs-end'].getDOMNode(),
-          using = this.refs.tabs.getDOMNode().offsetWidth,
+        var tabsStart = this.refs['tabs-start'],
+          tabsEnd = this.refs['tabs-end'],
+          using = this.refs.tabs.offsetWidth,
           total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
           maxTabWidth = this.props.maxTitleWidth + 35;
 
@@ -236,14 +236,14 @@ var ReactPanel = React.createClass({
           group = [];
         }
         for (j = 0; j < item.length; ++j) {
-          group.push(React.addons.cloneWithProps(item[j], {key: j}));
+          group.push(React.cloneElement(item[j], {key: j}));
         }
         if (group.length) {
           groups.push(group);
           group = [];
         }
       } else {
-        group.push(React.addons.cloneWithProps(item, {key: i}));
+        group.push(React.cloneElement(item, {key: i}));
       }
     }
     if (group.length) {
@@ -300,7 +300,7 @@ var ReactPanel = React.createClass({
       });
 
       tabs.push(
-        React.addons.cloneWithProps(child, {
+        React.cloneElement(child, {
           key: tabKey,
           tabKey: tabKey,
           selectedIndex: selectedIndex,

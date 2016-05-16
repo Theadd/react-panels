@@ -1,4 +1,13 @@
 
+var React = require('react');
+
+var ReactPanels = require('../../../index.js');
+var Tab = ReactPanels.Tab;
+var Content = ReactPanels.Content;
+var Toolbar = ReactPanels.Toolbar;
+var Footer = ReactPanels.Footer;
+var TabWrapperMixin = ReactPanels.Mixins.TabWrapper;
+
 var MyMainTab = React.createClass({
   displayName: 'MyMainTab',
   mixins: [TabWrapperMixin],
@@ -71,3 +80,5 @@ var MyMainTab = React.createClass({
   }
 
 });
+
+module.exports = MyMainTab;

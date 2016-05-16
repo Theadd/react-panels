@@ -33,7 +33,7 @@ var flexbox2Skin = function (skin) {
 
 var flexbox2Style = function (_opts, skin) {
   var colors,
-    opts = React.addons.update({
+    opts = update({
       skin: "default",
       renderPanelBorder: true,
       activeTabHeaderBorder: true
@@ -43,7 +43,7 @@ var flexbox2Style = function (_opts, skin) {
   skin = skin || opts.skin;
 
   if (typeof skin === "object") {
-    colors = React.addons.update(flexbox2Skin(), {$merge: skin});
+    colors = update(flexbox2Skin(), {$merge: skin});
   } else {
     colors = flexbox2Skin(skin);
   }
