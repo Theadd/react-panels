@@ -6,8 +6,10 @@
  * Licensed under the MIT license.
  */
 
-var React = require('react/addons');
-
+var React = require('react');
+var ReactDOM = require('react-dom');
+var update = require('react-addons-update');
+var CSSTransitionGroup = require('react-addons-css-transition-group');
 
 var flexbox2Skin = function (skin) {
   switch (skin || "") {
