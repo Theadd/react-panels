@@ -1,6 +1,3 @@
-/**
- * Created by twi18192 on 12/05/16.
- */
 
 var React = require('react');
 var ReactDOM = require('react-dom');

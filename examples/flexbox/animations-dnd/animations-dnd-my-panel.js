@@ -1,6 +1,3 @@
-/**
- * Created by twi18192 on 23/05/16.
- */
 
 var React = require('react');
 var ReactPanels = require('../../../index');
