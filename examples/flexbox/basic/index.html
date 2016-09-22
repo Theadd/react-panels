@@ -37,52 +37,7 @@
 
 <div id="root"></div>
 
-<script type="text/javascript" src="../../../bower_components/react/react-with-addons.js"></script>
-<script type="text/javascript" src="../../../bower_components/react/JSXTransformer.js"></script>
-<script type="text/javascript" src="../../../dist/react-panels.js"></script>
-
-<script type="text/jsx">
-  var Panel = ReactPanels.Panel;
-  var Tab = ReactPanels.Tab;
-  var Toolbar = ReactPanels.Toolbar;
-  var Content = ReactPanels.Content;
-  var Footer = ReactPanels.Footer;
-  var ToggleButton = ReactPanels.ToggleButton;
-
-  var MyPanel = React.createClass({
-
-    getInitialState: function () {
-      return {toolbars: true};
-    },
-
-    handleToggleToolbars: function () {
-      console.debug("IN handleToggleToolbars");
-      this.setState({toolbars: !this.state.toolbars});
-    },
-
-    render: function () {
-      console.debug("IN RENDER 1, toolbars: " + this.state.toolbars);
-      return (
-        <Panel theme="flexbox" useAvailableHeight={true} buttons={[
-          <ToggleButton title="Toggle Toolbar" active={this.state.toolbars} onChange={this.handleToggleToolbars}>
-            <i className="fa fa-wrench"></i>
-          </ToggleButton>
-        ]}>
-          <Tab title="One" icon="fa fa-plane" showToolbar={this.state.toolbars}>
-            <Toolbar>Toolbar content of One</Toolbar>
-            <Content>Content of One</Content>
-            <Footer>Footer content of One</Footer>
-          </Tab>
-          <Tab title="Two" icon="fa fa-fire" showToolbar={this.state.toolbars}>
-            <Content>Content of Two</Content>
-          </Tab>
-        </Panel>
-      );
-    }
-  });
-
-  React.render(<MyPanel />,document.getElementById('root'));
-</script>
+<script type="text/javascript" src="basicBundle.js"></script>
 
 </body>
 </html>

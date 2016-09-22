@@ -1,6 +1,6 @@
 {
   "name": "react-panels",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "React.js panel component with tabs, toolbars, buttons, floating windows and customizable themes",
   "repository": {
     "type": "git",
@@ -41,6 +41,9 @@
     "grunt-react": "^0.10.0"
   },
   "dependencies": {
-    "react": "^0.13.1"
+    "react": "15.0.2",
+    "react-dom": "15.0.2",
+    "react-addons-update": "15.0.2",
+    "react-addons-css-transition-group": "15.0.2"
   }
 }

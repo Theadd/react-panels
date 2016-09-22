@@ -285,12 +285,12 @@ var createSheet = (function (opts) {
     alter = alter || {}
     if (alter.skin || false) {
       if (!(_skin[alter.skin] || false)) {
-        _skin[alter.skin] = buildStyle(React.addons.update(opts, {$merge: {skin: alter.skin}}));
+        _skin[alter.skin] = buildStyle(update(opts, {$merge: {skin: alter.skin}}));
       }
       using = _skin[alter.skin];
     }
     if (!mods.length) return using[target];
-    var sheet = React.addons.update(using[target], {$merge: {}}),
+    var sheet = update(using[target], {$merge: {}}),
       i;
     for (i = 0; i < mods.length; ++i) {
       if ((sheet.mods || false) && (sheet.mods[mods[i]] || false)) {

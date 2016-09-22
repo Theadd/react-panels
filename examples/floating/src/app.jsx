@@ -1,4 +1,14 @@
 
+var React = require('react');
+var ReactDOM = require('react-dom');
+
+var MyMainTab = require('./main-tab.jsx');
+var MyItemTab = require('./item-tab.jsx');
+
+var ReactPanels = require('../../../index');
+var FloatingPanel = ReactPanels.FloatingPanel;
+var ToggleButton = ReactPanels.ToggleButton;
+
 var MyFloatingPanel = React.createClass({
   displayName: 'MyFloatingPanel',
 
@@ -52,7 +62,7 @@ var MyFloatingPanel = React.createClass({
 });
 
 
-var App = React.render(
+ReactDOM.render(
   <div>
     <MyFloatingPanel />
   </div>,

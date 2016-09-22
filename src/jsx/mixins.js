@@ -86,7 +86,7 @@ var Mixins = {
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
             this.props.transitionAppear : globals.transitionAppear || false,
           transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
-            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+            this.props.transitionComponent : globals.transitionComponent || CSSTransitionGroup,
           transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
@@ -95,7 +95,7 @@ var Mixins = {
           transitionEnter: false,
           transitionLeave: false,
           transitionAppear: false,
-          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionComponent: CSSTransitionGroup,
           transitionCustomProps: {}
         };
       }

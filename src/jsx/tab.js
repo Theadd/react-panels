@@ -71,7 +71,7 @@ var TabGroup = React.createClass({
   handleDragStart: function(e) {
     if (this.ctx.sortable) {
 
-      var node = this.getDOMNode(),
+      var node = ReactDOM.findDOMNode(this),
         tabWidth = node.offsetWidth / this.tabKeys.length,
         distance = e.pageX - node.getBoundingClientRect().left,
         index = parseInt(distance / tabWidth),
@@ -88,7 +88,7 @@ var TabGroup = React.createClass({
           });
           this.keyMap.splice(index, 1);
           this.acquireToken(e); //
-          this.handleDragStartOnTab(e, clone, tabComponent.getDOMNode());
+          this.handleDragStartOnTab(e, clone, ReactDOM.findDOMNode(tabComponent));
         }
       }
     }
@@ -105,7 +105,7 @@ var TabGroup = React.createClass({
         this._index = false;
         this.handler.setParentOfToken(this.memberId);
       } else {
-        var distance = e.pageX - this.getDOMNode().getBoundingClientRect().left;
+        var distance = e.pageX - ReactDOM.findDOMNode(this).getBoundingClientRect().left;
         nextIndex = parseInt(distance / this.tabWidth);
       }
 
@@ -138,7 +138,7 @@ var TabGroup = React.createClass({
 
   /* TODO: proper name. */
   acquireToken: function (e) {
-    var node = this.getDOMNode(),
+    var node = ReactDOM.findDOMNode(this),
       numTabsMod = this.ctx.ownerId == this.memberId ? 0 : 1,
       tabWidth = node.offsetWidth / (this.tabKeys.length + numTabsMod),
       distance = e.pageX - node.getBoundingClientRect().left,
@@ -405,7 +405,7 @@ var Tab = React.createClass({
             )
           ) : null;
         case 1:
-          var contentStyle = React.addons.update({
+          var contentStyle = update({
             maxHeight : this.props.maxContentHeight || "none",
             overflowX :"hidden",
             overflowY : this.props.maxContentHeight?"auto":"hidden"

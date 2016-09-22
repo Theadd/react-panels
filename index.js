@@ -6,8 +6,10 @@
  * Licensed under the MIT license.
  */
 
-var React = require('react/addons');
-
+var React = require('react');
+var ReactDOM = require('react-dom');
+var update = require('react-addons-update');
+var CSSTransitionGroup = require('react-addons-css-transition-group');
 
 var flexbox2Skin = function (skin) {
   switch (skin || "") {
@@ -43,7 +45,7 @@ var flexbox2Skin = function (skin) {
 
 var flexbox2Style = function (_opts, skin) {
   var colors,
-    opts = React.addons.update({
+    opts = update({
       skin: "default",
       renderPanelBorder: true,
       activeTabHeaderBorder: true
@@ -53,7 +55,7 @@ var flexbox2Style = function (_opts, skin) {
   skin = skin || opts.skin;
 
   if (typeof skin === "object") {
-    colors = React.addons.update(flexbox2Skin(), {$merge: skin});
+    colors = update(flexbox2Skin(), {$merge: skin});
   } else {
     colors = flexbox2Skin(skin);
   }
@@ -1126,12 +1128,12 @@ var createSheet = (function (opts) {
     alter = alter || {}
     if (alter.skin || false) {
       if (!(_skin[alter.skin] || false)) {
-        _skin[alter.skin] = buildStyle(React.addons.update(opts, {$merge: {skin: alter.skin}}));
+        _skin[alter.skin] = buildStyle(update(opts, {$merge: {skin: alter.skin}}));
       }
       using = _skin[alter.skin];
     }
     if (!mods.length) return using[target];
-    var sheet = React.addons.update(using[target], {$merge: {}}),
+    var sheet = update(using[target], {$merge: {}}),
       i;
     for (i = 0; i < mods.length; ++i) {
       if ((sheet.mods || false) && (sheet.mods[mods[i]] || false)) {
@@ -1325,7 +1327,7 @@ var Mixins = {
           transitionAppear: (typeof this.props.transitionAppear === "boolean") ?
             this.props.transitionAppear : globals.transitionAppear || false,
           transitionComponent: (typeof this.props.transitionComponent !== "undefined") ?
-            this.props.transitionComponent : globals.transitionComponent || React.addons.CSSTransitionGroup,
+            this.props.transitionComponent : globals.transitionComponent || CSSTransitionGroup,
           transitionCustomProps: this.props.transitionCustomProps || globals.transitionCustomProps || {}
         };
       } else {
@@ -1334,7 +1336,7 @@ var Mixins = {
           transitionEnter: false,
           transitionLeave: false,
           transitionAppear: false,
-          transitionComponent: React.addons.CSSTransitionGroup,
+          transitionComponent: CSSTransitionGroup,
           transitionCustomProps: {}
         };
       }
@@ -1435,6 +1437,7 @@ Mixins.PanelWrapper = {
        */
       "onTabChange": null,
       "buttons": [],
+      "leftButtons": [],
       "globals": {}
     };
   },
@@ -1699,7 +1702,7 @@ var FloatingPanel = React.createClass({
     delete this.panelBounds;
     window.removeEventListener('dragover', this.dragOver);
     if (this.props.onBoundsChange) {
-      var height=this.getDOMNode().offsetHeight;
+      var height = ReactDOM.findDOMNode(this).offsetHeight;
       this.props.onBoundsChange({left:this.state.left, top:this.state.top, width:this.state.width, height:height});
     }
   },
@@ -1721,7 +1724,7 @@ var FloatingPanel = React.createClass({
 
   render: function() {
     var transform = "translate3d(" + Utils.pixelsOf(this.state.left) + ", " + Utils.pixelsOf(this.state.top) + ", 0)",
-      wrapperStyle = React.addons.update({
+      wrapperStyle = update({
         WebkitTransform: transform,
         MozTransform: transform,
         msTransform: transform,
@@ -1731,7 +1734,7 @@ var FloatingPanel = React.createClass({
       }, {$merge: this.props.style});
 
     if (!this.skipUpdate) {
-      var props = React.addons.update({
+      var props = update({
           onDragStart: this.dragStart,
           onDragEnd: this.dragEnd,
           floating: true
@@ -1761,7 +1764,7 @@ var Panel = React.createClass({
   mixins: [Mixins.PanelWrapper],
 
   render: function() {
-    var props = React.addons.update({}, {$merge: this.config}),
+    var props = update({}, {$merge: this.config}),
       keys = Object.keys(this.props);
 
     for (var i = keys.length; --i >= 0;) {
@@ -1788,7 +1791,8 @@ var ReactPanel = React.createClass({
       "onDragStart": null,
       "onDragEnd": null,
       "maxTitleWidth": 130,
-      "buttons": []
+      "buttons": [],
+      "leftButtons": []
     };
   },
 
@@ -1822,9 +1826,9 @@ var ReactPanel = React.createClass({
 
   componentDidMount: function () {
     if (this.props.autocompact) {
-      var tabsStart = this.refs['tabs-start'].getDOMNode(),
-        tabsEnd = this.refs['tabs-end'].getDOMNode(),
-        using = this.refs.tabs.getDOMNode().offsetWidth,
+      var tabsStart = this.refs['tabs-start'],
+        tabsEnd = this.refs['tabs-end'],
+        using = this.refs.tabs.offsetWidth,
         total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth);
 
       if (using * 2 <= total) {   // TODO: ... * 2 is obviously not what it should be
@@ -1839,9 +1843,9 @@ var ReactPanel = React.createClass({
         next_childs = React.Children.count(nextProps.children);
 
       if (next_childs > childs && this.props.autocompact && !this.state.compacted) {
-        var tabsStart = this.refs['tabs-start'].getDOMNode(),
-          tabsEnd = this.refs['tabs-end'].getDOMNode(),
-          using = this.refs.tabs.getDOMNode().offsetWidth,
+        var tabsStart = this.refs['tabs-start'],
+          tabsEnd = this.refs['tabs-end'],
+          using = this.refs.tabs.offsetWidth,
           total = tabsEnd.offsetLeft - (tabsStart.offsetLeft + tabsStart.offsetWidth),
           maxTabWidth = this.props.maxTitleWidth + 35;
 
@@ -1866,12 +1870,12 @@ var ReactPanel = React.createClass({
     }
   },
 
-  _getGroupedButtons: function () {
-    var len = this.props.buttons.length,
+  _getGroupedButtons: function (buttons) {
+    var len = buttons.length,
       i, j, item, group = [], groups = [];
 
     for (i = 0; i < len; ++i) {
-      item = this.props.buttons[i];
+      item = buttons[i];
 
       if (typeof item === "object" && item instanceof Array) {
         if (group.length) {
@@ -1879,14 +1883,14 @@ var ReactPanel = React.createClass({
           group = [];
         }
         for (j = 0; j < item.length; ++j) {
-          group.push(React.addons.cloneWithProps(item[j], {key: j}));
+          group.push(React.cloneElement(item[j], {key: j}));
         }
         if (group.length) {
           groups.push(group);
           group = [];
         }
       } else {
-        group.push(React.addons.cloneWithProps(item, {key: i}));
+        group.push(React.cloneElement(item, {key: i}));
       }
     }
     if (group.length) {
@@ -1943,7 +1947,7 @@ var ReactPanel = React.createClass({
       });
 
       tabs.push(
-        React.addons.cloneWithProps(child, {
+        React.cloneElement(child, {
           key: tabKey,
           tabKey: tabKey,
           selectedIndex: selectedIndex,
@@ -1959,13 +1963,16 @@ var ReactPanel = React.createClass({
             onDragStart: self.handleDragStart, ref: "header", style: sheet.header.style},
           icon, title,
           React.createElement("div", {style: sheet.tabsStart.style, ref: "tabs-start"}),
+          this._getGroupedButtons(this.props.leftButtons).map(function (group) {
+            return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
+          }),
           React.createElement(TabGroup, {
             style: sheet.tabs.style, ref: "tabs", data: tabButtons,
             dragAndDropHandler: this.props.dragAndDropHandler || false,
             transitionProps: transitionProps
           }),
           React.createElement("div", {style: sheet.tabsEnd.style, ref: "tabs-end"}),
-          this._getGroupedButtons().map(function (group) {
+          this._getGroupedButtons(this.props.rightButtons||this.props.buttons).map(function (group) {
             return React.createElement("ul", {style: sheet.group.style, key: groupIndex++}, group );
           })
         ),
@@ -2049,7 +2056,7 @@ var TabGroup = React.createClass({
   handleDragStart: function(e) {
     if (this.ctx.sortable) {
 
-      var node = this.getDOMNode(),
+      var node = ReactDOM.findDOMNode(this),
         tabWidth = node.offsetWidth / this.tabKeys.length,
         distance = e.pageX - node.getBoundingClientRect().left,
         index = parseInt(distance / tabWidth),
@@ -2066,7 +2073,7 @@ var TabGroup = React.createClass({
           });
           this.keyMap.splice(index, 1);
           this.acquireToken(e); //
-          this.handleDragStartOnTab(e, clone, tabComponent.getDOMNode());
+          this.handleDragStartOnTab(e, clone, ReactDOM.findDOMNode(tabComponent));
         }
       }
     }
@@ -2083,7 +2090,7 @@ var TabGroup = React.createClass({
         this._index = false;
         this.handler.setParentOfToken(this.memberId);
       } else {
-        var distance = e.pageX - this.getDOMNode().getBoundingClientRect().left;
+        var distance = e.pageX - ReactDOM.findDOMNode(this).getBoundingClientRect().left;
         nextIndex = parseInt(distance / this.tabWidth);
       }
 
@@ -2116,7 +2123,7 @@ var TabGroup = React.createClass({
 
   /* TODO: proper name. */
   acquireToken: function (e) {
-    var node = this.getDOMNode(),
+    var node = ReactDOM.findDOMNode(this),
       numTabsMod = this.ctx.ownerId == this.memberId ? 0 : 1,
       tabWidth = node.offsetWidth / (this.tabKeys.length + numTabsMod),
       distance = e.pageX - node.getBoundingClientRect().left,
@@ -2383,7 +2390,7 @@ var Tab = React.createClass({
             )
           ) : null;
         case 1:
-          var contentStyle = React.addons.update({
+          var contentStyle = update({
             maxHeight : this.props.maxContentHeight || "none",
             overflowX :"hidden",
             overflowY : this.props.maxContentHeight?"auto":"hidden"
